@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import Graph from "graphology";
-import { SigmaContainer, useRegisterEvents, useSigma, useLoadGraph, } from "@react-sigma/core";
+import { AiOutlineZoomIn, AiOutlineZoomOut, } from "react-icons/ai";
+import { MdFilterCenterFocus, } from "react-icons/md";
+import { SigmaContainer, useRegisterEvents, useSigma, useLoadGraph, ControlsContainer, ZoomControl, FullScreenControl, } from "@react-sigma/core";
 import "@react-sigma/core/lib/react-sigma.min.css";
 import "./GraphCanvas.css";
 import Card from 'react-bootstrap/Card';
@@ -8,7 +10,7 @@ import Card from 'react-bootstrap/Card';
 // Component that loads the graph
 function LoadGraph() {
   const loadGraph = useLoadGraph();
-  
+
   useEffect(() => {
     
     let g = new Graph();
@@ -91,6 +93,14 @@ export default function GraphCanvas() {
           <SigmaContainer style={sigma_style} >
             <GraphEvents />
             <LoadGraph />
+            <ControlsContainer position="bottom-right">
+              <ZoomControl labels={{ zoomIn: "Zoom in", zoomOut: "Zoom out", reset: "Reset zoom"}}>
+                <AiOutlineZoomIn />
+                <AiOutlineZoomOut />
+                <MdFilterCenterFocus />
+              </ZoomControl>
+              <FullScreenControl/>
+            </ControlsContainer>
           </SigmaContainer>
         </Card.Body>
       </Card>
