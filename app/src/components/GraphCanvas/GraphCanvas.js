@@ -1,40 +1,25 @@
 import { useEffect, useState } from "react";
-import Graph from "graphology";
 import { AiOutlineZoomIn, AiOutlineZoomOut, } from "react-icons/ai";
 import { MdFilterCenterFocus, } from "react-icons/md";
 import { SigmaContainer, useRegisterEvents, useSigma, useLoadGraph, ControlsContainer, ZoomControl, FullScreenControl, } from "@react-sigma/core";
+import circlepack from "graphology-layout/circlepack";
 import "@react-sigma/core/lib/react-sigma.min.css";
 import "./GraphCanvas.css";
 import Card from 'react-bootstrap/Card';
 
 // Component that loads the graph
-function LoadGraph() {
+function LoadGraph( {graph} ) {
   const loadGraph = useLoadGraph();
 
   useEffect(() => {
     
-    let g = new Graph();
-    g.addNode("0", {"x": 0, "y": 0, "size": 15, "color": "blue"});
-    g.addNode("1", {"x": 10, "y": 70, "size": 15, "color": "blue"});
-    g.addNode("2", {"x": 20, "y": 10, "size": 15, "color": "blue"});
-    g.addNode("3", {"x": 30, "y": 60, "size": 15, "color": "blue"});
-    g.addNode("4", {"x": 30, "y": 20, "size": 15, "color": "blue"});
-    g.addNode("5", {"x": 20, "y": 50, "size": 15, "color": "blue"});
-    g.addNode("6", {"x": 10, "y": 30, "size": 15, "color": "blue"});
-    g.addNode("7", {"x": 0, "y": 40, "size": 15, "color": "blue"});
-    g.addEdge("0", "1");
-    g.addEdge("0", "2");
-    g.addEdge("1", "2");
-    g.addEdge("1", "3");
-    g.addEdge("2", "3");
-    g.addEdge("3", "7");
-    g.addEdge("3", "5");
-    g.addEdge("4", "6");
-    g.addEdge("5", "6");
-    g.addEdge("5", "7");
-    loadGraph(g);
-  
-  }, [loadGraph]);
+    //Assigning circlepack layout
+    circlepack.assign(graph);
+
+    //Loading graph
+    loadGraph(graph);
+
+  }, [loadGraph, graph,]);
 
   return null;
 };
@@ -84,15 +69,16 @@ function GraphEvents() {
 
 
 const sigma_style = {height: "500px", width: "100%", margin: "0px", padding: "0px"};
+const sigma_settings = {renderEdgeLabels: true};
 // Component that displays the graph
-export default function GraphCanvas() {
+export default function GraphCanvas( {graph} ) {
   return (
     <>
       <Card className="w-75 mx-3 my-3 p-0">
         <Card.Body className="m-0 p-1">
-          <SigmaContainer style={sigma_style} >
+          <SigmaContainer style={sigma_style} settings={sigma_settings}>
             <GraphEvents />
-            <LoadGraph />
+            <LoadGraph graph={graph}/>
             <ControlsContainer position="bottom-right">
               <ZoomControl labels={{ zoomIn: "Zoom in", zoomOut: "Zoom out", reset: "Reset zoom"}}>
                 <AiOutlineZoomIn />
