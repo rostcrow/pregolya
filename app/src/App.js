@@ -41,10 +41,9 @@ function App() {
       <Topbar />
       <GraphDropdown graphsJSON={graphsJSON} itemsFunc={changeCurrentGraph}/>
       <GraphCanvas graph={currentGraph}/>
+
       <script src="https://cdnjs.cloudflare.com/ajax/libs/sigma.js/2.4.0/sigma.min.js"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/graphology/0.25.4/graphology.umd.min.js"></script>
-      <script src="./plugins/sigma.plugins.dragNodes/sigma.plugins.dragNodes.js"></script>
-      <script src="./plugins/sigma.renderers.edgeLabels.min.js"></script>
     </div>
 
   );

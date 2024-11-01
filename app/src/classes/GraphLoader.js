@@ -5,7 +5,7 @@ export default class GraphLoader {
         let directed = jsonObject['attributes']['directed'];
         let directedString = "un".repeat(!directed) + "directed";
 
-        let graph = new Graph({type: directedString});
+        let graph = new Graph({multi: true, type: directedString});
         graph.import(jsonObject);
         return graph;
     }
