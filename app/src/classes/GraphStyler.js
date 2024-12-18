@@ -2,7 +2,7 @@ import { indexParallelEdgesIndex, DEFAULT_EDGE_CURVATURE} from "@sigma/edge-curv
 
 const DEFAULT_NODE_COLOR = "#0000FF";
 const DEFAULT_NODE_SIZE = 15;
-const DEFAULT_EDGE_SIZE = 5;
+const DEFAULT_EDGE_SIZE = 8;
 
 export default class GraphStyler{
     constructor(nodeColor = DEFAULT_NODE_COLOR, nodeSize = DEFAULT_NODE_SIZE, edgeSize = DEFAULT_EDGE_SIZE) {
