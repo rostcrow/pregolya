@@ -9,7 +9,7 @@ import Card from 'react-bootstrap/Card';
 import { MultiGraph } from "graphology";
 import EdgeCurveProgram, { EdgeCurvedArrowProgram } from "@sigma/edge-curve";
 import {EdgeRectangleProgram, EdgeArrowProgram} from "sigma/rendering";
-import EdgeLoopProgram from "../../programs/EdgeLoopProgram.ts";
+import EdgeLoopProgram from "../../programs/EdgeLoopProgram/EdgeLoopProgram.ts";
 
 // Component that loads the graph
 function LoadGraph( {graph} ) {
