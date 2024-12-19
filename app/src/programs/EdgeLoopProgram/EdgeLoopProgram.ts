@@ -1,11 +1,3 @@
-/**
- * Sigma.js WebGL Renderer Fast Edge Program
- * ==========================================
- *
- * Program rendering edges using GL_LINES which is presumably very fast but
- * won't render thickness correctly on some GPUs and has some quirks.
- * @module
- */
 import { Attributes } from "graphology-types";
 
 import { EdgeDisplayData, NodeDisplayData, RenderParams } from "sigma/types";
