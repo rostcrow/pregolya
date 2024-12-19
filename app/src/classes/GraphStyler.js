@@ -46,8 +46,12 @@ export default class GraphStyler{
             if (source === target) {
                 //Loop edge
 
-                graph.setEdgeAttribute(edge, "type", "loop");
-
+                if (graph.getAttribute("directed")) {
+                    graph.setEdgeAttribute(edge, "type", "loopArrow");
+                } else {
+                    graph.setEdgeAttribute(edge, "type", "loop");
+                }
+                
             } else {
 
                 if (graph.getEdgeAttribute(edge, "parallelIndex") != null) {

@@ -10,6 +10,7 @@ import { MultiGraph } from "graphology";
 import EdgeCurveProgram, { EdgeCurvedArrowProgram } from "@sigma/edge-curve";
 import {EdgeRectangleProgram, EdgeArrowProgram} from "sigma/rendering";
 import EdgeLoopProgram from "../../programs/EdgeLoopProgram/EdgeLoopProgram.ts";
+import EdgeLoopArrowProgram from "../../programs/EdgeLoopArrowProgram/EdgeLoopArrowProgram.ts";
 
 // Component that loads the graph
 function LoadGraph( {graph} ) {
@@ -78,7 +79,8 @@ const sigma_settings = {allowInvalidContainer: true, renderEdgeLabels: true, def
   arrow: EdgeArrowProgram,
   curved: EdgeCurveProgram,
   curvedArrow: EdgeCurvedArrowProgram,
-  loop: EdgeLoopProgram
+  loop: EdgeLoopProgram,
+  loopArrow: EdgeLoopArrowProgram
 }};
 // Component that displays the graph
 export default function GraphCanvas( {graph} ) {
