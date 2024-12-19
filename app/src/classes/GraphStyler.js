@@ -40,32 +40,42 @@ export default class GraphStyler{
         //Determining edge types
         indexParallelEdgesIndex(graph, { edgeIndexAttribute: "parallelIndex", edgeMaxIndexAttribute: "parallelMaxIndex"});
 
-        for (let i = 0; i < edgesLength; i++) {
-            let edge = edges[i];
 
-            if (graph.getEdgeAttribute(edge, "parallelMaxIndex") != null) {
+        graph.forEachEdge((edge, attributes, source, target) => {
 
-                //Parallel edge
-                let parallelIndex = graph.getEdgeAttribute(edge, "parallelIndex");
-                let parallelMaxIndex = graph.getEdgeAttribute(edge, "parallelMaxIndex");
+            if (source === target) {
+                //Loop edge
 
-                graph.setEdgeAttribute(edge, "curvature", 
-                    DEFAULT_EDGE_CURVATURE + (3 * DEFAULT_EDGE_CURVATURE * parallelIndex) / (parallelMaxIndex || 1));
-                
-                if (graph.getAttribute("directed")) {
-                    graph.setEdgeAttribute(edge, "type", "curvedArrow");
-                } else {
-                    graph.setEdgeAttribute(edge, "type", "curved");
-                }
+                graph.setEdgeAttribute(edge, "type", "loop");
+
             } else {
 
-                //Non-parallel edge
-                if (graph.getAttribute("directed")) {
-                    graph.setEdgeAttribute(edge, "type", "arrow");
+                if (graph.getEdgeAttribute(edge, "parallelIndex") != null) {
+                    //Parallel edge
+                    
+                    let parallelIndex = graph.getEdgeAttribute(edge, "parallelIndex");
+                    let parallelMaxIndex = graph.getEdgeAttribute(edge, "parallelMaxIndex");
+
+                    graph.setEdgeAttribute(edge, "curvature", 
+                        DEFAULT_EDGE_CURVATURE + (3 * DEFAULT_EDGE_CURVATURE * parallelIndex) / (parallelMaxIndex || 1));
+                    
+                    if (graph.getAttribute("directed")) {
+                        graph.setEdgeAttribute(edge, "type", "curvedArrow");
+                    } else {
+                        graph.setEdgeAttribute(edge, "type", "curved");
+                    }
+
                 } else {
-                    graph.setEdgeAttribute(edge, "type", "line");
+                    //Non-parallel edge
+
+                    if (graph.getAttribute("directed")) {
+                        graph.setEdgeAttribute(edge, "type", "arrow");
+                    } else {
+                        graph.setEdgeAttribute(edge, "type", "line");
+                    }
                 }
             }
-        }
+        });
+
     }
 }

@@ -9,6 +9,7 @@ import Card from 'react-bootstrap/Card';
 import { MultiGraph } from "graphology";
 import EdgeCurveProgram, { EdgeCurvedArrowProgram } from "@sigma/edge-curve";
 import {EdgeRectangleProgram, EdgeArrowProgram} from "sigma/rendering";
+import EdgeLoopProgram from "../../programs/EdgeLoopProgram.ts";
 
 // Component that loads the graph
 function LoadGraph( {graph} ) {
@@ -76,7 +77,8 @@ const sigma_settings = {allowInvalidContainer: true, renderEdgeLabels: true, def
   line: EdgeRectangleProgram,
   arrow: EdgeArrowProgram,
   curved: EdgeCurveProgram,
-  curvedArrow: EdgeCurvedArrowProgram
+  curvedArrow: EdgeCurvedArrowProgram,
+  loop: EdgeLoopProgram
 }};
 // Component that displays the graph
 export default function GraphCanvas( {graph} ) {
