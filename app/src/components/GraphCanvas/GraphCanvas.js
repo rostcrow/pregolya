@@ -1,30 +1,56 @@
+//Importing libraries and build-in files
 import { useEffect, useState } from "react";
 import { AiOutlineZoomIn, AiOutlineZoomOut, } from "react-icons/ai";
 import { MdFilterCenterFocus, } from "react-icons/md";
 import { SigmaContainer, useRegisterEvents, useSigma, useLoadGraph, ControlsContainer, ZoomControl, FullScreenControl,} from "@react-sigma/core";
-import circlepack from "graphology-layout/circlepack";
 import "@react-sigma/core/lib/react-sigma.min.css";
-import "./GraphCanvas.css";
 import Card from 'react-bootstrap/Card';
-import { MultiGraph } from "graphology";
 import EdgeCurveProgram, { EdgeCurvedArrowProgram } from "@sigma/edge-curve";
 import {EdgeRectangleProgram, EdgeArrowProgram} from "sigma/rendering";
+import { MultiGraph } from "graphology";
+
+//Importing layouts
+import circlepack from "graphology-layout/circlepack";
+import circular from "graphology-layout/circular";
+import random from "graphology-layout/random";
+import noverlap from "graphology-layout-noverlap";
+
+//Importing my classes
 import EdgeLoopProgram from "../../programs/EdgeLoopProgram/EdgeLoopProgram.ts";
 import EdgeLoopArrowProgram from "../../programs/EdgeLoopArrowProgram/EdgeLoopArrowProgram.ts";
+import LayoutControl from "../LayoutControl/LayoutControl.js";
+import GraphLayout from "../../classes/GraphLayout.js";
+import FlushGraphLayout from "../../classes/FlushGraphLayout.js";
+
+//Importing css
+import "./GraphCanvas.css";
+
+//Layouts
+const layouts = {
+  "Circlepack": new GraphLayout(circlepack), "Circular": new GraphLayout(circular), 
+  "No overlap": new FlushGraphLayout(noverlap), "Random": new GraphLayout(random)};
+
+const layoutKeys = Object.keys(layouts);
+const layoutKeysLength = layoutKeys.length;
+let currentLayoutKeyIndex = 0;
 
 // Component that loads the graph
-function LoadGraph( {graph} ) {
+function LoadGraph( {graph, layoutKey} ) {
   const loadGraph = useLoadGraph();
+  const sigma = useSigma();
 
   useEffect(() => {
 
-    //Assigning circlepack layout
-    circlepack.assign(graph);
+    //Setting autoscale
+    sigma.setCustomBBox(null);
+
+    //Assigning layout
+    layouts[layoutKey].assign(graph);
 
     //Loading graph
     loadGraph(graph);
 
-  }, [loadGraph, graph,]);
+  }, [loadGraph, sigma, graph, layoutKey]);
 
   return null;
 };
@@ -84,13 +110,22 @@ const sigma_settings = {allowInvalidContainer: true, renderEdgeLabels: true, def
 }};
 // Component that displays the graph
 export default function GraphCanvas( {graph} ) {
+
+  const [currentLayoutKey, setCurrentLayoutKey] = useState(layoutKeys[currentLayoutKeyIndex]);
+
+  //Handling layout key change
+  function changeLayoutKey() {
+    currentLayoutKeyIndex = (currentLayoutKeyIndex + 1) % layoutKeysLength;
+    setCurrentLayoutKey(layoutKeys[currentLayoutKeyIndex]);
+  }
+
   return (
     <>
       <Card className="w-75 mx-3 my-3 p-0">
         <Card.Body className="m-0 p-1">
           <SigmaContainer style={sigma_style} settings={sigma_settings} graph={MultiGraph}>
             <GraphEvents />
-            <LoadGraph graph={graph}/>
+            <LoadGraph graph={graph} layoutKey={currentLayoutKey}/>
             <ControlsContainer position="bottom-right">
               <ZoomControl labels={{ zoomIn: "Zoom in", zoomOut: "Zoom out", reset: "Reset zoom"}}>
                 <AiOutlineZoomIn />
@@ -98,6 +133,7 @@ export default function GraphCanvas( {graph} ) {
                 <MdFilterCenterFocus />
               </ZoomControl>
               <FullScreenControl/>
+              <LayoutControl layoutKey={currentLayoutKey} buttonFunc={changeLayoutKey}/>
             </ControlsContainer>
           </SigmaContainer>
         </Card.Body>
