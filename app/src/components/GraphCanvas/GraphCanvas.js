@@ -1,8 +1,6 @@
 //Importing libraries and build-in files
 import { useEffect, useState } from "react";
-import { AiOutlineZoomIn, AiOutlineZoomOut, } from "react-icons/ai";
-import { MdFilterCenterFocus, } from "react-icons/md";
-import { SigmaContainer, useRegisterEvents, useSigma, useLoadGraph, ControlsContainer, ZoomControl, FullScreenControl,} from "@react-sigma/core";
+import { SigmaContainer, useRegisterEvents, useSigma, useLoadGraph, ControlsContainer, FullScreenControl,} from "@react-sigma/core";
 import "@react-sigma/core/lib/react-sigma.min.css";
 import Card from 'react-bootstrap/Card';
 import EdgeCurveProgram, { EdgeCurvedArrowProgram } from "@sigma/edge-curve";
@@ -21,6 +19,8 @@ import EdgeLoopArrowProgram from "../../programs/EdgeLoopArrowProgram/EdgeLoopAr
 import LayoutControl from "../LayoutControl/LayoutControl.js";
 import GraphLayout from "../../classes/GraphLayout.js";
 import FlushGraphLayout from "../../classes/FlushGraphLayout.js";
+import RescaleControl from "../RescaleControl/RescaleControl.js";
+import ZoomControl from "../ZoomControl/ZoomControl.js";
 
 //Importing css
 import "./GraphCanvas.css";
@@ -127,11 +127,8 @@ export default function GraphCanvas( {graph} ) {
             <GraphEvents />
             <LoadGraph graph={graph} layoutKey={currentLayoutKey}/>
             <ControlsContainer position="bottom-right">
-              <ZoomControl labels={{ zoomIn: "Zoom in", zoomOut: "Zoom out", reset: "Reset zoom"}}>
-                <AiOutlineZoomIn />
-                <AiOutlineZoomOut />
-                <MdFilterCenterFocus />
-              </ZoomControl>
+              <ZoomControl />
+              <RescaleControl />
               <FullScreenControl/>
               <LayoutControl layoutKey={currentLayoutKey} buttonFunc={changeLayoutKey}/>
             </ControlsContainer>
