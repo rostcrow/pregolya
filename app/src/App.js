@@ -11,31 +11,23 @@ import GraphCanvas from './components/GraphCanvas/GraphCanvas.js';
 
 //  Classes
 import graphExamplesArray from "./graph_examples/all_examples.js";
-import GraphLoader from "./classes/GraphLoader.js";
-import GraphStyler from './classes/GraphStyler.js';
 import GraphDropdown from './components/GraphDropdown/GraphDropdown.js';
+import GraphFactory from './classes/GraphFactory.js';
 
 export const ChoosingGraphContext = createContext(null);
 export const CurrentGraphContext = createContext(null);
 
 const graphsJSON = graphExamplesArray;
-const graphLoader = new GraphLoader();
-const graphStyler = new GraphStyler();
+const graphFactory = new GraphFactory();
+let firstGraph = graphFactory.createDisplayGraphFromJSON(graphsJSON[0]);
 
 function App() {
-
-  //Init
-  let firstGraph = graphLoader.load(graphsJSON[0]);
-  graphStyler.style(firstGraph);
 
   const [currentGraph, setCurrentGraph] = useState(firstGraph);
 
   //Handling dropdown choice
   function changeCurrentGraph (index) {
-    let nextGraph = graphLoader.load(graphsJSON[index]);
-    graphStyler.style(nextGraph);
-
-    setCurrentGraph(nextGraph);
+    setCurrentGraph(graphFactory.createDisplayGraphFromJSON(graphsJSON[index]));
   }
   
   return (
