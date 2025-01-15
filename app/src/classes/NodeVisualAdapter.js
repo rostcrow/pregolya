@@ -6,7 +6,7 @@ export default class NodeVisualAdapter {
         }
 
         if (this.toNodeVisual === undefined) {
-            throw new Error("toNodeVisual method is not implemented");
+            throw new Error("Method 'toNodeVisual' is not implemented");
         }
     }
 }

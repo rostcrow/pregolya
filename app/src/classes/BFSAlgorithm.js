@@ -1,4 +1,5 @@
 import Algorithm from "./Algorithm";
+import BFSEdgeVisualAdapter from "./BFSEdgeVisualAdapter";
 import BFSNodeVisualAdapter from "./BFSNodeVisualAdapter";
 import GraphVisualAdapter from "./GraphVisualAdapter";
 
@@ -7,7 +8,7 @@ export default class BFSAlgorithm extends Algorithm {
     #queue;
 
     constructor(graph) {
-        super(graph, new GraphVisualAdapter(new BFSNodeVisualAdapter(), null));
+        super(graph, new GraphVisualAdapter(new BFSNodeVisualAdapter(), new BFSEdgeVisualAdapter()));
         this.#queue = [];
 
         this.#init();
