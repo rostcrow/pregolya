@@ -1,5 +1,5 @@
 //Importing libraries and build-in files
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { SigmaContainer, useRegisterEvents, useSigma, useLoadGraph, ControlsContainer, FullScreenControl,} from "@react-sigma/core";
 import "@react-sigma/core/lib/react-sigma.min.css";
 import Card from 'react-bootstrap/Card';
@@ -24,6 +24,7 @@ import ZoomControl from "../ZoomControl/ZoomControl.js";
 
 //Importing css
 import "./GraphCanvas.css";
+import { CurrentGraphContext } from "../../App.js";
 
 //Layouts
 const layouts = {
@@ -109,7 +110,11 @@ const sigma_settings = {allowInvalidContainer: true, renderEdgeLabels: true, def
   loopArrow: EdgeLoopArrowProgram
 }};
 // Component that displays the graph
-export default function GraphCanvas( {graph} ) {
+export default function GraphCanvas() {
+
+  const {
+    currentGraph,
+  } = useContext(CurrentGraphContext);
 
   const [currentLayoutKey, setCurrentLayoutKey] = useState(layoutKeys[currentLayoutKeyIndex]);
 
@@ -125,7 +130,7 @@ export default function GraphCanvas( {graph} ) {
         <Card.Body className="m-0 p-1">
           <SigmaContainer style={sigma_style} settings={sigma_settings} graph={MultiGraph}>
             <GraphEvents />
-            <LoadGraph graph={graph} layoutKey={currentLayoutKey}/>
+            <LoadGraph graph={currentGraph} layoutKey={currentLayoutKey}/>
             <ControlsContainer position="bottom-right">
               <ZoomControl />
               <RescaleControl />

@@ -2,7 +2,7 @@
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "@react-sigma/core/lib/react-sigma.min.css";
-import { useState } from 'react';
+import { createContext, useState } from 'react';
 
 //Importing my components and classes
 //  Components
@@ -15,14 +15,16 @@ import GraphLoader from "./classes/GraphLoader.js";
 import GraphStyler from './classes/GraphStyler.js';
 import GraphDropdown from './components/GraphDropdown/GraphDropdown.js';
 
+export const ChoosingGraphContext = createContext(null);
+export const CurrentGraphContext = createContext(null);
+
+const graphsJSON = graphExamplesArray;
+const graphLoader = new GraphLoader();
+const graphStyler = new GraphStyler();
+
 function App() {
 
   //Init
-  let graphsJSON = graphExamplesArray;
-
-  const graphLoader = new GraphLoader();
-  const graphStyler = new GraphStyler();
-
   let firstGraph = graphLoader.load(graphsJSON[0]);
   graphStyler.style(firstGraph);
 
@@ -39,8 +41,12 @@ function App() {
   return (
     <div className="App">
       <Topbar />
-      <GraphDropdown graphsJSON={graphsJSON} itemsFunc={changeCurrentGraph}/>
-      <GraphCanvas graph={currentGraph}/>
+      <ChoosingGraphContext.Provider value={{graphsJSON, changeCurrentGraph}}>
+        <GraphDropdown />
+      </ChoosingGraphContext.Provider>
+      <CurrentGraphContext.Provider value={{currentGraph}}>
+        <GraphCanvas />
+      </CurrentGraphContext.Provider>
 
       <script src="https://cdnjs.cloudflare.com/ajax/libs/sigma.js/2.4.0/sigma.min.js"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/graphology/0.25.4/graphology.umd.min.js"></script>
