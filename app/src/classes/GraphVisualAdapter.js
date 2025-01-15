@@ -1,12 +1,12 @@
 
 export default class GraphVisualAdapter {
     
-    #nodeAttributesAdapter;
-    #edgeAttributesAdapter;
+    #nodeVisualAdapter;
+    #edgeVisualAdapter;
 
-    constructor (nodeAttributesAdapter, edgeAttributesAdapter) {
-        this.#nodeAttributesAdapter = nodeAttributesAdapter;
-        this.#edgeAttributesAdapter = edgeAttributesAdapter;
+    constructor (nodeVisualAdapter, edgeVisualAdapter) {
+        this.#nodeVisualAdapter = nodeVisualAdapter;
+        this.#edgeVisualAdapter = edgeVisualAdapter;
     }
 
     toGraphVisual (graphAttributes) {
@@ -14,11 +14,13 @@ export default class GraphVisualAdapter {
 
         //Adapting nodes
         for (const key in graphAttributes["nodes"]) {
-            ret["nodes"][key] = this.#nodeAttributesAdapter.toNodeVisual(graphAttributes["nodes"][key]);
+            ret["nodes"][key] = this.#nodeVisualAdapter.toNodeVisual(graphAttributes["nodes"][key]);
         }
 
         //Adapting edges
-        //TODO
+        for (const key in graphAttributes["edges"]) {
+            ret["edges"][key] = this.#edgeVisualAdapter.toEdgeVisual(graphAttributes["edges"][key]);
+        }
 
         return ret;
     }
