@@ -11,9 +11,8 @@ export default class GraphFactory {
     #createRawGraph (graph, keepEdgeKeys) {
 
         //Creating new raw graph
-        console.log(graph.type.toString());
         let rawGraph = new Graph({multi: true, type: graph.type});
-        if (rawGraph.type == "directed") {
+        if (rawGraph.type === "directed") {
             rawGraph.setAttribute("directed", true);
         } else {
             rawGraph.setAttribute("directed", false);
@@ -76,7 +75,6 @@ export default class GraphFactory {
     createDisplayGraphFromGraph(graph, keepEdgeKeys) {
         
         let displayGraph = this.#createRawGraph(graph, keepEdgeKeys);
-        console.log("Display: " + displayGraph.type);
 
         //Setting size and color to nodes
         displayGraph.forEachNode((node) => {
@@ -158,6 +156,15 @@ export default class GraphFactory {
     createDisplayGraphFromJSON (json) {
         let jsonGraph = this.#createGraphFromJSON(json);
         return this.createDisplayGraphFromGraph (jsonGraph, false);
+    }
+
+    createAlgorithmGraphFromGraph (graph, keepEdgeKeys) {
+        return this.#createRawGraph(graph, keepEdgeKeys);
+    }
+
+    createAlgorithmGraphFromJSON(json) {
+        let jsonGraph = this.#createGraphFromJSON(json);
+        return this.createAlgorithmGraphFromGraph(jsonGraph, false);
     }
 
 }

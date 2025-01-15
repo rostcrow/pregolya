@@ -1,5 +1,5 @@
 //Importing libraries and build-in files
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { SigmaContainer, useRegisterEvents, useSigma, useLoadGraph, ControlsContainer, FullScreenControl,} from "@react-sigma/core";
 import "@react-sigma/core/lib/react-sigma.min.css";
 import Card from 'react-bootstrap/Card';
@@ -24,7 +24,6 @@ import ZoomControl from "../ZoomControl/ZoomControl.js";
 
 //Importing css
 import "./GraphCanvas.css";
-import { CurrentGraphContext } from "../../App.js";
 
 //Layouts
 const layouts = {
@@ -99,6 +98,16 @@ function GraphEvents() {
   return null;
 }
 
+//Component that refreshes graph when state changes
+function Refresher( {state} ) {
+
+  const sigma = useSigma();
+
+  useEffect (() => {
+    sigma.refresh();
+  }, [sigma, state]);
+
+}
 
 const sigma_style = {height: "500px", width: "100%", margin: "0px", padding: "0px"};
 const sigma_settings = {allowInvalidContainer: true, renderEdgeLabels: true, defaultEdgeType: "line", edgeProgramClasses: {
@@ -113,11 +122,7 @@ const sigma_settings = {allowInvalidContainer: true, renderEdgeLabels: true, def
 export const LayoutContext = createContext(null);
 
 // Component that displays the graph
-export default function GraphCanvas() {
-
-  const {
-    currentGraph,
-  } = useContext(CurrentGraphContext);
+export default function GraphCanvas( {graph, refreshState} ) {
 
   const [currentLayoutKey, setCurrentLayoutKey] = useState(layoutKeys[currentLayoutKeyIndex]);
 
@@ -133,7 +138,8 @@ export default function GraphCanvas() {
         <Card.Body className="m-0 p-1">
           <SigmaContainer style={sigma_style} settings={sigma_settings} graph={MultiGraph}>
             <GraphEvents />
-            <LoadGraph graph={currentGraph} layoutKey={currentLayoutKey}/>
+            <LoadGraph graph={graph} layoutKey={currentLayoutKey}/>
+            <Refresher state={refreshState} />
             <ControlsContainer position="bottom-right">
               <ZoomControl />
               <RescaleControl />
