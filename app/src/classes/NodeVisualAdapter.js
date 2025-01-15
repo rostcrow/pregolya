@@ -4,9 +4,9 @@ export default class NodeVisualAdapter {
         if (this.constructor === NodeVisualAdapter) {
             throw new Error("NodeVisualAdapter class is abstract");
         }
+    }
 
-        if (this.toNodeVisual === undefined) {
-            throw new Error("Method 'toNodeVisual' is not implemented");
-        }
+    toNodeVisual(attributes) {
+        return {};
     }
 }
