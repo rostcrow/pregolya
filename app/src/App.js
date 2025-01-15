@@ -49,9 +49,7 @@ function App() {
   return (
     <div className="App">
       <Topbar />
-      <ChoosingGraphContext.Provider value={{graphsJSON, changeCurrentGraph}}>
-        <GraphDropdown />
-      </ChoosingGraphContext.Provider>
+      <GraphDropdown graphsJSON={graphsJSON} itemFunc={changeCurrentGraph} />
       <GraphCanvas graph={currentGraph} refreshState={refreshState}/>
       <NextButton func={handleNext} />
 

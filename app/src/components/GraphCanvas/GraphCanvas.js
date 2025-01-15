@@ -144,9 +144,7 @@ export default function GraphCanvas( {graph, refreshState} ) {
               <ZoomControl />
               <RescaleControl />
               <FullScreenControl/>
-              <LayoutContext.Provider value={{currentLayoutKey, changeLayoutKey}}>
-                <LayoutControl layoutKey={currentLayoutKey} buttonFunc={changeLayoutKey}/>
-              </LayoutContext.Provider>
+              <LayoutControl layoutKey={currentLayoutKey} changeLayoutKeyFunc={changeLayoutKey}/>
             </ControlsContainer>
           </SigmaContainer>
         </Card.Body>

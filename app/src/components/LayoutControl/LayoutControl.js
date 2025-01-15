@@ -1,18 +1,11 @@
 
-import { useContext } from "react";
 import { PiGraphBold } from "react-icons/pi";
-import { LayoutContext } from "../GraphCanvas/GraphCanvas";
 
-export default function LayoutControl() {
-
-    const {
-        layoutKey,
-        changeLayoutKey
-    } = useContext(LayoutContext);
+export default function LayoutControl({layoutKey, changeLayoutKeyFunc}) {
 
     return (
         <div className="react-sigma-control">
-            <button title={"Change layout\nCurrent: " + layoutKey} onClick={changeLayoutKey}><PiGraphBold /></button>
+            <button title={"Change layout\nCurrent: " + layoutKey} onClick={changeLayoutKeyFunc}><PiGraphBold /></button>
         </div>
     );
 }

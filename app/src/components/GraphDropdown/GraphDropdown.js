@@ -1,20 +1,13 @@
 import Stack from 'react-bootstrap/Stack'
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
-import { useContext } from 'react';
-import { ChoosingGraphContext } from '../../App.js';
 
-export default function GraphDropdown( ) {
-
-    const {
-        graphsJSON,
-        changeCurrentGraph
-    } = useContext(ChoosingGraphContext);
+export default function GraphDropdown( {graphsJSON, itemFunc} ) {
 
     let dropdownItems = [];
     for (const [index, graph] of graphsJSON.entries()) {
         let graphName = graph["attributes"]["name"];
-        dropdownItems.push(<Dropdown.Item key={graphName} onClick={() => changeCurrentGraph(index)}>{graphName}</Dropdown.Item>);
+        dropdownItems.push(<Dropdown.Item key={graphName} onClick={() => itemFunc(index)}>{graphName}</Dropdown.Item>);
     }
 
     return (
