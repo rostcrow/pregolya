@@ -1,4 +1,5 @@
 import NodeVisualAdapter from "./NodeVisualAdapter";
+import { NodeState } from "./BFSAlgorithm";
 
 export default class BFSNodeVisualAdapter extends NodeVisualAdapter {
 
@@ -6,13 +7,13 @@ export default class BFSNodeVisualAdapter extends NodeVisualAdapter {
         let ret = {};
 
         switch(attributes["state"]) {
-            case 0:
+            case NodeState.WHITE:
                 ret["color"] = "#0000ff";
                 break;
-            case 1:
+            case NodeState.GRAY:
                 ret["color"] = "#00ff00";
                 break;
-            case 2:
+            case NodeState.BLACK:
                 ret["color"] = "#ff0000";
                 break;
             default:
