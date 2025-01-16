@@ -19,7 +19,7 @@ export default class GraphVisualApplier {
             let edgeVisual = visual["edges"][edge];
 
             for (const attr in edgeVisual) {
-                graph.setNodeAttribute(edge, attr, edgeVisual[attr]);
+                graph.setEdgeAttribute(edge, attr, edgeVisual[attr]);
             }
         });
 
