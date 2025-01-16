@@ -22,7 +22,7 @@ export const CurrentGraphContext = createContext(null);
 
 const graphsJSON = graphExamplesArray;
 const graphFactory = new GraphFactory();
-const firstGraph = graphFactory.createDisplayGraphFromJSON(graphsJSON[1]);
+const firstGraph = graphFactory.createDisplayGraphFromJSON(graphsJSON[3]);
 const firstAlg = new BFSAlgorithm(graphFactory.createAlgorithmGraphFromGraph(firstGraph));
 
 function App() {

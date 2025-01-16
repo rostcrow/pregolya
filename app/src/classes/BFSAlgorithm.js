@@ -86,7 +86,24 @@ export default class BFSAlgorithm extends Algorithm {
     #stateNodeFromQueue (graph) {
         //Checking queue
         if (this.#queue.length === 0) {
-            return;
+
+            //Searching for WHITE node
+            let nodes = graph.nodes();
+            let nodesLength = nodes.length;
+            for (let i = 0; i < nodesLength; i++) {
+                if (graph.getNodeAttribute(nodes[i], "state") === NodeState.WHITE) {
+                    //Found
+
+                    this.#queue.push(nodes[i]);
+                    break;
+                }
+            }
+
+            if (this.#queue.length === 0) {
+                //Not found
+                
+                return;
+            }
         }
 
         //Getting node from queue
