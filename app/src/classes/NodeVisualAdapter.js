@@ -6,7 +6,7 @@ export default class NodeVisualAdapter {
         }
     }
 
-    toNodeVisual(attributes) {
+    toNodeVisual(key, attributes) {
         return {};
     }
 }

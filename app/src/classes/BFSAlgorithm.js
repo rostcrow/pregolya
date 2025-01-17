@@ -3,9 +3,17 @@ import BFSEdgeVisualAdapter from "./BFSEdgeVisualAdapter";
 import BFSNodeVisualAdapter from "./BFSNodeVisualAdapter";
 import GraphVisualAdapter from "./GraphVisualAdapter";
 
+const INFINITY = "∞";
+
 const State = {
     NODE_FROM_QUEUE: 0,
     COLORING_NEIGHBORS: 1
+}
+
+export const NodeAttributes = {
+    STATE: 0,
+    VISITED_FROM: 1,
+    DISTANCE_FROM_START: 2
 }
 
 export const NodeState = {
@@ -45,17 +53,20 @@ export default class BFSAlgorithm extends Algorithm {
 
         //Setting state for all nodes
         graph.forEachNode((node) => {
-            graph.setNodeAttribute(node, "state", NodeState.WHITE);
+            graph.setNodeAttribute(node, NodeAttributes.STATE, NodeState.WHITE);
+            graph.setNodeAttribute(node, NodeAttributes.VISITED_FROM, null);
+            graph.setNodeAttribute(node, NodeAttributes.DISTANCE_FROM_START, INFINITY);
         });
 
         //Setting starting node
         let startingNode = this.getGraph().nodes()[0];
         this.#queue.push(startingNode);
-        graph.setNodeAttribute(startingNode, "state", NodeState.GRAY);
+        graph.setNodeAttribute(startingNode, NodeAttributes.STATE, NodeState.GRAY);
+        graph.setNodeAttribute(startingNode, NodeAttributes.DISTANCE_FROM_START, 0);
 
         //Setting state for all edges
         graph.forEachEdge((edge) => {
-            graph.setEdgeAttribute(edge, "state", EdgeState.NORMAL);
+            graph.setEdgeAttribute(edge, NodeAttributes.STATE, EdgeState.NORMAL);
         });
     }
 
@@ -64,7 +75,7 @@ export default class BFSAlgorithm extends Algorithm {
 
         //Setting highlighted edge to normal
         if (this.#highlightedEdge !== -1) {
-            graph.setEdgeAttribute(this.#highlightedEdge, "state", EdgeState.NORMAL);
+            graph.setEdgeAttribute(this.#highlightedEdge, NodeAttributes.STATE, EdgeState.NORMAL);
         }
         
         switch (this.#state) {
@@ -91,7 +102,7 @@ export default class BFSAlgorithm extends Algorithm {
             let nodes = graph.nodes();
             let nodesLength = nodes.length;
             for (let i = 0; i < nodesLength; i++) {
-                if (graph.getNodeAttribute(nodes[i], "state") === NodeState.WHITE) {
+                if (graph.getNodeAttribute(nodes[i], NodeAttributes.STATE) === NodeState.WHITE) {
                     //Found
 
                     this.#queue.push(nodes[i]);
@@ -108,7 +119,7 @@ export default class BFSAlgorithm extends Algorithm {
 
         //Getting node from queue
         this.#currentNode = this.#queue.shift();
-        graph.setNodeAttribute(this.#currentNode, "state", NodeState.BLACK);
+        graph.setNodeAttribute(this.#currentNode, NodeAttributes.STATE, NodeState.BLACK);
 
         //Setting neighbors
         this.#currentNodeNeighbors = graph.neighbors(this.#currentNode);
@@ -129,15 +140,19 @@ export default class BFSAlgorithm extends Algorithm {
                 //Getting neighbor
                 let neighbor = this.#currentNodeNeighbors.shift();
 
-                if (graph.getNodeAttribute(neighbor, "state") === NodeState.WHITE) {
+                if (graph.getNodeAttribute(neighbor, NodeAttributes.STATE) === NodeState.WHITE) {
                     //Coloring neighbor
 
                     this.#queue.push(neighbor);
-                    graph.setNodeAttribute(neighbor, "state", NodeState.GRAY);
+                    graph.setNodeAttribute(neighbor, NodeAttributes.STATE, NodeState.GRAY);
+                    graph.setNodeAttribute(neighbor, NodeAttributes.VISITED_FROM, this.#currentNode);
+
+                    const distanceFromStartingNode =graph.getNodeAttribute(this.#currentNode, NodeAttributes.DISTANCE_FROM_START) + 1;
+                    graph.setNodeAttribute(neighbor, NodeAttributes.DISTANCE_FROM_START, distanceFromStartingNode);
 
                     //Highlighting edge
                     this.#highlightedEdge = graph.edges(this.#currentNode, neighbor)[0];
-                    graph.setEdgeAttribute(this.#highlightedEdge, "state", EdgeState.HIGHLIGHTED);
+                    graph.setEdgeAttribute(this.#highlightedEdge, NodeAttributes.STATE, EdgeState.HIGHLIGHTED);
 
                     break;
 

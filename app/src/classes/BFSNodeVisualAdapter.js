@@ -1,12 +1,14 @@
 import NodeVisualAdapter from "./NodeVisualAdapter";
 import { NodeState } from "./BFSAlgorithm";
+import { NodeAttributes } from "./BFSAlgorithm";
 
 export default class BFSNodeVisualAdapter extends NodeVisualAdapter {
 
-    toNodeVisual (attributes) {
+    toNodeVisual (key, attributes) {
         let ret = {};
 
-        switch(attributes["state"]) {
+        //Setting color
+        switch(attributes[NodeAttributes.STATE]) {
             case NodeState.WHITE:
                 ret["color"] = "#0000ff";
                 break;
@@ -18,6 +20,12 @@ export default class BFSNodeVisualAdapter extends NodeVisualAdapter {
                 break;
             default:
         }
+
+        //Setting label
+        let vf = attributes[NodeAttributes.VISITED_FROM];
+        let dfsn = attributes[NodeAttributes.DISTANCE_FROM_START];
+
+        ret["label"] = `${key} (${vf}, ${dfsn})`;
 
         return ret;
     }

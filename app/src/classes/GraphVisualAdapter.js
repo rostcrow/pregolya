@@ -14,7 +14,7 @@ export default class GraphVisualAdapter {
 
         //Adapting nodes
         for (const key in graphAttributes["nodes"]) {
-            ret["nodes"][key] = this.#nodeVisualAdapter.toNodeVisual(graphAttributes["nodes"][key]);
+            ret["nodes"][key] = this.#nodeVisualAdapter.toNodeVisual(key, graphAttributes["nodes"][key]);
         }
 
         //Adapting edges
