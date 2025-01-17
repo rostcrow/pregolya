@@ -76,10 +76,11 @@ export default class GraphFactory {
         
         let displayGraph = this.#createRawGraph(graph, keepEdgeKeys);
 
-        //Setting size and color to nodes
+        //Setting size, color and label to nodes
         displayGraph.forEachNode((node) => {
             displayGraph.setNodeAttribute(node, "size", DEFAULT_NODE_SIZE);
             displayGraph.setNodeAttribute(node, "color", DEFAULT_NODE_COLOR);
+            displayGraph.setNodeAttribute(node, "label", node);
         })
 
         //Setting edges
