@@ -1,5 +1,6 @@
 import EdgeVisualAdapter from "./EdgeVisualAdapter";
 import { EdgeState } from "./BFSAlgorithm";
+import { EdgeAttributes } from "./BFSAlgorithm";
 
 export default class BFSEdgeVisualAdapter extends EdgeVisualAdapter {
 
@@ -7,7 +8,7 @@ export default class BFSEdgeVisualAdapter extends EdgeVisualAdapter {
 
         let ret = {};
 
-        switch(attributes["state"]) {
+        switch(attributes[EdgeAttributes.STATE]) {
             case EdgeState.NORMAL:
                ret["color"] = "#cccccc";
                break;

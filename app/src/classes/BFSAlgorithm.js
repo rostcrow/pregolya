@@ -22,6 +22,10 @@ export const NodeState = {
     BLACK: 2
 }
 
+export const EdgeAttributes = {
+    STATE: 0
+}
+
 export const EdgeState = {
     NORMAL: 0,
     HIGHLIGHTED: 1
@@ -66,7 +70,7 @@ export default class BFSAlgorithm extends Algorithm {
 
         //Setting state for all edges
         graph.forEachEdge((edge) => {
-            graph.setEdgeAttribute(edge, NodeAttributes.STATE, EdgeState.NORMAL);
+            graph.setEdgeAttribute(edge, EdgeAttributes.STATE, EdgeState.NORMAL);
         });
     }
 
@@ -75,7 +79,7 @@ export default class BFSAlgorithm extends Algorithm {
 
         //Setting highlighted edge to normal
         if (this.#highlightedEdge !== -1) {
-            graph.setEdgeAttribute(this.#highlightedEdge, NodeAttributes.STATE, EdgeState.NORMAL);
+            graph.setEdgeAttribute(this.#highlightedEdge, EdgeAttributes.STATE, EdgeState.NORMAL);
         }
         
         switch (this.#state) {
@@ -147,12 +151,12 @@ export default class BFSAlgorithm extends Algorithm {
                     graph.setNodeAttribute(neighbor, NodeAttributes.STATE, NodeState.GRAY);
                     graph.setNodeAttribute(neighbor, NodeAttributes.VISITED_FROM, this.#currentNode);
 
-                    const distanceFromStartingNode =graph.getNodeAttribute(this.#currentNode, NodeAttributes.DISTANCE_FROM_START) + 1;
-                    graph.setNodeAttribute(neighbor, NodeAttributes.DISTANCE_FROM_START, distanceFromStartingNode);
+                    const distance = graph.getNodeAttribute(this.#currentNode, NodeAttributes.DISTANCE_FROM_START) + 1;
+                    graph.setNodeAttribute(neighbor, NodeAttributes.DISTANCE_FROM_START, distance);
 
                     //Highlighting edge
                     this.#highlightedEdge = graph.edges(this.#currentNode, neighbor)[0];
-                    graph.setEdgeAttribute(this.#highlightedEdge, NodeAttributes.STATE, EdgeState.HIGHLIGHTED);
+                    graph.setEdgeAttribute(this.#highlightedEdge, EdgeAttributes.STATE, EdgeState.HIGHLIGHTED);
 
                     break;
 
