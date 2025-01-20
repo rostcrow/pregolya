@@ -59,8 +59,16 @@ export default class AlgorithmController {
         return this.#stepHistory[this.#currentStep];
     }
 
+    algorithmIsOnStart() {
+        return this.#currentStep === 0;
+    }
+
+    algorithmIsOnEnd() {
+        return this.#algorithm.isFinished() && (this.#currentStep === this.#stepHistory.length - 1);
+    }
+
     algorithmIsRunnable() {
-        return !this.#algorithm.isFinished() || (this.#currentStep !== this.#stepHistory.length - 1);
+        return !this.algorithmIsOnEnd();
     }
 
 }
