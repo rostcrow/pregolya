@@ -11,7 +11,7 @@ import Topbar from './components/Topbar/Topbar.js';
 import GraphCanvas from './components/GraphCanvas/GraphCanvas.js';
 import BackButton from './components/BackButton/BackButton.js';
 import GraphDropdown from './components/GraphDropdown/GraphDropdown.js';
-import NextButton from './components/NextButton/NextButton.js';
+import ForwardButton from './components/ForwardButton/ForwardButton.js';
 
 //  Classes
 import graphExamplesArray from "./graph_examples/all_examples.js";
@@ -66,7 +66,7 @@ function App() {
       <GraphCanvas graph={currentGraph} refreshState={refreshState}/>
       <Container>
         <BackButton func={handleBack} />
-        <NextButton func={handleNext} />
+        <ForwardButton func={handleNext} />
       </Container>
       
 
