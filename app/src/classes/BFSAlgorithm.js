@@ -33,14 +33,16 @@ export const EdgeState = {
 
 export default class BFSAlgorithm extends Algorithm {
 
-    #queue;
+    #startingNode;
     #state;
+    #queue;
     #currentNode;
     #currentNodeNeighbors;
     #highlightedEdge;
 
-    constructor(graph) {
+    constructor(graph, startingNode) {
         super(graph, new GraphVisualAdapter(new BFSNodeVisualAdapter(), new BFSEdgeVisualAdapter()));
+        this.#startingNode = startingNode;
     }
 
     init() {
@@ -62,10 +64,9 @@ export default class BFSAlgorithm extends Algorithm {
         });
 
         //Setting starting node
-        let startingNode = this.getGraph().nodes()[0];
-        this.#queue.push(startingNode);
-        graph.setNodeAttribute(startingNode, NodeAttributes.STATE, NodeState.GRAY);
-        graph.setNodeAttribute(startingNode, NodeAttributes.DISTANCE_FROM_START, 0);
+        this.#queue.push(this.#startingNode);
+        graph.setNodeAttribute(this.#startingNode, NodeAttributes.STATE, NodeState.GRAY);
+        graph.setNodeAttribute(this.#startingNode, NodeAttributes.DISTANCE_FROM_START, 0);
 
         //Setting state for all edges
         graph.forEachEdge((edge) => {

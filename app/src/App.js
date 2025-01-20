@@ -25,7 +25,7 @@ const graphsJSON = graphExamplesArray;
 const graphFactory = new GraphFactory();
 const firstGraph = graphFactory.createDisplayGraphFromJSON(graphsJSON[0]);
 const algorithmController = new AlgorithmController();
-algorithmController.setAlgorithm(new BFSAlgorithm(graphFactory.createAlgorithmGraphFromGraph(firstGraph)));
+algorithmController.setAlgorithm(new BFSAlgorithm(graphFactory.createAlgorithmGraphFromGraph(firstGraph), "0"));
 
 function App() {
 
