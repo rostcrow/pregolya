@@ -25,7 +25,7 @@ export default class BFSNodeVisualAdapter extends NodeVisualAdapter {
         let vf = attributes[NodeAttributes.VISITED_FROM];
         let dfsn = attributes[NodeAttributes.DISTANCE_FROM_START];
 
-        ret["label"] = `${key} (${vf}, ${dfsn})`;
+        ret["label"] = `${key}\nVisited from: ${vf}\nDistance from start: ${dfsn}`;
 
         return ret;
     }

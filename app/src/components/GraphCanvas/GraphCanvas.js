@@ -21,6 +21,7 @@ import GraphLayout from "../../classes/GraphLayout.js";
 import FlushGraphLayout from "../../classes/FlushGraphLayout.js";
 import RescaleControl from "../RescaleControl/RescaleControl.js";
 import ZoomControl from "../ZoomControl/ZoomControl.js";
+import MyNodeProgram from "../../programs/MyNodeProgram/MyNodeProgram.ts";
 
 //Importing css
 import "./GraphCanvas.css";
@@ -110,7 +111,11 @@ function Refresher( {state} ) {
 }
 
 const sigma_style = {height: "500px", width: "100%", margin: "0px", padding: "0px"};
-const sigma_settings = {allowInvalidContainer: true, renderEdgeLabels: true, defaultEdgeType: "line", edgeProgramClasses: {
+const sigma_settings = {allowInvalidContainer: true, renderEdgeLabels: true, defaultEdgeType: "line", 
+  nodeProgramClasses: {
+    circle: MyNodeProgram
+  },
+  edgeProgramClasses: {
   line: EdgeRectangleProgram,
   arrow: EdgeArrowProgram,
   curved: EdgeCurveProgram,
