@@ -2,9 +2,10 @@
 import Graph from "graphology";
 import { indexParallelEdgesIndex, DEFAULT_EDGE_CURVATURE} from "@sigma/edge-curve";
 
-const DEFAULT_NODE_COLOR = "#0000FF";
-const DEFAULT_NODE_SIZE = 15;
-const DEFAULT_EDGE_SIZE = 8;
+export const DEFAULT_NODE_COLOR = "#0D6EFD";
+const DEFAULT_NODE_SIZE = 10;
+export const DEFAULT_EDGE_COLOR = "#CCCCCC";
+const DEFAULT_EDGE_SIZE = 6;
 
 export default class GraphFactory {
 
@@ -86,8 +87,9 @@ export default class GraphFactory {
         //Setting edges
         displayGraph.forEachEdge((edge) => {
 
-            //Setting edge size
+            //Setting edge size and color
             displayGraph.setEdgeAttribute(edge, "size", DEFAULT_EDGE_SIZE);
+            displayGraph.setEdgeAttribute(edge, "color", DEFAULT_EDGE_COLOR);
 
             //Setting weight label
             if (displayGraph.getAttribute("weighted")) {

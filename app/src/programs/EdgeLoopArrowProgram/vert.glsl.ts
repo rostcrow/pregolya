@@ -17,7 +17,7 @@ const float bias = 255.0 / 254.0;
 void main() {
 
   const float outer_radius = 0.1;
-  float inner_radius = outer_radius - 16.0 * u_correctionRatio / u_sizeRatio;
+  float inner_radius = outer_radius - 12.0 * u_correctionRatio / u_sizeRatio;
   
   float sizeRatioInv = max(1.0 / u_sizeRatio, 1.0);
   float ratio = u_correctionRatio * sizeRatioInv;

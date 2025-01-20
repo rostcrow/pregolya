@@ -1,6 +1,10 @@
 import NodeVisualAdapter from "./NodeVisualAdapter";
 import { NodeState } from "./BFSAlgorithm";
 import { NodeAttributes } from "./BFSAlgorithm";
+import { DEFAULT_NODE_COLOR } from "./GraphFactory";
+
+const GRAY_COLOR = "#888888";
+const BLACK_COLOR = "#000000";
 
 export default class BFSNodeVisualAdapter extends NodeVisualAdapter {
 
@@ -10,13 +14,13 @@ export default class BFSNodeVisualAdapter extends NodeVisualAdapter {
         //Setting color
         switch(attributes[NodeAttributes.STATE]) {
             case NodeState.WHITE:
-                ret["color"] = "#0000ff";
+                ret["color"] = DEFAULT_NODE_COLOR;
                 break;
             case NodeState.GRAY:
-                ret["color"] = "#00ff00";
+                ret["color"] = GRAY_COLOR;
                 break;
             case NodeState.BLACK:
-                ret["color"] = "#ff0000";
+                ret["color"] = BLACK_COLOR;
                 break;
             default:
         }
