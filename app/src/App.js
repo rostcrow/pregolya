@@ -3,35 +3,36 @@ import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "@react-sigma/core/lib/react-sigma.min.css";
 import { createContext, useState } from 'react';
+import Container from 'react-bootstrap/esm/Container.js';
 
 //Importing my components and classes
 //  Components
 import Topbar from './components/Topbar/Topbar.js';
 import GraphCanvas from './components/GraphCanvas/GraphCanvas.js';
+import BackButton from './components/BackButton/BackButton.js';
+import GraphDropdown from './components/GraphDropdown/GraphDropdown.js';
+import NextButton from './components/NextButton/NextButton.js';
 
 //  Classes
 import graphExamplesArray from "./graph_examples/all_examples.js";
-import GraphDropdown from './components/GraphDropdown/GraphDropdown.js';
 import GraphFactory from './classes/GraphFactory.js';
-import NextButton from './components/NextButton/NextButton.js';
 import GraphVisualApplier from './classes/GraphVisualApplier.js';
 import BFSAlgorithm from './classes/BFSAlgorithm.js';
-import Container from 'react-bootstrap/esm/Container.js';
-import BackButton from './components/BackButton/BackButton.js';
+import AlgorithmController from './classes/AlgorithmController.js';
 
 export const ChoosingGraphContext = createContext(null);
 export const CurrentGraphContext = createContext(null);
 
 const graphsJSON = graphExamplesArray;
 const graphFactory = new GraphFactory();
-const firstGraph = graphFactory.createDisplayGraphFromJSON(graphsJSON[1]);
-const firstAlg = new BFSAlgorithm(graphFactory.createAlgorithmGraphFromGraph(firstGraph));
+const firstGraph = graphFactory.createDisplayGraphFromJSON(graphsJSON[0]);
+const algorithmController = new AlgorithmController();
+algorithmController.setAlgorithm(new BFSAlgorithm(graphFactory.createAlgorithmGraphFromGraph(firstGraph)));
 
 function App() {
 
   const [currentGraph, setCurrentGraph] = useState(firstGraph);
   const [refreshState, setRefreshState] = useState(true);
-  const [currentAlgorithm, setCurrentAlgorithm] = useState(firstAlg);
 
   //Handling dropdown choice
   function changeCurrentGraph (index) {
@@ -40,7 +41,7 @@ function App() {
 
   //Updates graph based on current algorithm state
   function updateGraph() {
-    let visual = currentAlgorithm.getGraphVisual();
+    let visual = algorithmController.getCurrentGraphVisual();
     GraphVisualApplier.apply(currentGraph, visual);
 
     setRefreshState(refreshState => !refreshState);
@@ -48,13 +49,13 @@ function App() {
 
   //Handle back button
   function handleBack() {
-    currentAlgorithm.back();
+    algorithmController.back();
     updateGraph();
   }
 
   //Handle next button
   function handleNext() {
-    currentAlgorithm.next();
+    algorithmController.forward();
     updateGraph();
   }
   

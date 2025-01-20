@@ -41,10 +41,9 @@ export default class BFSAlgorithm extends Algorithm {
 
     constructor(graph) {
         super(graph, new GraphVisualAdapter(new BFSNodeVisualAdapter(), new BFSEdgeVisualAdapter()));
-        this.#init();
     }
 
-    #init() {
+    init() {
 
         //Initializing attributes
         this.#queue = [];
@@ -74,7 +73,8 @@ export default class BFSAlgorithm extends Algorithm {
         });
     }
 
-    nextAlg() {
+    forward() {
+
         let graph = this.getGraph();
 
         //Setting highlighted edge to normal
@@ -115,8 +115,9 @@ export default class BFSAlgorithm extends Algorithm {
             }
 
             if (this.#queue.length === 0) {
-                //Not found
+                //Not found, algorithm ends
                 
+                this.setFinished();
                 return;
             }
         }
@@ -186,7 +187,7 @@ export default class BFSAlgorithm extends Algorithm {
 
             if (noNeighborColored) {
                 //Nothing happened, run again
-                this.next();
+                this.forward();
             }
         }
 

@@ -1,54 +1,36 @@
 
-const DEFAULT_GRAPH_VISUAL = {"nodes": {}, "edges": {}};
-
 export default class Algorithm {
 
     #graph;
     #visualAdapter;
-    #stepHistory;
-    #currentStep;
+    #finished;
 
     constructor (graph, visaulAdapter) {
         this.#graph = graph;
         this.#visualAdapter = visaulAdapter;
-        this.#stepHistory = [DEFAULT_GRAPH_VISUAL];
-        this.#currentStep = 0;
+        this.#finished = false;
 
         if (this.constructor === Algorithm) {
             throw new Error("Algorithm class is abstract");
         }
 
-        if (this.next === undefined) {
-            throw new Error("Method 'next' is not implemented");
+        if (this.init === undefined) {
+            throw new Error("Method 'init' is not implemented");
         }
-    }
 
-    back() {
-        if (this.#currentStep > 0) {
-            this.#currentStep--;
+        if (this.forward === undefined) {
+            throw new Error("Method 'forward' is not implemented");
         }
-    }
-
-    next() {
-        if (this.#currentStep === this.#stepHistory.length - 1) {
-            this.nextAlg();
-            this.#stepHistory.push(this.#createGraphVisual());
-        }
-        this.#currentStep++;
-    }
-
-    nextAlg() {
-        throw new Error("Method 'nextAlg' should be overriden by concrete algorithm class");
     }
 
     getGraph() {
         return this.#graph;
     }
 
-    #createGraphVisual() {
+    getGraphVisual() {
 
         //Getting graph attributes
-        let graphAttributes = DEFAULT_GRAPH_VISUAL;
+        let graphAttributes = {"nodes": {}, "edges": {}};
 
         this.#graph.forEachNode((node, attributes) => {
             graphAttributes["nodes"][node] = attributes;
@@ -60,16 +42,14 @@ export default class Algorithm {
 
         //Adapting
         return this.#visualAdapter.toGraphVisual(graphAttributes);
-
+        
     }
 
-    getGraphVisual() {
+    isFinished() {
+        return this.#finished;
+    }
 
-        if (this.#currentStep >= 0 && this.#currentStep < this.#stepHistory.length) {
-            return this.#stepHistory[this.#currentStep];
-        }
-
-        return DEFAULT_GRAPH_VISUAL;
-        
+    setFinished() {
+        this.#finished = true;
     }
 }
