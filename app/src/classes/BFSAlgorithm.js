@@ -151,7 +151,15 @@ export default class BFSAlgorithm extends Algorithm {
                     graph.setNodeAttribute(neighbor, NodeAttributes.STATE, NodeState.GRAY);
                     graph.setNodeAttribute(neighbor, NodeAttributes.VISITED_FROM, this.#currentNode);
 
-                    const distance = graph.getNodeAttribute(this.#currentNode, NodeAttributes.DISTANCE_FROM_START) + 1;
+                    //Counting distance from starting node
+                    let distance;
+                    const previousDistance = graph.getNodeAttribute(this.#currentNode, NodeAttributes.DISTANCE_FROM_START);
+                    if (previousDistance === INFINITY) {
+                        distance = INFINITY;
+                    } else {
+                        distance = previousDistance + 1;
+                    }
+                    
                     graph.setNodeAttribute(neighbor, NodeAttributes.DISTANCE_FROM_START, distance);
 
                     //Highlighting edge
