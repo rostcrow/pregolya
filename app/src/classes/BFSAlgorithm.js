@@ -74,7 +74,7 @@ export default class BFSAlgorithm extends Algorithm {
         });
     }
 
-    next() {
+    nextAlg() {
         let graph = this.getGraph();
 
         //Setting highlighted edge to normal

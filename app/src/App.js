@@ -16,6 +16,8 @@ import GraphFactory from './classes/GraphFactory.js';
 import NextButton from './components/NextButton/NextButton.js';
 import GraphVisualApplier from './classes/GraphVisualApplier.js';
 import BFSAlgorithm from './classes/BFSAlgorithm.js';
+import Container from 'react-bootstrap/esm/Container.js';
+import BackButton from './components/BackButton/BackButton.js';
 
 export const ChoosingGraphContext = createContext(null);
 export const CurrentGraphContext = createContext(null);
@@ -36,14 +38,24 @@ function App() {
     setCurrentGraph(graphFactory.createDisplayGraphFromJSON(graphsJSON[index]));
   }
 
-  //Handle next button
-  function handleNext() {
-    
-    currentAlgorithm.next();
+  //Updates graph based on current algorithm state
+  function updateGraph() {
     let visual = currentAlgorithm.getGraphVisual();
     GraphVisualApplier.apply(currentGraph, visual);
 
     setRefreshState(refreshState => !refreshState);
+  }
+
+  //Handle back button
+  function handleBack() {
+    currentAlgorithm.back();
+    updateGraph();
+  }
+
+  //Handle next button
+  function handleNext() {
+    currentAlgorithm.next();
+    updateGraph();
   }
   
   return (
@@ -51,7 +63,11 @@ function App() {
       <Topbar />
       <GraphDropdown graphsJSON={graphsJSON} itemFunc={changeCurrentGraph} />
       <GraphCanvas graph={currentGraph} refreshState={refreshState}/>
-      <NextButton func={handleNext} />
+      <Container>
+        <BackButton func={handleBack} />
+        <NextButton func={handleNext} />
+      </Container>
+      
 
       <script src="https://cdnjs.cloudflare.com/ajax/libs/sigma.js/2.4.0/sigma.min.js"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/graphology/0.25.4/graphology.umd.min.js"></script>
