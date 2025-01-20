@@ -126,7 +126,7 @@ export default class BFSAlgorithm extends Algorithm {
         graph.setNodeAttribute(this.#currentNode, NodeAttributes.STATE, NodeState.BLACK);
 
         //Setting neighbors
-        this.#currentNodeNeighbors = graph.neighbors(this.#currentNode);
+        this.#currentNodeNeighbors = graph.outboundNeighbors(this.#currentNode);
 
         //Switching state
         if (this.#currentNodeNeighbors.length !== 0) {
