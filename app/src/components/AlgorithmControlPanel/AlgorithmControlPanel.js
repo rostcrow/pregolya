@@ -1,6 +1,7 @@
 import Container from "react-bootstrap/esm/Container";
 import { BsChevronBarLeft, BsChevronLeft, BsChevronRight, BsChevronBarRight, BsPlay, BsStop } from "react-icons/bs";
 import { useState } from "react";
+import Form from "react-bootstrap/Form";
 
 const DEFAULT_RUN_BUTTON_STYLE = "btn btn-primary mt-2 ms-2";
 const DEFAULT_OTHER_BUTTON_STYLE = "btn btn-secondary mt-2 ms-2";
@@ -9,9 +10,11 @@ let running = false;
 
 export default function AlgorithmControlPanel( {algorithmController, updateGraph} ) {
 
+    //States
     const [runningState, setRunningState] = useState(false);
     const [start, setStart] = useState(true);
     const [end, setEnd] = useState(false);
+    const [runSpeed, setRunSpeed] = useState(6);
 
     //Setting dynamic variables dependent on runningState
     let buttonStyles = [DEFAULT_OTHER_BUTTON_STYLE, DEFAULT_OTHER_BUTTON_STYLE, 
@@ -115,12 +118,15 @@ export default function AlgorithmControlPanel( {algorithmController, updateGraph
             return new Promise(resolve => setTimeout(resolve, ms));
         }
 
+        //Counting sleep duration
+        let sleepDurationMs = 1000 / runSpeed;
+
         //Run function
         async function run() {
             while(running && algorithmController.algorithmIsRunnable()) {
                 algorithmController.forward();
                 updateGraph();
-                await sleep(100);
+                await sleep(sleepDurationMs);
             }
 
             //Run end
@@ -152,24 +158,38 @@ export default function AlgorithmControlPanel( {algorithmController, updateGraph
         setStartEndStates();
     }
 
+    //Handle range change
+    function handleRange(value) {
+        setRunSpeed(value);
+    }
+
     return (
-        <Container>
-            <button title="Jump to start" type="button" className={startButtonStyle} onClick={handleJumpToStart}>
-                <BsChevronBarLeft />
-            </button>
-            <button title="Back" type="button" className={backButtonStyle} onClick={handleBack}>
-                <BsChevronLeft />
-            </button>
-            <button title={runButtonTitle} type="button" className={runButtonStyle} onClick={handleRun}>
-                {runButtonIcon}
-            </button>
-            <button title="Forward" type="button" className={forwardButtonStyle} onClick={handleForward}>
-                <BsChevronRight />
-            </button>
-            <button title="Jump to end" type="button" className={endButtonStyle} onClick={handleJumpToEnd}>
-                <BsChevronBarRight />
-            </button>
-        </Container>
+        <>
+            <Container>
+                <button title="Jump to start" type="button" className={startButtonStyle} onClick={handleJumpToStart}>
+                    <BsChevronBarLeft />
+                </button>
+                <button title="Back" type="button" className={backButtonStyle} onClick={handleBack}>
+                    <BsChevronLeft />
+                </button>
+                <button title={runButtonTitle} type="button" className={runButtonStyle} onClick={handleRun}>
+                    {runButtonIcon}
+                </button>
+                <button title="Forward" type="button" className={forwardButtonStyle} onClick={handleForward}>
+                    <BsChevronRight />
+                </button>
+                <button title="Jump to end" type="button" className={endButtonStyle} onClick={handleJumpToEnd}>
+                    <BsChevronBarRight />
+                </button>
+            </Container>
+            <Container>
+                <p className="mt-3">Run speed: {runSpeed}</p>
+                <Form.Range className="mb-5 w-25" onChange={e => handleRange(e.target.value)} min={1} max={10} 
+                    disabled={runningState}/>
+
+            </Container>
+        </>
+
     );
 
 }
