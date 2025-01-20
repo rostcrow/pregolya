@@ -19,6 +19,8 @@ import GraphFactory from './classes/GraphFactory.js';
 import GraphVisualApplier from './classes/GraphVisualApplier.js';
 import BFSAlgorithm from './classes/BFSAlgorithm.js';
 import AlgorithmController from './classes/AlgorithmController.js';
+import JumpToEndButton from './components/JumpToEndButton/JumpToEndButton.js';
+import JumpToStartButton from './components/JumpToStartButton/JumpToStartButton.js';
 
 export const ChoosingGraphContext = createContext(null);
 export const CurrentGraphContext = createContext(null);
@@ -47,6 +49,11 @@ function App() {
     setRefreshState(refreshState => !refreshState);
   }
 
+  function handleJumpToStart() {
+    algorithmController.jumpToStart();
+    updateGraph();
+  }
+
   //Handle back button
   function handleBack() {
     algorithmController.back();
@@ -58,6 +65,12 @@ function App() {
     algorithmController.forward();
     updateGraph();
   }
+
+  //Handle jump to end button
+  function handleJumpToEnd() {
+    algorithmController.jumpToEnd();
+    updateGraph();
+  }
   
   return (
     <div className="App">
@@ -65,8 +78,10 @@ function App() {
       <GraphDropdown graphsJSON={graphsJSON} itemFunc={changeCurrentGraph} />
       <GraphCanvas graph={currentGraph} refreshState={refreshState}/>
       <Container>
+        <JumpToStartButton func={handleJumpToStart} />
         <BackButton func={handleBack} />
         <ForwardButton func={handleNext} />
+        <JumpToEndButton func={handleJumpToEnd} />
       </Container>
       
 

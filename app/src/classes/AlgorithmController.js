@@ -15,6 +15,10 @@ export default class AlgorithmController {
         this.#currentStep = 0;
     }
 
+    jumpToStart() {
+        this.#currentStep = 0;
+    }
+
     back() {
         if (this.#currentStep > 0) {
             this.#currentStep--;
@@ -41,6 +45,14 @@ export default class AlgorithmController {
         }
 
         this.#currentStep++;
+    }
+
+    jumpToEnd() {
+        while (!this.#algorithm.isFinished()) {
+            this.forward();
+        }
+
+        this.#currentStep = this.#stepHistory.length - 1;
     }
 
     getCurrentGraphVisual() {
