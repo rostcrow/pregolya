@@ -1,4 +1,3 @@
-import ErrorThrower from "./ErrorThrower";
 
 export default class AlgorithmController {
 
@@ -9,16 +8,11 @@ export default class AlgorithmController {
 
     constructor (algorithm, algorithmMementoFactory) {
         this.#algorithm = algorithm;
-
         this.#algorithmMementoFactory = algorithmMementoFactory;
         this.#algorithmMementos = [];
         this.#currentStep = 0;
 
         this.#makeMemento();
-
-        if (this.constructor === AlgorithmController) {
-            ErrorThrower.classIsAbstract("AlgorithmController");
-        }
     }
     
     #makeMemento () {

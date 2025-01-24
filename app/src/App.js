@@ -19,7 +19,12 @@ import SidePanel from './components/SidePanel/SidePanel.js';
 import graphExamplesArray from "./graph_examples/all_examples.js";
 import GraphFactory from './classes/GraphFactory.js';
 import GraphVisualApplier from './classes/GraphVisualApplier.js';
-import BFSAlgorithmController from './classes/BFSAlgorithmController.js';
+import AlgorithmHeader from './classes/AlgorithmHeader.js';
+import BFSAlgorithm from './classes/BFSAlgorithm.js';
+import BFSNodeVisualAdapter from './classes/BFSNodeVisualAdapter.js';
+import BFSEdgeVisualAdapter from './classes/BFSEdgeVisualAdapter.js';
+import BFSSideComponentsFactory from './classes/BFSSideComponentsFactory.js';
+import AlgorithmControllerFactory from './classes/AlgorithmControllerFactory.js';
 
 export const ChoosingGraphContext = createContext(null);
 export const CurrentGraphContext = createContext(null);
@@ -27,7 +32,13 @@ export const CurrentGraphContext = createContext(null);
 const graphsJSON = graphExamplesArray;
 const graphFactory = new GraphFactory();
 const firstGraph = graphFactory.createDisplayGraphFromJSON(graphsJSON[0]);
-const algorithmController = new BFSAlgorithmController(firstGraph);
+const firstAlgGraph = graphFactory.createAlgorithmGraphFromGraph(firstGraph, true);
+
+const bfs = new AlgorithmHeader(
+  "Broad-first search (BFS)", 
+  BFSAlgorithm, BFSNodeVisualAdapter, BFSEdgeVisualAdapter, BFSSideComponentsFactory
+);
+const algorithmController = AlgorithmControllerFactory.createAlgorithmController(firstAlgGraph, bfs, "0");
 
 function App() {
 
