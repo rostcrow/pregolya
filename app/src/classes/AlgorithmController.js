@@ -11,7 +11,7 @@ export default class AlgorithmController {
         this.#algorithm.init();
         
         //Step history init
-        this.#stepHistory = [this.#algorithm.getGraphVisual()];
+        this.#stepHistory = [this.#algorithm.getData()];
         this.#currentStep = 0;
     }
 
@@ -41,7 +41,7 @@ export default class AlgorithmController {
             }
 
             //Saving to history
-            this.#stepHistory.push(this.#algorithm.getGraphVisual());
+            this.#stepHistory.push(this.#algorithm.getData());
         }
 
         this.#currentStep++;
@@ -56,7 +56,7 @@ export default class AlgorithmController {
     }
 
     getCurrentGraphVisual() {
-        return this.#stepHistory[this.#currentStep];
+        return this.#stepHistory[this.#currentStep]["visual"];
     }
 
     algorithmIsOnStart() {
@@ -71,4 +71,7 @@ export default class AlgorithmController {
         return !this.algorithmIsOnEnd();
     }
 
+    getCurrentSideComponents() {
+        return this.#stepHistory[this.#currentStep]["components"];
+    }
 }

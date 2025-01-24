@@ -1,13 +1,16 @@
+import BFSComponentCreator from "./BFSComponentCreator";
 
 export default class Algorithm {
 
     #graph;
     #visualAdapter;
+    #componentCreator;
     #finished;
 
-    constructor (graph, visaulAdapter) {
+    constructor (graph, visaulAdapter, componentCreator) {
         this.#graph = graph;
         this.#visualAdapter = visaulAdapter;
+        this.#componentCreator = componentCreator;
         this.#finished = false;
 
         if (this.constructor === Algorithm) {
@@ -43,6 +46,18 @@ export default class Algorithm {
         //Adapting
         return this.#visualAdapter.toGraphVisual(graphAttributes);
         
+    }
+
+    getComponentData() {
+        return {};
+    }
+
+    getData() {
+        return {"visual": this.getGraphVisual(), "components": new BFSComponentCreator().createComponents(this.getComponentData())};
+    }
+
+    getSideComponents() {
+        return this.#componentCreator.createComponents(this.getComponentData());
     }
 
     isFinished() {

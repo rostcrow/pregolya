@@ -194,4 +194,8 @@ export default class BFSAlgorithm extends Algorithm {
 
     }
 
+    getComponentData() {
+        return {"queue": this.#queue};
+    }
+
 }

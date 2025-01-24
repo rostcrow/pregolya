@@ -139,7 +139,7 @@ export default function GraphCanvas( {graph, refreshState} ) {
 
   return (
     <>
-      <Card className="w-75 mx-3 my-3 p-0">
+      <Card className="mx-3 my-3 p-0">
         <Card.Body className="m-0 p-1">
           <SigmaContainer style={sigma_style} settings={sigma_settings} graph={MultiGraph}>
             <GraphEvents />
