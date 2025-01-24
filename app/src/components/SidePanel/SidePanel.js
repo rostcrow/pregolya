@@ -1,18 +1,16 @@
 import Nav from 'react-bootstrap/Nav';
 import { useState } from 'react';
 
-export default function SidePanel ( {components} ) {
+export default function SidePanel ( {sideComponents} ) {
 
     const [componentIndex, setComponentIndex] = useState(0);
 
     let navItems = [];
-    for (const [index, [key, ]] of Object.entries(Object.entries(components))) {
-        navItems.push(<Nav.Item><Nav.Link onClick={() => handleClick(index)}>{key}</Nav.Link></Nav.Item>);
-    }
-
     let tabComponents = [];
-    for (const key in components) {
-        tabComponents.push(components[key]);
+
+    for (const [index, sideComponent] of sideComponents.entries()) {
+        navItems.push(<Nav.Item key={index}><Nav.Link eventKey={index} onClick={() => handleClick(index)}>{sideComponent.getName()}</Nav.Link></Nav.Item>);
+        tabComponents.push(sideComponent.getComponent());
     }
 
     function handleClick(index) {
@@ -26,9 +24,6 @@ export default function SidePanel ( {components} ) {
             </Nav>
             {tabComponents[componentIndex]}
         </>
-
-
-        
     );
 
 }

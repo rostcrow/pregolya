@@ -1,7 +1,4 @@
 import Algorithm from "./Algorithm";
-import BFSEdgeVisualAdapter from "./BFSEdgeVisualAdapter";
-import BFSNodeVisualAdapter from "./BFSNodeVisualAdapter";
-import GraphVisualAdapter from "./GraphVisualAdapter";
 
 const INFINITY = "∞";
 
@@ -41,20 +38,15 @@ export default class BFSAlgorithm extends Algorithm {
     #highlightedEdge;
 
     constructor(graph, startingNode) {
-        super(graph, new GraphVisualAdapter(new BFSNodeVisualAdapter(), new BFSEdgeVisualAdapter()));
-        this.#startingNode = startingNode;
-    }
-
-    init() {
+        super(graph);
 
         //Initializing attributes
-        this.#queue = [];
+        this.#startingNode = startingNode;
         this.#state = State.NODE_FROM_QUEUE;
+        this.#queue = [];
         this.#currentNode = -1;
         this.#currentNodeNeighbors = [];
         this.#highlightedEdge = -1;
-
-        let graph = this.getGraph();
 
         //Setting state for all nodes
         graph.forEachNode((node) => {
@@ -194,7 +186,7 @@ export default class BFSAlgorithm extends Algorithm {
 
     }
 
-    getComponentData() {
+    getData() {
         return {"queue": this.#queue};
     }
 

@@ -1,10 +1,11 @@
 
 import ListGroup from 'react-bootstrap/ListGroup';
+import SideComponent from './SideComponent';
 
-export default class BFSComponentCreator {
+export default class BFSSideComponentsFactory {
 
 
-    createComponents(data) {
+    createSideComponents(data) {
 
         let queue = data["queue"];
 
@@ -18,7 +19,7 @@ export default class BFSComponentCreator {
                 {items}
             </ListGroup>;
 
-        return {"Queue": queueComponent};
+        return [new SideComponent("Queue", queueComponent)];
     }
 
 }

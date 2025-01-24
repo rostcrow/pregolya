@@ -2,17 +2,26 @@
 export default class AlgorithmController {
 
     #algorithm
-    #stepHistory;
+    #algorithmMementoFactory;
+    #algorithmMementos;
     #currentStep;
 
-    setAlgorithm(algorithm) {
-        //Algorithm init
+    constructor (algorithm, algorithmMementoFactory) {
         this.#algorithm = algorithm;
-        this.#algorithm.init();
-        
-        //Step history init
-        this.#stepHistory = [this.#algorithm.getData()];
+
+        this.#algorithmMementoFactory = algorithmMementoFactory;
+        this.#algorithmMementos = [];
         this.#currentStep = 0;
+
+        this.#makeMemento();
+
+        if (this.constructor === AlgorithmController) {
+            throw new Error("AlgorithmController class is abstract");
+        }
+    }
+    
+    #makeMemento () {
+        this.#algorithmMementos.push(this.#algorithmMementoFactory.createAlgorithmMemento());
     }
 
     jumpToStart() {
@@ -26,7 +35,7 @@ export default class AlgorithmController {
     }
 
     forward() {
-        if (this.#currentStep === this.#stepHistory.length - 1) {
+        if (this.#currentStep === this.#algorithmMementos.length - 1) {
             if (this.#algorithm.isFinished()) {
                 //Algorithm is finished, no action made
                 return;
@@ -41,7 +50,7 @@ export default class AlgorithmController {
             }
 
             //Saving to history
-            this.#stepHistory.push(this.#algorithm.getData());
+            this.#makeMemento();
         }
 
         this.#currentStep++;
@@ -52,11 +61,7 @@ export default class AlgorithmController {
             this.forward();
         }
 
-        this.#currentStep = this.#stepHistory.length - 1;
-    }
-
-    getCurrentGraphVisual() {
-        return this.#stepHistory[this.#currentStep]["visual"];
+        this.#currentStep = this.#algorithmMementos.length - 1;
     }
 
     algorithmIsOnStart() {
@@ -64,14 +69,14 @@ export default class AlgorithmController {
     }
 
     algorithmIsOnEnd() {
-        return this.#algorithm.isFinished() && (this.#currentStep === this.#stepHistory.length - 1);
+        return this.#algorithm.isFinished() && (this.#currentStep === this.#algorithmMementos.length - 1);
     }
 
-    algorithmIsRunnable() {
-        return !this.algorithmIsOnEnd();
+    getCurrentGraphVisual() {
+        return this.#algorithmMementos[this.#currentStep].getGraphVisual();
     }
 
     getCurrentSideComponents() {
-        return this.#stepHistory[this.#currentStep]["components"];
+        return this.#algorithmMementos[this.#currentStep].getSideComponents();
     }
 }

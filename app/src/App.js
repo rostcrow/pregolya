@@ -13,15 +13,13 @@ import Topbar from './components/Topbar/Topbar.js';
 import GraphCanvas from './components/GraphCanvas/GraphCanvas.js';
 import GraphDropdown from './components/GraphDropdown/GraphDropdown.js';
 import AlgorithmControlPanel from './components/AlgorithmControlPanel/AlgorithmControlPanel.js';
+import SidePanel from './components/SidePanel/SidePanel.js';
 
 //  Classes
 import graphExamplesArray from "./graph_examples/all_examples.js";
 import GraphFactory from './classes/GraphFactory.js';
 import GraphVisualApplier from './classes/GraphVisualApplier.js';
-import BFSAlgorithm from './classes/BFSAlgorithm.js';
-import AlgorithmController from './classes/AlgorithmController.js';
-import SidePanel from './components/SidePanel/SidePanel.js';
-
+import BFSAlgorithmController from './classes/BFSAlgorithmController.js';
 
 export const ChoosingGraphContext = createContext(null);
 export const CurrentGraphContext = createContext(null);
@@ -29,14 +27,13 @@ export const CurrentGraphContext = createContext(null);
 const graphsJSON = graphExamplesArray;
 const graphFactory = new GraphFactory();
 const firstGraph = graphFactory.createDisplayGraphFromJSON(graphsJSON[0]);
-const algorithmController = new AlgorithmController();
-algorithmController.setAlgorithm(new BFSAlgorithm(graphFactory.createAlgorithmGraphFromGraph(firstGraph), "0"));
+const algorithmController = new BFSAlgorithmController(firstGraph);
 
 function App() {
 
   const [currentGraph, setCurrentGraph] = useState(firstGraph);
   const [refreshState, setRefreshState] = useState(true);
-  const [sideComponents, setSideComponents] = useState({"": <></>});
+  const [sideComponents, setSideComponents] = useState([]);
 
   //Handling dropdown choice
   function changeCurrentGraph (index) {
@@ -64,7 +61,7 @@ function App() {
             <AlgorithmControlPanel algorithmController={algorithmController} updateGraph={updateGraph} />
           </Col>
           <Col className="col-4">
-            <SidePanel components={sideComponents}/>
+            <SidePanel sideComponents={sideComponents}/>
           </Col>
         </Row>
       </Container>

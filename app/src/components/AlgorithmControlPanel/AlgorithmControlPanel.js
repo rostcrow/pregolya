@@ -123,7 +123,7 @@ export default function AlgorithmControlPanel( {algorithmController, updateGraph
 
         //Run function
         async function run() {
-            while(running && algorithmController.algorithmIsRunnable()) {
+            while(running && !algorithmController.algorithmIsOnEnd()) {
                 algorithmController.forward();
                 updateGraph();
                 await sleep(sleepDurationMs);

@@ -1,4 +1,6 @@
 
+import GraphData from "./GraphData";
+
 export default class GraphVisualAdapter {
     
     #nodeVisualAdapter;
@@ -9,20 +11,25 @@ export default class GraphVisualAdapter {
         this.#edgeVisualAdapter = edgeVisualAdapter;
     }
 
-    toGraphVisual (graphAttributes) {
-        let ret = {"nodes": {}, "edges": {}};
+    toGraphVisual (graphData) {
+        
+        let nodes = graphData.getNodes();
+        let edges = graphData.getEdges();
+
+        let retNodes = {};
+        let retEdges = {};
 
         //Adapting nodes
-        for (const key in graphAttributes["nodes"]) {
-            ret["nodes"][key] = this.#nodeVisualAdapter.toNodeVisual(key, graphAttributes["nodes"][key]);
+        for (const key in nodes) {
+            retNodes[key] = this.#nodeVisualAdapter.toNodeVisual(key, nodes[key]);
         }
 
         //Adapting edges
-        for (const key in graphAttributes["edges"]) {
-            ret["edges"][key] = this.#edgeVisualAdapter.toEdgeVisual(graphAttributes["edges"][key]);
+        for (const key in edges) {
+            retEdges[key] = this.#edgeVisualAdapter.toEdgeVisual(edges[key]);
         }
 
-        return ret;
+        return new GraphData(retNodes, retEdges);
     }
 
 }
