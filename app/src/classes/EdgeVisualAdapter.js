@@ -8,7 +8,7 @@ export default class EdgeVisualAdapter {
         }
     }
 
-    toEdgeVisual(attributes) {
+    toEdgeVisual(key, attributes) {
         return {}
     }
 }

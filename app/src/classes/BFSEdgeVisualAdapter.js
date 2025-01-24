@@ -5,7 +5,7 @@ import { DEFAULT_EDGE_COLOR } from "./GraphFactory";
 
 export default class BFSEdgeVisualAdapter extends EdgeVisualAdapter {
 
-    toEdgeVisual(attributes) {
+    toEdgeVisual(key, attributes) {
 
         let ret = {};
 

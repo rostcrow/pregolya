@@ -26,7 +26,7 @@ export default class GraphVisualAdapter {
 
         //Adapting edges
         for (const key in edges) {
-            retEdges[key] = this.#edgeVisualAdapter.toEdgeVisual(edges[key]);
+            retEdges[key] = this.#edgeVisualAdapter.toEdgeVisual(key, edges[key]);
         }
 
         return new GraphData(retNodes, retEdges);
