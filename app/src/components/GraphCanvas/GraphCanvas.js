@@ -1,5 +1,5 @@
 //Importing libraries and build-in files
-import { createContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { SigmaContainer, useRegisterEvents, useSigma, useLoadGraph, ControlsContainer, FullScreenControl,} from "@react-sigma/core";
 import "@react-sigma/core/lib/react-sigma.min.css";
 import Card from 'react-bootstrap/Card';
@@ -110,8 +110,8 @@ function Refresher( {state} ) {
 
 }
 
-const sigma_style = {height: "500px", width: "100%", margin: "0px", padding: "0px"};
-const sigma_settings = {allowInvalidContainer: true, renderEdgeLabels: true, defaultEdgeType: "line", 
+const sigmaStyle = {height: "500px", width: "100%", margin: "0px", padding: "0px"};
+const sigmaSettings = {allowInvalidContainer: true, renderEdgeLabels: true, defaultEdgeType: "line", 
   nodeProgramClasses: {
     circle: MyNodeProgram
   },
@@ -123,8 +123,6 @@ const sigma_settings = {allowInvalidContainer: true, renderEdgeLabels: true, def
   loop: EdgeLoopProgram,
   loopArrow: EdgeLoopArrowProgram
 }};
-
-export const LayoutContext = createContext(null);
 
 // Component that displays the graph
 export default function GraphCanvas( {graph, refreshState} ) {
@@ -141,7 +139,7 @@ export default function GraphCanvas( {graph, refreshState} ) {
     <>
       <Card className="mx-3 my-3 p-0">
         <Card.Body className="m-0 p-1">
-          <SigmaContainer style={sigma_style} settings={sigma_settings} graph={MultiGraph}>
+          <SigmaContainer style={sigmaStyle} settings={sigmaSettings} graph={MultiGraph}>
             <GraphEvents />
             <LoadGraph graph={graph} layoutKey={currentLayoutKey}/>
             <Refresher state={refreshState} />
