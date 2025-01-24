@@ -1,8 +1,9 @@
+import ErrorThrower from "./ErrorThrower";
 
 export default class NodeVisualAdapter {
     constructor() {
         if (this.constructor === NodeVisualAdapter) {
-            throw new Error("NodeVisualAdapter class is abstract");
+            ErrorThrower.classIsAbstract("NodeVisualAdapter");
         }
     }
 

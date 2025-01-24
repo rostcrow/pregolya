@@ -1,3 +1,4 @@
+import ErrorThrower from "./ErrorThrower";
 
 export default class AlgorithmController {
 
@@ -16,7 +17,7 @@ export default class AlgorithmController {
         this.#makeMemento();
 
         if (this.constructor === AlgorithmController) {
-            throw new Error("AlgorithmController class is abstract");
+            ErrorThrower.classIsAbstract("AlgorithmController");
         }
     }
     

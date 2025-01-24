@@ -1,3 +1,4 @@
+import ErrorThrower from "./ErrorThrower";
 
 export default class Algorithm {
 
@@ -9,15 +10,15 @@ export default class Algorithm {
         this.#finished = false;
 
         if (this.constructor === Algorithm) {
-            throw new Error("Algorithm class is abstract");
+            ErrorThrower.classIsAbstract("Algorithm");
         }
 
         if (this.forward === undefined) {
-            throw new Error("Method 'forward' is not implemented");
+            ErrorThrower.methodNotImplemented("forward");
         }
 
         if (this.getData === undefined) {
-            throw new Error ("Method 'getData' is not implemented");
+            ErrorThrower.methodNotImplemented("getData");
         }
     }
 

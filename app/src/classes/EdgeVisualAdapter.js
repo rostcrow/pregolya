@@ -1,9 +1,10 @@
+import ErrorThrower from "./ErrorThrower"
 
 export default class EdgeVisualAdapter {
 
     constructor () {
         if (this.constructor === EdgeVisualAdapter) {
-            throw new Error("EdgeVisaulAdapter class is abstract");
+            ErrorThrower.classIsAbstract("EdgeVisualAdapter");
         }
     }
 

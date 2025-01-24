@@ -1,13 +1,14 @@
+import ErrorThrower from "./ErrorThrower";
 
 export default class SideComponentsFactory {
 
     constructor () {
         if (this.constructor === SideComponentsFactory) {
-            throw new Error ("SideComponentsFactory class is abstract");
+            ErrorThrower.classIsAbstract("SideComponentsFactory");
         }
 
         if (this.createSideComponents === undefined) {
-            throw new Error ("Method 'createSideComponents' is not implemented");
+            ErrorThrower.methodNotImplemented("createSideComponents");
         }
     }
 
