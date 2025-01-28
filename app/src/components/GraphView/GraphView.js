@@ -63,7 +63,7 @@ const sigmaSettings = {allowInvalidContainer: true, renderEdgeLabels: true, defa
 export default function GraphView ( {graph, refreshState} ) {
 
     return (
-        <Card className="m-3 p-0">
+        <Card className="m-0 p-0">
             <Card.Body className="m-0 p-1">
                 <SigmaContainer style={sigmaStyle} settings={sigmaSettings} graph={MultiGraph}>
                     <LoadGraph graph={graph}/>

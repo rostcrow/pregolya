@@ -6,24 +6,20 @@ export default class AlgorithmMementoFactory {
     #graph;
     #algorithm;
     #graphVisualAdapter;
-    #sideComponentsFactory;
 
-    constructor (graph, algorithm, graphVisualAdapter, sideComponentsFactory) {
+    constructor (graph, algorithm, graphVisualAdapter) {
         this.#graph = graph;
         this.#algorithm = algorithm;
         this.#graphVisualAdapter = graphVisualAdapter;
-        this.#sideComponentsFactory = sideComponentsFactory;
     }   
 
-
     createAlgorithmMemento() {
-        let graphData = GraphVisitor.extractData(this.#graph);
-        let graphVisual = this.#graphVisualAdapter.toGraphVisual(graphData);
+        const graphData = GraphVisitor.extractData(this.#graph);
+        const graphVisual = this.#graphVisualAdapter.toGraphVisual(graphData);
 
-        let algorithmData = this.#algorithm.getData();
-        let sideComponents = this.#sideComponentsFactory.createSideComponents(algorithmData);
+        const algorithmData = structuredClone(this.#algorithm.getData());
 
-        return new AlgorithmMemento(graphVisual, sideComponents);
+        return new AlgorithmMemento(graphVisual, algorithmData);
     }
 
 }

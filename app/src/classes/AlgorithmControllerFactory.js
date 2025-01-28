@@ -15,11 +15,10 @@ export default class AlgorithmControllerFactory {
         const algorithmMementoFactory = new AlgorithmMementoFactory(
             graph,
             algorithm,
-            new GraphVisualAdapter(new nodeVisualAdapterClass(), new edgeVisualAdapterClass()),
-            new sideComponentsFactoryClass()
+            new GraphVisualAdapter(new nodeVisualAdapterClass(), new edgeVisualAdapterClass())
         );
 
-        return new AlgorithmController(algorithm, algorithmMementoFactory);
+        return new AlgorithmController(algorithm, algorithmMementoFactory, new sideComponentsFactoryClass());
     }
 
 }

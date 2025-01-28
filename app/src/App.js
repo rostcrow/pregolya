@@ -53,10 +53,14 @@ function App() {
 
   //Updates graph based on current algorithm state
   function updateGraph() {
-    let visual = algorithmController.getCurrentGraphVisual();
+
+    //Updating GraphCanvas
+    const  visual = algorithmController.getCurrentGraphVisual();
     GraphVisualApplier.apply(currentGraph, visual);
 
-    setSideComponents(algorithmController.getCurrentSideComponents());
+    //Updating SidePanel
+    const sideComp = algorithmController.getCurrentSideComponents();
+    setSideComponents(sideComp);
 
     setRefreshState(refreshState => !refreshState);
   }

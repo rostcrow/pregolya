@@ -1,5 +1,6 @@
 import Nav from 'react-bootstrap/Nav';
 import { useState } from 'react';
+import Container from 'react-bootstrap/Container';
 
 export default function SidePanel ( {sideComponents} ) {
 
@@ -9,8 +10,24 @@ export default function SidePanel ( {sideComponents} ) {
     let tabComponents = [];
 
     for (const [index, sideComponent] of sideComponents.entries()) {
-        navItems.push(<Nav.Item key={index}><Nav.Link eventKey={index} onClick={() => handleClick(index)}>{sideComponent.getName()}</Nav.Link></Nav.Item>);
-        tabComponents.push(sideComponent.getComponent());
+        navItems.push(<Nav.Item><Nav.Link eventKey={index} onClick={() => handleClick(index)}>{sideComponent.getName()}</Nav.Link></Nav.Item>);
+
+        //Counting if sideComponent is hidden or not
+        if (index === componentIndex) {
+            //Visible
+            tabComponents.push(
+                <div>
+                    {sideComponent.getComponent()}
+                </div>
+            );
+        } else {
+            //Hidden
+            tabComponents.push(
+                <div style={{height: 0, marginBottom: 0, padding: 0, visibility: "hidden"}}>
+                    {sideComponent.getComponent()}
+                </div>
+            );
+        }
     }
 
     function handleClick(index) {
@@ -22,7 +39,9 @@ export default function SidePanel ( {sideComponents} ) {
             <Nav className="mt-2" variant="tabs" defaultActiveKey="0">
                 {navItems}
             </Nav>
-            {tabComponents[componentIndex]}
+            <Container className="pt-2">
+                {tabComponents}
+            </Container>
         </>
     );
 

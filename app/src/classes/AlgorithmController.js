@@ -3,12 +3,16 @@ export default class AlgorithmController {
 
     #algorithm
     #algorithmMementoFactory;
+    #sideComponentsFactory;
+
     #algorithmMementos;
     #currentStep;
 
-    constructor (algorithm, algorithmMementoFactory) {
+    constructor (algorithm, algorithmMementoFactory, sideComponentsFactory) {
         this.#algorithm = algorithm;
         this.#algorithmMementoFactory = algorithmMementoFactory;
+        this.#sideComponentsFactory = sideComponentsFactory;
+
         this.#algorithmMementos = [];
         this.#currentStep = 0;
 
@@ -71,7 +75,13 @@ export default class AlgorithmController {
         return this.#algorithmMementos[this.#currentStep].getGraphVisual();
     }
 
-    getCurrentSideComponents() {
-        return this.#algorithmMementos[this.#currentStep].getSideComponents();
+    #getCurrentAlgorithmData() {
+        return this.#algorithmMementos[this.#currentStep].getAlgorithmData();
     }
+
+    getCurrentSideComponents() {
+        const algorithmData = this.#getCurrentAlgorithmData();
+        return this.#sideComponentsFactory.createSideComponents(algorithmData);
+    }
+
 }

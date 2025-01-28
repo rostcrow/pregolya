@@ -2,19 +2,19 @@
 export default class AlgorithmMemento {
 
     #graphVisual;
-    #sideComponents;
+    #algorithmData;
 
-    constructor(graphVisual, sideComponents) {
+    constructor(graphVisual, algorithmData) {
         this.#graphVisual = graphVisual;
-        this.#sideComponents = sideComponents;
+        this.#algorithmData = algorithmData;
     }
 
     getGraphVisual() {
         return this.#graphVisual;
     }
 
-    getSideComponents() {
-        return this.#sideComponents;
+    getAlgorithmData() {
+        return this.#algorithmData;
     }
 
 }
