@@ -8,7 +8,9 @@ import graphExamplesArray from '../graph_examples/all_examples';
 export default class BFSSideComponentsFactory {
 
 
-    createSideComponents(data) {
+    createSideComponents(additionalData) {
+
+        const data = additionalData.getData();
 
         let queue = data["queue"];
 

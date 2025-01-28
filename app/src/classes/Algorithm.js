@@ -1,4 +1,7 @@
+import AdditionalData from "./AdditionalData";
+import AlgorithmState from "./AlgorithmState";
 import ErrorThrower from "./ErrorThrower";
+import GraphVisitor from "./GraphVisitor";
 
 export default class Algorithm {
 
@@ -16,14 +19,21 @@ export default class Algorithm {
         if (this.forward === undefined) {
             ErrorThrower.methodNotImplemented("forward");
         }
-
-        if (this.getData === undefined) {
-            ErrorThrower.methodNotImplemented("getData");
-        }
     }
 
     getGraph() {
         return this.#graph;
+    }
+
+    getAdditionalData() {
+        return new AdditionalData({});
+    }
+
+    getState() {
+        const graphData = GraphVisitor.extractData(this.#graph);
+        const additionalData = this.getAdditionalData();
+
+        return new AlgorithmState(graphData.clone(), additionalData.clone());
     }
 
     isFinished() {

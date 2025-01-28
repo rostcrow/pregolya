@@ -8,7 +8,7 @@ const DEFAULT_OTHER_BUTTON_STYLE = "btn btn-secondary mt-2 ms-2";
 
 let running = false;
 
-export default function AlgorithmControlPanel( {algorithmController, updateGraph} ) {
+export default function AlgorithmControlPanel( {algorithmFacade, updateGraph} ) {
 
     //States
     const [runningState, setRunningState] = useState(false);
@@ -66,10 +66,10 @@ export default function AlgorithmControlPanel( {algorithmController, updateGraph
 
     //Functions
     function setStartEndStates() {
-        if (algorithmController.algorithmIsOnStart()) {
+        if (algorithmFacade.algorithmIsOnStart()) {
             setStart(true);
             setEnd(false);
-        } else if (algorithmController.algorithmIsOnEnd()) {
+        } else if (algorithmFacade.algorithmIsOnEnd()) {
             setStart(false);
             setEnd(true);
         } else {
@@ -81,7 +81,7 @@ export default function AlgorithmControlPanel( {algorithmController, updateGraph
     //Handle jump to start button
     function handleJumpToStart() {
         //Updating graph
-        algorithmController.jumpToStart();
+        algorithmFacade.jumpToStart();
         updateGraph();
         
         //Updating states
@@ -91,7 +91,7 @@ export default function AlgorithmControlPanel( {algorithmController, updateGraph
     //Handle back button
     function handleBack() {
         //Updating graph
-        algorithmController.back();
+        algorithmFacade.back();
         updateGraph();
 
         //Updating states
@@ -123,8 +123,8 @@ export default function AlgorithmControlPanel( {algorithmController, updateGraph
 
         //Run function
         async function run() {
-            while(running && !algorithmController.algorithmIsOnEnd()) {
-                algorithmController.forward();
+            while(running && !algorithmFacade.algorithmIsOnEnd()) {
+                algorithmFacade.forward();
                 updateGraph();
                 await sleep(sleepDurationMs);
             }
@@ -141,7 +141,7 @@ export default function AlgorithmControlPanel( {algorithmController, updateGraph
     //Handle forward button
     function handleForward() {
         //Updating graph
-        algorithmController.forward();
+        algorithmFacade.forward();
         updateGraph();
 
         //Updating states
@@ -151,7 +151,7 @@ export default function AlgorithmControlPanel( {algorithmController, updateGraph
     //Handle jump to end button
     function handleJumpToEnd() {
         //Updating graph
-        algorithmController.jumpToEnd();
+        algorithmFacade.jumpToEnd();
         updateGraph();
 
         //Updating states

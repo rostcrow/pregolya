@@ -19,12 +19,12 @@ import SidePanel from './components/SidePanel/SidePanel.js';
 import graphExamplesArray from "./graph_examples/all_examples.js";
 import GraphFactory from './classes/GraphFactory.js';
 import GraphVisualApplier from './classes/GraphVisualApplier.js';
-import AlgorithmHeader from './classes/AlgorithmHeader.js';
+import AlgorithmTag from './classes/AlgorithmTag.js';
 import BFSAlgorithm from './classes/BFSAlgorithm.js';
 import BFSNodeVisualAdapter from './classes/BFSNodeVisualAdapter.js';
 import BFSEdgeVisualAdapter from './classes/BFSEdgeVisualAdapter.js';
 import BFSSideComponentsFactory from './classes/BFSSideComponentsFactory.js';
-import AlgorithmControllerFactory from './classes/AlgorithmControllerFactory.js';
+import AlgorithmFacade from './classes/AlgorithmFacade.js';
 
 export const ChoosingGraphContext = createContext(null);
 export const CurrentGraphContext = createContext(null);
@@ -34,11 +34,12 @@ const graphFactory = new GraphFactory();
 const firstGraph = graphFactory.createDisplayGraphFromJSON(graphsJSON[0]);
 const firstAlgGraph = graphFactory.createAlgorithmGraphFromGraph(firstGraph, true);
 
-const bfs = new AlgorithmHeader(
+const bfs = new AlgorithmTag(
   "Broad-first search (BFS)", 
   BFSAlgorithm, BFSNodeVisualAdapter, BFSEdgeVisualAdapter, BFSSideComponentsFactory
 );
-const algorithmController = AlgorithmControllerFactory.createAlgorithmController(firstAlgGraph, bfs, "0");
+
+const algorithmFacade = new AlgorithmFacade(firstAlgGraph, bfs, "0");
 
 function App() {
 
@@ -55,11 +56,11 @@ function App() {
   function updateGraph() {
 
     //Updating GraphCanvas
-    const  visual = algorithmController.getCurrentGraphVisual();
+    const  visual = algorithmFacade.getCurrentGraphVisual();
     GraphVisualApplier.apply(currentGraph, visual);
 
     //Updating SidePanel
-    const sideComp = algorithmController.getCurrentSideComponents();
+    const sideComp = algorithmFacade.getCurrentSideComponents();
     setSideComponents(sideComp);
 
     setRefreshState(refreshState => !refreshState);
@@ -73,7 +74,7 @@ function App() {
         <Row>
           <Col className="col-8">
             <GraphCanvas graph={currentGraph} refreshState={refreshState}/>
-            <AlgorithmControlPanel algorithmController={algorithmController} updateGraph={updateGraph} />
+            <AlgorithmControlPanel algorithmFacade={algorithmFacade} updateGraph={updateGraph} />
           </Col>
           <Col className="col-4">
             <SidePanel sideComponents={sideComponents}/>

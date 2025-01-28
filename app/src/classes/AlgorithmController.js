@@ -2,39 +2,34 @@
 export default class AlgorithmController {
 
     #algorithm
-    #algorithmMementoFactory;
-    #sideComponentsFactory;
+    #algorithmStates;
+    #currentStateIndex;
 
-    #algorithmMementos;
-    #currentStep;
-
-    constructor (algorithm, algorithmMementoFactory, sideComponentsFactory) {
+    constructor (algorithm) {
         this.#algorithm = algorithm;
-        this.#algorithmMementoFactory = algorithmMementoFactory;
-        this.#sideComponentsFactory = sideComponentsFactory;
 
-        this.#algorithmMementos = [];
-        this.#currentStep = 0;
+        this.#algorithmStates = [];
+        this.#currentStateIndex = 0;
 
-        this.#makeMemento();
+        this.#saveState();
     }
     
-    #makeMemento () {
-        this.#algorithmMementos.push(this.#algorithmMementoFactory.createAlgorithmMemento());
+    #saveState () {
+        this.#algorithmStates.push(this.#algorithm.getState());
     }
 
     jumpToStart() {
-        this.#currentStep = 0;
+        this.#currentStateIndex = 0;
     }
 
     back() {
-        if (this.#currentStep > 0) {
-            this.#currentStep--;
+        if (this.#currentStateIndex > 0) {
+            this.#currentStateIndex--;
         }
     }
 
     forward() {
-        if (this.#currentStep === this.#algorithmMementos.length - 1) {
+        if (this.#currentStateIndex === this.#algorithmStates.length - 1) {
             if (this.#algorithm.isFinished()) {
                 //Algorithm is finished, no action made
                 return;
@@ -49,10 +44,10 @@ export default class AlgorithmController {
             }
 
             //Saving to history
-            this.#makeMemento();
+            this.#saveState();
         }
 
-        this.#currentStep++;
+        this.#currentStateIndex++;
     }
 
     jumpToEnd() {
@@ -60,28 +55,19 @@ export default class AlgorithmController {
             this.forward();
         }
 
-        this.#currentStep = this.#algorithmMementos.length - 1;
+        this.#currentStateIndex = this.#algorithmStates.length - 1;
     }
 
     algorithmIsOnStart() {
-        return this.#currentStep === 0;
+        return this.#currentStateIndex === 0;
     }
 
     algorithmIsOnEnd() {
-        return this.#algorithm.isFinished() && (this.#currentStep === this.#algorithmMementos.length - 1);
+        return this.#algorithm.isFinished() && (this.#currentStateIndex === this.#algorithmStates.length - 1);
     }
 
-    getCurrentGraphVisual() {
-        return this.#algorithmMementos[this.#currentStep].getGraphVisual();
-    }
-
-    #getCurrentAlgorithmData() {
-        return this.#algorithmMementos[this.#currentStep].getAlgorithmData();
-    }
-
-    getCurrentSideComponents() {
-        const algorithmData = this.#getCurrentAlgorithmData();
-        return this.#sideComponentsFactory.createSideComponents(algorithmData);
+    getCurrentState() {
+        return this.#algorithmStates[this.#currentStateIndex];
     }
 
 }

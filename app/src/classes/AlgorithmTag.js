@@ -1,5 +1,5 @@
 
-export default class AlgorithmHeader {
+export default class AlgorithmTag {
 
     #name;
     #algorithmClass;

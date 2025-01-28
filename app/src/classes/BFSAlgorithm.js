@@ -1,3 +1,4 @@
+import AdditionalData from "./AdditionalData";
 import Algorithm from "./Algorithm";
 
 const INFINITY = "∞";
@@ -186,8 +187,8 @@ export default class BFSAlgorithm extends Algorithm {
 
     }
 
-    getData() {
-        return {"queue": this.#queue};
+    getAdditionalData() {
+        return new AdditionalData({"queue": this.#queue});
     }
 
 }

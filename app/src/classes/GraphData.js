@@ -16,5 +16,9 @@ export default class GraphData {
     getEdges() {
         return this.#edges;
     }
+
+    clone() {
+        return new GraphData(structuredClone(this.#nodes), structuredClone(this.#edges));
+    }
     
 }
