@@ -1,7 +1,7 @@
 import AdditionalData from "./AdditionalData";
 import AlgorithmState from "./AlgorithmState";
 import ErrorThrower from "./ErrorThrower";
-import GraphVisitor from "./GraphVisitor";
+import GraphDataExtractor from "./GraphVisitor";
 
 export default class Algorithm {
 
@@ -30,7 +30,7 @@ export default class Algorithm {
     }
 
     getState() {
-        const graphData = GraphVisitor.extractData(this.#graph);
+        const graphData = GraphDataExtractor.extractData(this.#graph);
         const additionalData = this.getAdditionalData();
 
         return new AlgorithmState(graphData.clone(), additionalData.clone());

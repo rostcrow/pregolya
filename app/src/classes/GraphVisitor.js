@@ -1,7 +1,7 @@
 
 import GraphData from "./GraphData";
 
-export default class GraphVisitor {
+export default class GraphDataExtractor {
 
     static extractData (graph) {
 
