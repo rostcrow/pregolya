@@ -7,8 +7,8 @@ export default class AdditionalData {
         this.#data = data;
     }
 
-    getData() {
-        return this.#data;
+    get(name) {
+        return this.#data[name];
     }
 
     clone() {

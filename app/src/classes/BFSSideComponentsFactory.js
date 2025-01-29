@@ -3,16 +3,18 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import SideComponent from './SideComponent';
 import GraphView from '../components/GraphView/GraphView';
 import GraphFactory from './GraphFactory';
-import graphExamplesArray from '../graph_examples/all_examples';
+import { NodeAttributes, NodeState } from './BFSAlgorithm';
+import TreeLayout from './TreeLayout';
 
 export default class BFSSideComponentsFactory {
 
+    createSideComponents(algorithmState) {
 
-    createSideComponents(additionalData) {
+        const graphData = algorithmState.getGraphData();
+        const additionalData = algorithmState.getAdditionalData();
 
-        const data = additionalData.getData();
-
-        let queue = data["queue"];
+        //Queue
+        let queue = additionalData.get("queue");
 
         let items = [];
         for (const node of queue) {
@@ -24,8 +26,36 @@ export default class BFSSideComponentsFactory {
                 {items}
             </ListGroup>;
 
-        let graph = new GraphFactory().createDisplayGraphFromJSON(graphExamplesArray[0]);
-        let treeComponent = <GraphView graph={graph} refreshState={true}></GraphView>;
+        //Tree
+        const nodes = graphData.getNodes();
+
+        let outputNodes = [];
+        let outputEdges = [];
+
+        //Counting nodes and edges
+        for (const key in nodes) {
+            if (nodes[key][NodeAttributes.STATE] !== NodeState.WHITE) {
+                //Saving nonwhite nodes
+                outputNodes.push({"key": key});
+            }
+            
+            if (nodes[key][NodeAttributes.VISITED_FROM] !== null) {
+                //Making edge between child and its parent
+                outputEdges.push({"source": nodes[key][NodeAttributes.VISITED_FROM], "target": key});
+            }
+        }
+
+        //Making json
+        let graphJSON = 
+            {
+                "attributes": {"directed": true, "weighted": false},
+                "nodes": outputNodes,
+                "edges": outputEdges
+            };
+
+        //Making graph and component
+        let graph = new GraphFactory().createDisplayGraphFromJSON(graphJSON);
+        let treeComponent = <GraphView graph={graph} layout={new TreeLayout()}></GraphView>;
 
         return [new SideComponent("Queue", queueComponent), new SideComponent("Tree", treeComponent)];
     }

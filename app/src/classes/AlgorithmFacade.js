@@ -50,8 +50,8 @@ export default class AlgorithmFacade {
     }
 
     getCurrentSideComponents() {
-        let data = this.#algorithmController.getCurrentState().getAdditionalData();
-        return this.#sideComponentsFactory.createSideComponents(data);
+        let state = this.#algorithmController.getCurrentState();
+        return this.#sideComponentsFactory.createSideComponents(state);
     }
 
 }
