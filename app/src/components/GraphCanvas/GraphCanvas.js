@@ -11,14 +11,13 @@ import { MultiGraph } from "graphology";
 import circlepack from "graphology-layout/circlepack";
 import circular from "graphology-layout/circular";
 import random from "graphology-layout/random";
-import noverlap from "graphology-layout-noverlap";
 
 //Importing my classes
 import EdgeLoopProgram from "../../programs/EdgeLoopProgram/EdgeLoopProgram.ts";
 import EdgeLoopArrowProgram from "../../programs/EdgeLoopArrowProgram/EdgeLoopArrowProgram.ts";
 import LayoutControl from "../LayoutControl/LayoutControl.js";
-import GraphLayout from "../../classes/GraphLayout.js";
-import FlushGraphLayout from "../../classes/FlushGraphLayout.js";
+import GraphologyGraphLayout from "../../classes/GraphologyGraphLayout.js";
+import NoOverlapGraphLayout from "../../classes/NoOverlapGraphLayout.js";
 import RescaleControl from "../RescaleControl/RescaleControl.js";
 import ZoomControl from "../ZoomControl/ZoomControl.js";
 import MyNodeProgram from "../../programs/MyNodeProgram/MyNodeProgram.ts";
@@ -28,8 +27,8 @@ import "./GraphCanvas.css";
 
 //Layouts
 const layouts = {
-  "Circlepack": new GraphLayout(circlepack), "Circular": new GraphLayout(circular), 
-  "No overlap": new FlushGraphLayout(noverlap), "Random": new GraphLayout(random)};
+  "Circlepack": new GraphologyGraphLayout(circlepack), "Circular": new GraphologyGraphLayout(circular), 
+  "No overlap": new NoOverlapGraphLayout(), "Random": new GraphologyGraphLayout(random)};
 
 const layoutKeys = Object.keys(layouts);
 const layoutKeysLength = layoutKeys.length;

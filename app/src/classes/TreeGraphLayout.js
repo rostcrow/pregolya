@@ -1,8 +1,9 @@
+import GraphLayout from "./GraphLayout";
 
 const HORIZONTAL_SPACE = 10;
 const VERTICAL_SPACE = 30;
 
-export default class TreeLayout {
+export default class TreeGraphLayout extends GraphLayout {
 
     assign(graph) {
 

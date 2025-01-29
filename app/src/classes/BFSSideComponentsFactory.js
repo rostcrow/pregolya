@@ -4,7 +4,7 @@ import SideComponent from './SideComponent';
 import GraphView from '../components/GraphView/GraphView';
 import GraphFactory from './GraphFactory';
 import { NodeAttributes, NodeState } from './BFSAlgorithm';
-import TreeLayout from './TreeLayout';
+import TreeGraphLayout from './TreeGraphLayout';
 
 export default class BFSSideComponentsFactory {
 
@@ -55,7 +55,7 @@ export default class BFSSideComponentsFactory {
 
         //Making graph and component
         let graph = new GraphFactory().createDisplayGraphFromJSON(graphJSON);
-        let treeComponent = <GraphView graph={graph} layout={new TreeLayout()}></GraphView>;
+        let treeComponent = <GraphView graph={graph} layout={new TreeGraphLayout()}></GraphView>;
 
         return [new SideComponent("Queue", queueComponent), new SideComponent("Tree", treeComponent)];
     }

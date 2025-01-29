@@ -1,12 +1,11 @@
+import ErrorThrower from "./ErrorThrower";
 
 export default class GraphLayout {
 
-    constructor (layout) {
-        this.layout = layout;
-    }
-
-    assign (graph) {
-        this.layout.assign(graph);
+    constructor () {        
+        if (this.assign === undefined) {
+            ErrorThrower.methodNotImplemented("assign");
+        }
     }
 
 }
