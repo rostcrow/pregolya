@@ -1,7 +1,7 @@
 import AdditionalData from "./AdditionalData";
 import AlgorithmState from "./AlgorithmState";
 import ErrorThrower from "./ErrorThrower";
-import GraphDataExtractor from "./GraphVisitor";
+import GraphDataExtractor from "./GraphDataExtractor";
 
 export default class Algorithm {
 
