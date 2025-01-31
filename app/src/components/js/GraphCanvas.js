@@ -15,15 +15,15 @@ import random from "graphology-layout/random";
 //Importing my classes
 import EdgeLoopProgram from "../../programs/EdgeLoopProgram/EdgeLoopProgram.ts";
 import EdgeLoopArrowProgram from "../../programs/EdgeLoopArrowProgram/EdgeLoopArrowProgram.ts";
-import LayoutControl from "../LayoutControl/LayoutControl.js";
+import LayoutControl from "./LayoutControl.js";
 import GraphologyGraphLayout from "../../classes/GraphologyGraphLayout.js";
 import NoOverlapGraphLayout from "../../classes/NoOverlapGraphLayout.js";
-import RescaleControl from "../RescaleControl/RescaleControl.js";
-import ZoomControl from "../ZoomControl/ZoomControl.js";
+import RescaleControl from "./RescaleControl.js";
+import ZoomControl from "./ZoomControl.js";
 import MyNodeProgram from "../../programs/MyNodeProgram/MyNodeProgram.ts";
 
 //Importing css
-import "./GraphCanvas.css";
+import "../css/GraphCanvas.css";
 
 //Layouts
 const layouts = {

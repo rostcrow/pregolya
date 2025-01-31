@@ -10,8 +10,8 @@ import { MultiGraph } from "graphology";
 //Importing my classes
 import EdgeLoopProgram from "../../programs/EdgeLoopProgram/EdgeLoopProgram.ts";
 import EdgeLoopArrowProgram from "../../programs/EdgeLoopArrowProgram/EdgeLoopArrowProgram.ts";
-import RescaleControl from "../RescaleControl/RescaleControl.js";
-import ZoomControl from "../ZoomControl/ZoomControl.js";
+import RescaleControl from "./RescaleControl.js";
+import ZoomControl from "./ZoomControl.js";
 import MyNodeProgram from "../../programs/MyNodeProgram/MyNodeProgram.ts";
 
 // Component that loads the graph

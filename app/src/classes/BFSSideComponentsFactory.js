@@ -1,7 +1,7 @@
 
 import ListGroup from 'react-bootstrap/ListGroup';
 import SideComponent from './SideComponent';
-import GraphView from '../components/GraphView/GraphView';
+import GraphView from '../components/js/GraphView';
 import GraphFactory from './GraphFactory';
 import { NodeAttributes, NodeState } from './BFSAlgorithm';
 import TreeGraphLayout from './TreeGraphLayout';

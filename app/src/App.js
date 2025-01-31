@@ -9,11 +9,11 @@ import Col from 'react-bootstrap/Col';
 
 //Importing my components and classes
 //  Components
-import Topbar from './components/Topbar/Topbar.js';
-import GraphCanvas from './components/GraphCanvas/GraphCanvas.js';
-import GraphDropdown from './components/GraphDropdown/GraphDropdown.js';
-import AlgorithmControlPanel from './components/AlgorithmControlPanel/AlgorithmControlPanel.js';
-import SidePanel from './components/SidePanel/SidePanel.js';
+import Topbar from './components/js/Topbar.js';
+import GraphCanvas from './components/js/GraphCanvas.js';
+import GraphDropdown from './components/js/GraphDropdown.js';
+import AlgorithmControlPanel from './components/js/AlgorithmControlPanel.js';
+import SidePanel from './components/js/SidePanel.js';
 
 //  Classes
 import graphExamplesArray from "./graph_examples/all_examples.js";
