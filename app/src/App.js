@@ -9,7 +9,7 @@ import Col from 'react-bootstrap/Col';
 
 //Importing my components and classes
 //  Components
-import Topbar from './components/js/Topbar.js';
+import Title from './components/js/Title.js';
 import GraphCanvas from './components/js/GraphCanvas.js';
 import GraphDropdown from './components/js/GraphDropdown.js';
 import AlgorithmControlPanel from './components/js/AlgorithmControlPanel.js';
@@ -68,7 +68,7 @@ function App() {
   
   return (
     <div className="App">
-      <Topbar />
+      <Title />
       <GraphDropdown graphsJSON={graphsJSON} itemFunc={changeCurrentGraph} />
       <Container>
         <Row>

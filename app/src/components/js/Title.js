@@ -1,7 +1,7 @@
 import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar';
 
-export default function Topbar() {
+export default function Title() {
     return (
         <>
             <Navbar bg='primary' data-bs-theme='dark'>
