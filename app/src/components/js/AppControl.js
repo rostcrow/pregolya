@@ -40,19 +40,41 @@ const firstAlgorithmFacade = new AlgorithmFacade(firstAlgGraph, bfs, "0");
 export default function AppControl() {
 
     //States
-    const [currentGraph, setCurrentGraph] = useState(firstGraph);
-    const [currentAlgorithmFacade, setCurrentAlgorithmFacade] = useState(firstAlgorithmFacade);
+    const [currentVisibleGraph, setCurrentVisibleGraph] = useState(firstGraph);
+    const [currentWorkingGraph, setCurrentWorkingGraph] = useState(firstGraph);
+    const [selectedGraphIndex, setSelectedGraphIndex] = useState(-1);
+    const [graphPreview, setGraphPreview] = useState(false);
+
     const [graphRefreshState, setGraphRefreshState] = useState(true);
-    const [sideComponents, setSideComponents] = useState([]);
+    const [sideComponents, setSideComponents] = useState(firstAlgorithmFacade.getCurrentSideComponents());
+
+    const [currentAlgorithmFacade, setCurrentAlgorithmFacade] = useState(firstAlgorithmFacade);
     const [algorithmControlState, setAlgorithmControlState] = useState("start");
   
-    //Handling form
+    //Handling graph change in form
+    function changeGraph (graphIndex) {
+
+        setSelectedGraphIndex(graphIndex);
+
+        if (graphIndex === -1) {
+            setCurrentVisibleGraph(currentWorkingGraph);
+            setGraphPreview(false);
+        } else {
+            const graph = graphFactory.createDisplayGraphFromJSON(graphsJSON[graphIndex]);
+            setCurrentVisibleGraph(graph);
+            setGraphPreview(true);
+        }
+    }
+
+    //Handling form change
     function changeCurrents(graphIndex, algorithmIndex) {
         const graph = graphFactory.createDisplayGraphFromJSON(graphsJSON[graphIndex]);
         const algorithmGraph = graphFactory.createAlgorithmGraphFromGraph(graph, true);
         const algorithmFacade = new AlgorithmFacade(algorithmGraph, algorithmTags[algorithmIndex], "0");
 
-        setCurrentGraph(graph);
+        setCurrentVisibleGraph(graph);
+        setCurrentWorkingGraph(graph);
+        setGraphPreview(false);
         setCurrentAlgorithmFacade(algorithmFacade);
         setSideComponents(algorithmFacade.getCurrentSideComponents());
         setAlgorithmControlState("start");
@@ -64,7 +86,7 @@ export default function AppControl() {
   
       //Updating GraphCanvas
       const  visual = currentAlgorithmFacade.getCurrentGraphVisual();
-      GraphVisualApplier.apply(currentGraph, visual);
+      GraphVisualApplier.apply(currentWorkingGraph, visual);
       setGraphRefreshState(graphRefreshState => !graphRefreshState);
   
       //Updating SidePanel
@@ -74,17 +96,19 @@ export default function AppControl() {
 
     return (
         <>
-            <GraphAlgorithmForm graphsJSON={graphsJSON} algorithmTags={algorithmTags} changeFunc={changeCurrents}/>
+            <GraphAlgorithmForm graphsJSON={graphsJSON} algorithmTags={algorithmTags} 
+                graphIndex={selectedGraphIndex} setGraphIndexFunc={setSelectedGraphIndex}                
+                changeGraphFunc={changeGraph} changeCurrentsFunc={changeCurrents}/>
             <Container>
                 <Row>
                     <Col className="col-8">
-                        <GraphCanvas graph={currentGraph} refreshState={graphRefreshState}/>
+                        <GraphCanvas graph={currentVisibleGraph} refreshState={graphRefreshState} graphPreview={graphPreview}/>
                         <AlgorithmControlPanel controlState={algorithmControlState} 
                             setControlStateFunc={setAlgorithmControlState} 
-                            algorithmFacade={currentAlgorithmFacade} updateFunc={update} />
+                            algorithmFacade={currentAlgorithmFacade} updateFunc={update} graphPreview={graphPreview} />
                     </Col>
                     <Col className="col-4">
-                        <SidePanel sideComponents={sideComponents}/>
+                        <SidePanel sideComponents={sideComponents} graphPreview={graphPreview}/>
                     </Col>
                 </Row>
             </Container>

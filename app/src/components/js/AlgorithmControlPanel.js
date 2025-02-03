@@ -8,7 +8,7 @@ const DEFAULT_OTHER_BUTTON_STYLE = "btn btn-secondary mt-2 ms-2";
 
 let running = false;
 
-export default function AlgorithmControlPanel( {controlState, setControlStateFunc, algorithmFacade, updateFunc} ) {
+export default function AlgorithmControlPanel( {controlState, setControlStateFunc, algorithmFacade, updateFunc, graphPreview} ) {
 
     //States
     const [runSpeed, setRunSpeed] = useState(6);
@@ -155,8 +155,14 @@ export default function AlgorithmControlPanel( {controlState, setControlStateFun
         setRunSpeed(value);
     }
 
+    //Setting style based on graph preview boolean
+    let style = {};
+    if (graphPreview) {
+        style = {visibility: "hidden"};
+    }
+
     return (
-        <>
+        <div style={style}>
             <Container>
                 <button title="Jump to start" type="button" className={startButtonStyle} onClick={handleJumpToStart}>
                     <BsChevronBarLeft />
@@ -180,7 +186,7 @@ export default function AlgorithmControlPanel( {controlState, setControlStateFun
                     disabled={controlState === "running"}/>
 
             </Container>
-        </>
+        </div>
 
     );
 

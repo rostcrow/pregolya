@@ -8,24 +8,24 @@ import AlgorithmSelect from './AlgorithmSelect';
 import Button from 'react-bootstrap/Button';
 import { useState } from 'react';
 
-export default function GraphAlgorithmForm ( {graphsJSON, algorithmTags, changeFunc} ) {
+export default function GraphAlgorithmForm ( 
+    {graphsJSON, algorithmTags, graphIndex, setGraphIndexFunc, changeGraphFunc, changeCurrentsFunc} ) {
 
-    const [selectedGraphIndex, setSelectedGraphIndex] = useState(-1);
     const [selectedAlgorithmIndex, setSelectedAlgorithmIndex] = useState(-1);
 
     function handleChange() {
 
-        if (selectedGraphIndex === -1 || selectedAlgorithmIndex === -1) {
+        if (graphIndex === -1 || selectedAlgorithmIndex === -1) {
             return;
         }
 
-        changeFunc(selectedGraphIndex, selectedAlgorithmIndex);
-        setSelectedGraphIndex(-1);
+        changeCurrentsFunc(graphIndex, selectedAlgorithmIndex);
+        setGraphIndexFunc(-1);
         setSelectedAlgorithmIndex(-1);
     }
 
     function handleClear() {
-        setSelectedGraphIndex(-1);
+        changeGraphFunc(-1);
         setSelectedAlgorithmIndex(-1);
     }
 
@@ -36,7 +36,7 @@ export default function GraphAlgorithmForm ( {graphsJSON, algorithmTags, changeF
                     <Form>
                         <Row>
                             <Col>
-                                <GraphSelect graphsJSON={graphsJSON} selected={selectedGraphIndex} setFunc={setSelectedGraphIndex} />
+                                <GraphSelect graphsJSON={graphsJSON} selected={graphIndex} changeFunc={changeGraphFunc}/>
                             </Col>
                             <Col>
                                 <AlgorithmSelect tags={algorithmTags} selected={selectedAlgorithmIndex} setFunc={setSelectedAlgorithmIndex}/>
@@ -48,9 +48,7 @@ export default function GraphAlgorithmForm ( {graphsJSON, algorithmTags, changeF
                                 <Button className="btn btn-secondary mt-3 ms-3" onClick={handleClear}>Clear</Button>
                             </Col>
                         </Row>
-                        
                     </Form>
-                    
                 </Card.Body>
             </Card>
         </>

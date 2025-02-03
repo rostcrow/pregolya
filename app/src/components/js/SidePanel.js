@@ -2,10 +2,12 @@ import Nav from 'react-bootstrap/Nav';
 import { useState } from 'react';
 import Container from 'react-bootstrap/Container';
 
-export default function SidePanel ( {sideComponents} ) {
+export default function SidePanel ( {sideComponents, graphPreview} ) {
 
+    //Setting states
     const [componentIndex, setComponentIndex] = useState(0);
 
+    //Setting items and components
     let navItems = [];
     let tabComponents = [];
 
@@ -30,19 +32,26 @@ export default function SidePanel ( {sideComponents} ) {
         }
     }
 
+    //Handling click
     function handleClick(index) {
         setComponentIndex(index);
     }
 
+    //Setting style based on graph preview boolean
+    let style = {};
+    if (graphPreview) {
+        style = {visibility: "hidden"};
+    }
+
     return (
-        <>
+        <div style={style}>
             <Nav className="mt-2" variant="tabs" defaultActiveKey="0">
                 {navItems}
             </Nav>
             <Container className="pt-2">
                 {tabComponents}
             </Container>
-        </>
+        </div>
     );
 
 }

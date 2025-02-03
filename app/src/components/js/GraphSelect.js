@@ -1,7 +1,7 @@
 
 import Form from 'react-bootstrap/Form';
 
-export default function GraphSelect( {graphsJSON, selected, setFunc} ) {
+export default function GraphSelect( {graphsJSON, selected, changeFunc} ) {
 
     let options = [];
     for (const [index, graph] of graphsJSON.entries()) {
@@ -10,7 +10,7 @@ export default function GraphSelect( {graphsJSON, selected, setFunc} ) {
     }
 
     function handleChange(e) {
-        setFunc(Number(e.target.value));
+        changeFunc(Number(e.target.value));
     }
 
     return (

@@ -124,7 +124,7 @@ const sigmaSettings = {allowInvalidContainer: true, renderEdgeLabels: true, defa
 }};
 
 // Component that displays the graph
-export default function GraphCanvas( {graph, refreshState} ) {
+export default function GraphCanvas( {graph, refreshState, graphPreview} ) {
 
   const [currentLayoutKey, setCurrentLayoutKey] = useState(layoutKeys[currentLayoutKeyIndex]);
 
@@ -134,9 +134,15 @@ export default function GraphCanvas( {graph, refreshState} ) {
     setCurrentLayoutKey(layoutKeys[currentLayoutKeyIndex]);
   }
 
+  //Determining card style based on graph preview boolean
+  let cardClass = "mx-3 my-3 p-0";
+  if (graphPreview) {
+    cardClass += " border border-5 border-primary-subtle";
+  }
+
   return (
     <>
-      <Card className="mx-3 my-3 p-0">
+      <Card className={cardClass}>
         <Card.Body className="m-0 p-1">
           <SigmaContainer style={sigmaStyle} settings={sigmaSettings} graph={MultiGraph}>
             <GraphEvents />
