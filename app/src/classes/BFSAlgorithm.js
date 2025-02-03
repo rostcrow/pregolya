@@ -4,8 +4,9 @@ import Algorithm from "./Algorithm";
 const INFINITY = "∞";
 
 const State = {
-    NODE_FROM_QUEUE: 0,
-    COLORING_NEIGHBORS: 1
+    SETTING_STARTING_NODE: 0,
+    NODE_FROM_QUEUE: 1,
+    COLORING_NEIGHBORS: 2
 }
 
 export const NodeAttributes = {
@@ -43,7 +44,7 @@ export default class BFSAlgorithm extends Algorithm {
 
         //Initializing attributes
         this.#startingNode = startingNode;
-        this.#state = State.NODE_FROM_QUEUE;
+        this.#state = State.SETTING_STARTING_NODE;
         this.#queue = [];
         this.#currentNode = -1;
         this.#currentNodeNeighbors = [];
@@ -55,11 +56,6 @@ export default class BFSAlgorithm extends Algorithm {
             graph.setNodeAttribute(node, NodeAttributes.VISITED_FROM, null);
             graph.setNodeAttribute(node, NodeAttributes.DISTANCE_FROM_START, INFINITY);
         });
-
-        //Setting starting node
-        this.#queue.push(this.#startingNode);
-        graph.setNodeAttribute(this.#startingNode, NodeAttributes.STATE, NodeState.GRAY);
-        graph.setNodeAttribute(this.#startingNode, NodeAttributes.DISTANCE_FROM_START, 0);
 
         //Setting state for all edges
         graph.forEachEdge((edge) => {
@@ -77,6 +73,10 @@ export default class BFSAlgorithm extends Algorithm {
         }
         
         switch (this.#state) {
+            case State.SETTING_STARTING_NODE:
+                this.#stateSettingStartingNode(graph);
+                break;
+
             case State.NODE_FROM_QUEUE:
                 this.#stateNodeFromQueue(graph);
                 break;
@@ -89,6 +89,18 @@ export default class BFSAlgorithm extends Algorithm {
                 throw new Error("Not expected state");
 
         }
+
+    }
+
+    #stateSettingStartingNode(graph) {
+
+        //Setting starting node
+        this.#queue.push(this.#startingNode);
+        graph.setNodeAttribute(this.#startingNode, NodeAttributes.STATE, NodeState.GRAY);
+        graph.setNodeAttribute(this.#startingNode, NodeAttributes.DISTANCE_FROM_START, 0);
+
+        //Changing state
+        this.#state = State.NODE_FROM_QUEUE;
 
     }
 

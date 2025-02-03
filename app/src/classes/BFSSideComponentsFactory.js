@@ -17,8 +17,8 @@ export default class BFSSideComponentsFactory {
         let queue = additionalData.get("queue");
 
         let items = [];
-        for (const node of queue) {
-            items.push(<ListGroup.Item>{node}</ListGroup.Item>);
+        for (const [index, node] of queue.entries()) {
+            items.push(<ListGroup.Item key={index}>{node}</ListGroup.Item>);
         }
 
         let queueComponent = 

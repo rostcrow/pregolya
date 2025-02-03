@@ -10,20 +10,20 @@ export default function SidePanel ( {sideComponents} ) {
     let tabComponents = [];
 
     for (const [index, sideComponent] of sideComponents.entries()) {
-        navItems.push(<Nav.Item><Nav.Link eventKey={index} onClick={() => handleClick(index)}>{sideComponent.getName()}</Nav.Link></Nav.Item>);
+        navItems.push(<Nav.Item key={index}><Nav.Link key={index} eventKey={index} onClick={() => handleClick(index)}>{sideComponent.getName()}</Nav.Link></Nav.Item>);
 
         //Counting if sideComponent is hidden or not
         if (index === componentIndex) {
             //Visible
             tabComponents.push(
-                <div>
+                <div key={index}>
                     {sideComponent.getComponent()}
                 </div>
             );
         } else {
             //Hidden
             tabComponents.push(
-                <div style={{height: 0, marginBottom: 0, padding: 0, visibility: "hidden"}}>
+                <div key={index} style={{height: 0, marginBottom: 0, padding: 0, visibility: "hidden"}}>
                     {sideComponent.getComponent()}
                 </div>
             );

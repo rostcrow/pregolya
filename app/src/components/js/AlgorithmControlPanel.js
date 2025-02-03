@@ -8,12 +8,9 @@ const DEFAULT_OTHER_BUTTON_STYLE = "btn btn-secondary mt-2 ms-2";
 
 let running = false;
 
-export default function AlgorithmControlPanel( {algorithmFacade, updateGraph} ) {
+export default function AlgorithmControlPanel( {controlState, setControlStateFunc, algorithmFacade, updateFunc} ) {
 
     //States
-    const [runningState, setRunningState] = useState(false);
-    const [start, setStart] = useState(true);
-    const [end, setEnd] = useState(false);
     const [runSpeed, setRunSpeed] = useState(6);
 
     //Setting dynamic variables dependent on runningState
@@ -27,7 +24,7 @@ export default function AlgorithmControlPanel( {algorithmFacade, updateGraph} ) 
     let runButtonTitle;
     let runButtonIcon;
 
-    if (runningState) {
+    if (controlState === "running") {
         //Running
 
         runButtonTitle = "Stop";
@@ -42,14 +39,14 @@ export default function AlgorithmControlPanel( {algorithmFacade, updateGraph} ) 
         runButtonTitle = "Run";
         runButtonIcon = <BsPlay />
 
-        if (start) {
+        if (controlState === "start") {
             //Start, can't go further back
 
             for (const index of leftButtonStyles) {
                 buttonStyles[index] += " disabled";
             }
 
-        } else if (end) {
+        } else if (controlState === "end") {
             //End, can't go further forward
 
             for (const index of rightButtonStyles) {
@@ -64,17 +61,14 @@ export default function AlgorithmControlPanel( {algorithmFacade, updateGraph} ) 
     let forwardButtonStyle = buttonStyles[3];
     let endButtonStyle = buttonStyles[4];
 
-    //Functions
-    function setStartEndStates() {
+    //Sets correct control state based on algorithm
+    function setStartMiddleEnd() {
         if (algorithmFacade.algorithmIsOnStart()) {
-            setStart(true);
-            setEnd(false);
+            setControlStateFunc("start");
         } else if (algorithmFacade.algorithmIsOnEnd()) {
-            setStart(false);
-            setEnd(true);
+            setControlStateFunc("end");
         } else {
-            setStart(false);
-            setEnd(false);
+            setControlStateFunc("middle");
         }
     }
 
@@ -82,20 +76,20 @@ export default function AlgorithmControlPanel( {algorithmFacade, updateGraph} ) 
     function handleJumpToStart() {
         //Updating graph
         algorithmFacade.jumpToStart();
-        updateGraph();
+        updateFunc();
         
-        //Updating states
-        setStartEndStates();
+        //Updating state
+        setStartMiddleEnd();
     }
     
     //Handle back button
     function handleBack() {
         //Updating graph
         algorithmFacade.back();
-        updateGraph();
+        updateFunc();
 
         //Updating states
-        setStartEndStates();
+        setStartMiddleEnd();
     }
 
     //Handle run button
@@ -104,13 +98,12 @@ export default function AlgorithmControlPanel( {algorithmFacade, updateGraph} ) 
         //Run/stop logic
         if (running) {
             running = false;
-            setRunningState(false);
-            setStartEndStates();
+            setStartMiddleEnd();
 
             return;
         } else {
             running = true;
-            setRunningState(true);
+            setControlStateFunc("running");
         }
 
         //Sleep function
@@ -125,14 +118,13 @@ export default function AlgorithmControlPanel( {algorithmFacade, updateGraph} ) 
         async function run() {
             while(running && !algorithmFacade.algorithmIsOnEnd()) {
                 algorithmFacade.forward();
-                updateGraph();
+                updateFunc();
                 await sleep(sleepDurationMs);
             }
 
             //Run end
             running = false;
-            setRunningState(false);
-            setStartEndStates();
+            setStartMiddleEnd();
         }
 
         run();
@@ -142,20 +134,20 @@ export default function AlgorithmControlPanel( {algorithmFacade, updateGraph} ) 
     function handleForward() {
         //Updating graph
         algorithmFacade.forward();
-        updateGraph();
+        updateFunc();
 
-        //Updating states
-        setStartEndStates();
+        //Updating state
+        setStartMiddleEnd();
     }
 
     //Handle jump to end button
     function handleJumpToEnd() {
         //Updating graph
         algorithmFacade.jumpToEnd();
-        updateGraph();
+        updateFunc();
 
         //Updating states
-        setStartEndStates();
+        setStartMiddleEnd();
     }
 
     //Handle range change
@@ -185,7 +177,7 @@ export default function AlgorithmControlPanel( {algorithmFacade, updateGraph} ) 
             <Container>
                 <p className="mt-3">Run speed: {runSpeed}</p>
                 <Form.Range className="mb-5 w-25" onChange={e => handleRange(e.target.value)} min={1} max={10} 
-                    disabled={runningState}/>
+                    disabled={controlState === "running"}/>
 
             </Container>
         </>
