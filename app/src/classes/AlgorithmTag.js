@@ -6,13 +6,15 @@ export default class AlgorithmTag {
     #nodeVisualAdapterClass;
     #edgeVisualAdapterClass;
     #sideComponentsFactoryClass;
+    #optionsFormClass;
 
-    constructor(name, algorithmClass, nodeVisualAdapterClass, edgeVisualAdapterClass, sideComponentsFactoryClass) {
+    constructor(name, algorithmClass, nodeVisualAdapterClass, edgeVisualAdapterClass, sideComponentsFactoryClass, optionsFormClass) {
         this.#name = name;
         this.#algorithmClass = algorithmClass;
         this.#nodeVisualAdapterClass = nodeVisualAdapterClass;
         this.#edgeVisualAdapterClass = edgeVisualAdapterClass;
         this.#sideComponentsFactoryClass = sideComponentsFactoryClass;
+        this.#optionsFormClass = optionsFormClass;
     }
     
     getName() {
@@ -35,4 +37,7 @@ export default class AlgorithmTag {
         return this.#sideComponentsFactoryClass;
     }
 
+    getOptionsFormClass() {
+        return this.#optionsFormClass;
+    }
 }

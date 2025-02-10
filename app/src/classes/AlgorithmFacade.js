@@ -8,14 +8,14 @@ export default class AlgorithmFacade {
     #graphVisualAdapter;
     #sideComponentsFactory; 
 
-    constructor(graph, algorithmTag, ...algorithmAttributes) {
+    constructor(graph, algorithmTag, ...algorithmOptions) {
 
         const algorithmClass = algorithmTag.getAlgorithmClass();
         const nodeVisualAdapterClass = algorithmTag.getNodeVisualAdapterClass();
         const edgeVisualAdapterClass = algorithmTag.getEdgeVisualAdapterClass();
         const sideComponentsFactoryClass = algorithmTag.getSideComponentsFactoryClass();
 
-        this.#algorithmController = new AlgorithmController (new algorithmClass (graph, ...algorithmAttributes));
+        this.#algorithmController = new AlgorithmController (new algorithmClass (graph, ...algorithmOptions));
         this.#graphVisualAdapter = new GraphVisualAdapter (new nodeVisualAdapterClass(), new edgeVisualAdapterClass());
         this.#sideComponentsFactory = new sideComponentsFactoryClass();
     }

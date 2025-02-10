@@ -7,11 +7,24 @@ import Form from 'react-bootstrap/Form';
 import AlgorithmSelect from './AlgorithmSelect';
 import Button from 'react-bootstrap/Button';
 import { useState } from 'react';
+import GraphFactory from '../../classes/GraphFactory';
 
 export default function GraphAlgorithmForm ( 
     {graphsJSON, algorithmTags, graphIndex, setGraphIndexFunc, changeGraphFunc, changeCurrentsFunc} ) {
 
     const [selectedAlgorithmIndex, setSelectedAlgorithmIndex] = useState(-1);
+    const [options, setOptions] = useState([]);
+
+    const bothSelected = (graphIndex !== -1) && (selectedAlgorithmIndex !== -1);
+    let optionsForm = null;
+    let optionsFormComponents = <></>;
+    if (bothSelected) {
+        const graph = new GraphFactory().createAlgorithmGraphFromJSON(graphsJSON[graphIndex]);
+        const optionsFormClass = algorithmTags[selectedAlgorithmIndex].getOptionsFormClass();
+
+        optionsForm = new optionsFormClass(options, setOptions, graph);
+        optionsFormComponents = optionsForm.getComponents();
+    }
 
     function handleChange() {
 
@@ -19,7 +32,7 @@ export default function GraphAlgorithmForm (
             return;
         }
 
-        changeCurrentsFunc(graphIndex, selectedAlgorithmIndex);
+        changeCurrentsFunc(graphIndex, selectedAlgorithmIndex, options);
         setGraphIndexFunc(-1);
         setSelectedAlgorithmIndex(-1);
     }
@@ -42,6 +55,7 @@ export default function GraphAlgorithmForm (
                                 <AlgorithmSelect tags={algorithmTags} selected={selectedAlgorithmIndex} setFunc={setSelectedAlgorithmIndex}/>
                             </Col>
                         </Row>
+                        {optionsFormComponents}
                         <Row>
                             <Col>
                                 <Button className="btn btn-primary mt-3" onClick={handleChange}>Change</Button>

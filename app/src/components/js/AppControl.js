@@ -21,6 +21,7 @@ import BFSEdgeVisualAdapter from '../../classes/BFSEdgeVisualAdapter.js';
 import BFSSideComponentsFactory from '../../classes/BFSSideComponentsFactory.js';
 import AlgorithmFacade from '../../classes/AlgorithmFacade.js';
 import GraphAlgorithmForm from './GraphAlgorithmForm.js';
+import BFSAlgorithmOptionsForm from '../../classes/BFSAlgorithmOptionsForm.js';
 
 //Initial state
 const graphsJSON = graphExamplesArray;
@@ -30,7 +31,7 @@ const firstAlgGraph = graphFactory.createAlgorithmGraphFromGraph(firstGraph, tru
 
 const bfs = new AlgorithmTag(
   "Breadth-first search (BFS)", 
-  BFSAlgorithm, BFSNodeVisualAdapter, BFSEdgeVisualAdapter, BFSSideComponentsFactory
+  BFSAlgorithm, BFSNodeVisualAdapter, BFSEdgeVisualAdapter, BFSSideComponentsFactory, BFSAlgorithmOptionsForm
 );
 
 const algorithmTags = [bfs];
@@ -67,10 +68,10 @@ export default function AppControl() {
     }
 
     //Handling form change
-    function changeCurrents(graphIndex, algorithmIndex) {
+    function changeCurrents(graphIndex, algorithmIndex, algorithmOptions) {
         const graph = graphFactory.createDisplayGraphFromJSON(graphsJSON[graphIndex]);
         const algorithmGraph = graphFactory.createAlgorithmGraphFromGraph(graph, true);
-        const algorithmFacade = new AlgorithmFacade(algorithmGraph, algorithmTags[algorithmIndex], "0");
+        const algorithmFacade = new AlgorithmFacade(algorithmGraph, algorithmTags[algorithmIndex], ...algorithmOptions);
 
         setCurrentVisibleGraph(graph);
         setCurrentWorkingGraph(graph);
