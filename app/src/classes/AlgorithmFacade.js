@@ -1,22 +1,22 @@
 
 import AlgorithmController from "./AlgorithmController";
-import GraphVisualAdapter from "./GraphVisualAdapter";
+import GraphAttributesAdapter from "./GraphAttributesAdapter";
 
 export default class AlgorithmFacade {
 
     #algorithmController;
-    #graphVisualAdapter;
+    #graphAttributesAdapter;
     #sideComponentsFactory; 
 
     constructor(graph, algorithmTag, ...algorithmOptions) {
 
         const algorithmClass = algorithmTag.getAlgorithmClass();
-        const nodeVisualAdapterClass = algorithmTag.getNodeVisualAdapterClass();
-        const edgeVisualAdapterClass = algorithmTag.getEdgeVisualAdapterClass();
+        const nodeAttributesAdapterClass = algorithmTag.getNodeAttributesAdapterClass();
+        const edgeAttributesAdapterClass = algorithmTag.getEdgeAttributesAdapterClass();
         const sideComponentsFactoryClass = algorithmTag.getSideComponentsFactoryClass();
 
         this.#algorithmController = new AlgorithmController (new algorithmClass (graph, ...algorithmOptions));
-        this.#graphVisualAdapter = new GraphVisualAdapter (new nodeVisualAdapterClass(), new edgeVisualAdapterClass());
+        this.#graphAttributesAdapter = new GraphAttributesAdapter (new nodeAttributesAdapterClass(), new edgeAttributesAdapterClass());
         this.#sideComponentsFactory = new sideComponentsFactoryClass();
     }
 
@@ -44,9 +44,9 @@ export default class AlgorithmFacade {
         return this.#algorithmController.algorithmIsOnEnd();
     }
 
-    getCurrentGraphVisual() {
+    getCurrentGraphAttributes() {
         let graphData = this.#algorithmController.getCurrentState().getGraphData();
-        return this.#graphVisualAdapter.toGraphVisual(graphData);
+        return this.#graphAttributesAdapter.adapt(graphData);
     }
 
     getCurrentSideComponents() {

@@ -1,10 +1,10 @@
-import EdgeVisualAdapter from "./EdgeVisualAdapter";
+import EdgeAttributesAdapter from "./EdgeAttributesAdapter";
 import { EdgeState } from "./BFSAlgorithm";
 import { EdgeAttributes } from "./BFSAlgorithm";
 
-export default class BFSEdgeVisualAdapter extends EdgeVisualAdapter {
+export default class BFSEdgeVisualAdapter extends EdgeAttributesAdapter {
 
-    toEdgeVisual(key, attributes) {
+    adapt(key, attributes) {
 
         let ret = {};
 

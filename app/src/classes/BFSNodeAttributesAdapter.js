@@ -1,13 +1,13 @@
-import NodeVisualAdapter from "./NodeVisualAdapter";
+import NodeAttributesAdapter from "./NodeAttributesAdapter";
 import { NodeState } from "./BFSAlgorithm";
 import { NodeAttributes } from "./BFSAlgorithm";
 
 const GRAY_COLOR = "#888888";
 const BLACK_COLOR = "#000000";
 
-export default class BFSNodeVisualAdapter extends NodeVisualAdapter {
+export default class BFSNodeVisualAdapter extends NodeAttributesAdapter {
 
-    toNodeVisual (key, attributes) {
+    adapt(key, attributes) {
         let ret = {};
 
         //Setting color

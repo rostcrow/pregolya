@@ -3,16 +3,16 @@ export default class AlgorithmTag {
 
     #name;
     #algorithmClass;
-    #nodeVisualAdapterClass;
-    #edgeVisualAdapterClass;
+    #nodeAttributesAdapterClass;
+    #edgeAttributesAdapterClass;
     #sideComponentsFactoryClass;
     #optionsFormClass;
 
-    constructor(name, algorithmClass, nodeVisualAdapterClass, edgeVisualAdapterClass, sideComponentsFactoryClass, optionsFormClass) {
+    constructor(name, algorithmClass, nodeAttributesAdapterClass, edgeAttributesAdapterClass, sideComponentsFactoryClass, optionsFormClass) {
         this.#name = name;
         this.#algorithmClass = algorithmClass;
-        this.#nodeVisualAdapterClass = nodeVisualAdapterClass;
-        this.#edgeVisualAdapterClass = edgeVisualAdapterClass;
+        this.#nodeAttributesAdapterClass = nodeAttributesAdapterClass;
+        this.#edgeAttributesAdapterClass = edgeAttributesAdapterClass;
         this.#sideComponentsFactoryClass = sideComponentsFactoryClass;
         this.#optionsFormClass = optionsFormClass;
     }
@@ -25,12 +25,12 @@ export default class AlgorithmTag {
         return this.#algorithmClass;
     }
 
-    getNodeVisualAdapterClass() {
-        return this.#nodeVisualAdapterClass;
+    getNodeAttributesAdapterClass() {
+        return this.#nodeAttributesAdapterClass;
     }
 
-    getEdgeVisualAdapterClass() {
-        return this.#edgeVisualAdapterClass;
+    getEdgeAttributesAdapterClass() {
+        return this.#edgeAttributesAdapterClass;
     }
 
     getSideComponentsFactoryClass() {

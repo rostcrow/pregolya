@@ -12,11 +12,11 @@ import SidePanel from './SidePanel.js';
 
 //Classes
 import graphExamplesArray from "../../graph_examples/all_examples.js";
-import GraphVisualApplier from '../../classes/GraphVisualApplier.js';
+import GraphAttributesApplier from '../../classes/GraphAttributesApplier.js';
 import AlgorithmTag from '../../classes/AlgorithmTag.js';
 import BFSAlgorithm from '../../classes/BFSAlgorithm.js';
-import BFSNodeVisualAdapter from '../../classes/BFSNodeVisualAdapter.js';
-import BFSEdgeVisualAdapter from '../../classes/BFSEdgeVisualAdapter.js';
+import BFSNodeVisualAdapter from '../../classes/BFSNodeAttributesAdapter.js';
+import BFSEdgeVisualAdapter from '../../classes/BFSEdgeAttributesAdapter.js';
 import BFSSideComponentsFactory from '../../classes/BFSSideComponentsFactory.js';
 import AlgorithmFacade from '../../classes/AlgorithmFacade.js';
 import GraphAlgorithmForm from './GraphAlgorithmForm.js';
@@ -90,8 +90,8 @@ export default function AppControl() {
     function update() {
   
       //Updating GraphCanvas
-      const  visual = currentAlgorithmFacade.getCurrentGraphVisual();
-      GraphVisualApplier.apply(currentWorkingGraph, visual);
+      const graphAttributes = currentAlgorithmFacade.getCurrentGraphAttributes();
+      GraphAttributesApplier.apply(currentWorkingGraph, graphAttributes);
       setGraphRefreshState(graphRefreshState => !graphRefreshState);
   
       //Updating SidePanel
