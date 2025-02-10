@@ -1,6 +1,7 @@
 import NodeAttributesAdapter from "./NodeAttributesAdapter";
 import { NodeState } from "./BFSAlgorithm";
 import { NodeAttributes } from "./BFSAlgorithm";
+import Globals from "./Globals";
 
 const GRAY_COLOR = "#888888";
 const BLACK_COLOR = "#000000";
@@ -13,7 +14,7 @@ export default class BFSNodeVisualAdapter extends NodeAttributesAdapter {
         //Setting color
         switch(attributes[NodeAttributes.STATE]) {
             case NodeState.WHITE:
-                ret["color"] = "#0D6EFD";
+                ret["color"] = Globals.DEFAULT_NODE_COLOR;
                 break;
             case NodeState.GRAY:
                 ret["color"] = GRAY_COLOR;
