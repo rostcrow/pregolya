@@ -1,11 +1,12 @@
 
 import Graph from "graphology";
 import { indexParallelEdgesIndex, DEFAULT_EDGE_CURVATURE} from "@sigma/edge-curve";
-
-export const DEFAULT_NODE_COLOR = "#0D6EFD";
-const DEFAULT_NODE_SIZE = 10;
-export const DEFAULT_EDGE_COLOR = "#CCCCCC";
-const DEFAULT_EDGE_SIZE = 6;
+import GraphAttributesAdapter from "./GraphAttributesAdapter";
+import DefaultNodeAttributesAdapter from "./DefaultNodeAttributesAdapter";
+import DefaultEdgeAttributesAdapter from "./DefaultEdgeAttributesAdapter";
+import GraphAttributesApplier from "./GraphAttributesApplier";
+import GraphDataExtractor from "./GraphDataExtractor";
+import ErrorThrower from "./ErrorThrower";
 
 export default class GraphTag {
 
@@ -70,19 +71,16 @@ export default class GraphTag {
 
         let graph = this.#rawGraph.copy();
 
-        //Setting size, color and label to nodes
-        graph.forEachNode((node) => {
-            graph.setNodeAttribute(node, "size", DEFAULT_NODE_SIZE);
-            graph.setNodeAttribute(node, "color", DEFAULT_NODE_COLOR);
-            graph.setNodeAttribute(node, "label", node);
-        });
+        //Setting default attributes to nodes and edges
+        const graphData = GraphDataExtractor.extractData(graph);
+        const graphAttributesAdapter = 
+            new GraphAttributesAdapter(new DefaultNodeAttributesAdapter(), new DefaultEdgeAttributesAdapter());
+        const adaptedData = graphAttributesAdapter.adapt(graphData);
 
+        GraphAttributesApplier.apply(graph, adaptedData);
+        
         //Setting edges
         graph.forEachEdge((edge) => {
-
-            //Setting edge size and color
-            graph.setEdgeAttribute(edge, "size", DEFAULT_EDGE_SIZE);
-            graph.setEdgeAttribute(edge, "color", DEFAULT_EDGE_COLOR);
 
             //Setting weight label
             if (this.#weighted) {
@@ -94,13 +92,9 @@ export default class GraphTag {
 
                 } else {
                     //Edge in weighted graph doesn't have weight
-                    console.log("ERROR: Edge in weighted graph doesn't have weight attribute");
+                    ErrorThrower.edgeWithoutWeight();
                 }
             }
-            
-            //Setting variables for parallel edges
-            graph.setEdgeAttribute(edge, "parallelIndex", "");
-            graph.setEdgeAttribute(edge, "parallelMaxIndex", "");
         });
 
         //Determining edge types
