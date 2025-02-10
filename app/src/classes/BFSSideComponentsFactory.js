@@ -2,9 +2,9 @@
 import ListGroup from 'react-bootstrap/ListGroup';
 import SideComponent from './SideComponent';
 import GraphView from '../components/js/GraphView';
-import GraphFactory from './GraphFactory';
 import { NodeAttributes, NodeState } from './BFSAlgorithm';
 import TreeGraphLayout from './TreeGraphLayout';
+import GraphTag from './GraphTag';
 
 export default class BFSSideComponentsFactory {
 
@@ -36,7 +36,7 @@ export default class BFSSideComponentsFactory {
         for (const key in nodes) {
             if (nodes[key][NodeAttributes.STATE] !== NodeState.WHITE) {
                 //Saving nonwhite nodes
-                outputNodes.push({"key": key});
+                outputNodes.push(key);
             }
             
             if (nodes[key][NodeAttributes.VISITED_FROM] !== null) {
@@ -48,13 +48,15 @@ export default class BFSSideComponentsFactory {
         //Making json
         let graphJSON = 
             {
-                "attributes": {"directed": true, "weighted": false},
+                "name": "BFS tree",
+                "directed": true, 
+                "weighted": false,
                 "nodes": outputNodes,
                 "edges": outputEdges
             };
 
         //Making graph and component
-        let graph = new GraphFactory().createDisplayGraphFromJSON(graphJSON);
+        let graph = new GraphTag(graphJSON).getDisplayGraph();
         let treeComponent = <GraphView graph={graph} layout={new TreeGraphLayout()}></GraphView>;
 
         return [new SideComponent("Queue", queueComponent), new SideComponent("Tree", treeComponent)];

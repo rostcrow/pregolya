@@ -12,7 +12,6 @@ import SidePanel from './SidePanel.js';
 
 //Classes
 import graphExamplesArray from "../../graph_examples/all_examples.js";
-import GraphFactory from '../../classes/GraphFactory.js';
 import GraphVisualApplier from '../../classes/GraphVisualApplier.js';
 import AlgorithmTag from '../../classes/AlgorithmTag.js';
 import BFSAlgorithm from '../../classes/BFSAlgorithm.js';
@@ -22,21 +21,26 @@ import BFSSideComponentsFactory from '../../classes/BFSSideComponentsFactory.js'
 import AlgorithmFacade from '../../classes/AlgorithmFacade.js';
 import GraphAlgorithmForm from './GraphAlgorithmForm.js';
 import BFSAlgorithmOptionsForm from '../../classes/BFSAlgorithmOptionsForm.js';
+import GraphTag from '../../classes/GraphTag.js';
 
-//Initial state
+//Initializing graphs
 const graphsJSON = graphExamplesArray;
-const graphFactory = new GraphFactory();
-const firstGraph = graphFactory.createDisplayGraphFromJSON(graphsJSON[0]);
-const firstAlgGraph = graphFactory.createAlgorithmGraphFromGraph(firstGraph, true);
+const graphTags = [];
+for (const graphJSON of graphsJSON) {
+    graphTags.push(new GraphTag(graphJSON));
+}
 
+const firstGraph = graphTags[0].getDisplayGraph();
+const firstAlgGraph = graphTags[0].getAlgorithmGraph();
+
+//Initializing algorithms
 const bfs = new AlgorithmTag(
   "Breadth-first search (BFS)", 
   BFSAlgorithm, BFSNodeVisualAdapter, BFSEdgeVisualAdapter, BFSSideComponentsFactory, BFSAlgorithmOptionsForm
 );
 
 const algorithmTags = [bfs];
-
-const firstAlgorithmFacade = new AlgorithmFacade(firstAlgGraph, bfs, "0");
+const firstAlgorithmFacade = new AlgorithmFacade(firstAlgGraph, algorithmTags[0], "0");
 
 export default function AppControl() {
 
@@ -61,16 +65,16 @@ export default function AppControl() {
             setCurrentVisibleGraph(currentWorkingGraph);
             setGraphPreview(false);
         } else {
-            const graph = graphFactory.createDisplayGraphFromJSON(graphsJSON[graphIndex]);
-            setCurrentVisibleGraph(graph);
+            setCurrentVisibleGraph(graphTags[graphIndex].getDisplayGraph());
             setGraphPreview(true);
         }
     }
 
     //Handling form change
     function changeCurrents(graphIndex, algorithmIndex, algorithmOptions) {
-        const graph = graphFactory.createDisplayGraphFromJSON(graphsJSON[graphIndex]);
-        const algorithmGraph = graphFactory.createAlgorithmGraphFromGraph(graph, true);
+        const graphTag = graphTags[graphIndex];
+        const graph = graphTag.getDisplayGraph();
+        const algorithmGraph = graphTag.getAlgorithmGraph();
         const algorithmFacade = new AlgorithmFacade(algorithmGraph, algorithmTags[algorithmIndex], ...algorithmOptions);
 
         setCurrentVisibleGraph(graph);
@@ -97,7 +101,7 @@ export default function AppControl() {
 
     return (
         <>
-            <GraphAlgorithmForm graphsJSON={graphsJSON} algorithmTags={algorithmTags} 
+            <GraphAlgorithmForm graphTags={graphTags} algorithmTags={algorithmTags} 
                 graphIndex={selectedGraphIndex} setGraphIndexFunc={setSelectedGraphIndex}                
                 changeGraphFunc={changeGraph} changeCurrentsFunc={changeCurrents}/>
             <Container>

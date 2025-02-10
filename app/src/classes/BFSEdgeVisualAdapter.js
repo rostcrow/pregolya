@@ -1,7 +1,6 @@
 import EdgeVisualAdapter from "./EdgeVisualAdapter";
 import { EdgeState } from "./BFSAlgorithm";
 import { EdgeAttributes } from "./BFSAlgorithm";
-import { DEFAULT_EDGE_COLOR } from "./GraphFactory";
 
 export default class BFSEdgeVisualAdapter extends EdgeVisualAdapter {
 
@@ -11,8 +10,8 @@ export default class BFSEdgeVisualAdapter extends EdgeVisualAdapter {
 
         switch(attributes[EdgeAttributes.STATE]) {
             case EdgeState.NORMAL:
-               ret["color"] = DEFAULT_EDGE_COLOR;
-               break;
+                ret["color"] = "#CCCCCC";
+                break;
             case EdgeState.HIGHLIGHTED:
                 ret["color"] = "#ff0000";
                 break;
