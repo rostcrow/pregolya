@@ -1,7 +1,7 @@
 
 import GraphData from "./GraphData";
 
-export default class GraphAttributesAdapter {
+export default class GraphDataAdapter {
     
     #nodeAttributesAdapter;
     #edgeAttributesAdapter;

@@ -1,5 +1,5 @@
 
-export default class GraphAttributesApplier {
+export default class GraphDataApplier {
 
     static apply(graph, graphData) {
 

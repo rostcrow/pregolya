@@ -12,7 +12,7 @@ import SidePanel from './SidePanel.js';
 
 //Classes
 import graphExamplesArray from "../../graph_examples/all_examples.js";
-import GraphAttributesApplier from '../../classes/GraphAttributesApplier.js';
+import GraphDataApplier from '../../classes/GraphDataApplier.js';
 import AlgorithmTag from '../../classes/AlgorithmTag.js';
 import BFSAlgorithm from '../../classes/BFSAlgorithm.js';
 import BFSNodeVisualAdapter from '../../classes/BFSNodeAttributesAdapter.js';
@@ -91,7 +91,7 @@ export default function AppControl() {
   
       //Updating GraphCanvas
       const graphAttributes = currentAlgorithmFacade.getCurrentGraphAttributes();
-      GraphAttributesApplier.apply(currentWorkingGraph, graphAttributes);
+      GraphDataApplier.apply(currentWorkingGraph, graphAttributes);
       setGraphRefreshState(graphRefreshState => !graphRefreshState);
   
       //Updating SidePanel

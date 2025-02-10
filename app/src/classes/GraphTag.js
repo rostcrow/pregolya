@@ -1,10 +1,10 @@
 
 import Graph from "graphology";
 import { indexParallelEdgesIndex, DEFAULT_EDGE_CURVATURE} from "@sigma/edge-curve";
-import GraphAttributesAdapter from "./GraphAttributesAdapter";
+import GraphDataAdapter from "./GraphDataAdapter";
 import DefaultNodeAttributesAdapter from "./DefaultNodeAttributesAdapter";
 import DefaultEdgeAttributesAdapter from "./DefaultEdgeAttributesAdapter";
-import GraphAttributesApplier from "./GraphAttributesApplier";
+import GraphDataApplier from "./GraphDataApplier";
 import GraphDataExtractor from "./GraphDataExtractor";
 import ErrorThrower from "./ErrorThrower";
 
@@ -73,11 +73,11 @@ export default class GraphTag {
 
         //Setting default attributes to nodes and edges
         const graphData = GraphDataExtractor.extractData(graph);
-        const graphAttributesAdapter = 
-            new GraphAttributesAdapter(new DefaultNodeAttributesAdapter(), new DefaultEdgeAttributesAdapter());
-        const adaptedData = graphAttributesAdapter.adapt(graphData);
+        const graphDataAdapter = 
+            new GraphDataAdapter(new DefaultNodeAttributesAdapter(), new DefaultEdgeAttributesAdapter());
+        const adaptedData = graphDataAdapter.adapt(graphData);
 
-        GraphAttributesApplier.apply(graph, adaptedData);
+        GraphDataApplier.apply(graph, adaptedData);
         
         //Setting edges
         graph.forEachEdge((edge) => {
