@@ -3,7 +3,7 @@ import { EdgeState } from "./BFSAlgorithm";
 import { EdgeAttributes } from "./BFSAlgorithm";
 import Globals from "./Globals";
 
-export default class BFSEdgeVisualAdapter extends EdgeAttributesAdapter {
+export default class BFSEdgeAttributesAdapter extends EdgeAttributesAdapter {
 
     adapt(key, attributes) {
 
@@ -11,10 +11,10 @@ export default class BFSEdgeVisualAdapter extends EdgeAttributesAdapter {
 
         switch(attributes[EdgeAttributes.STATE]) {
             case EdgeState.NORMAL:
-                ret["color"] = Globals.DEFAULT_EDGE_COLOR;
+                ret["color"] = Globals.Colors.DEFAULT_EDGE_COLOR;
                 break;
             case EdgeState.HIGHLIGHTED:
-                ret["color"] = "#ff0000";
+                ret["color"] = Globals.Colors.RED;
                 break;
             default:
         }

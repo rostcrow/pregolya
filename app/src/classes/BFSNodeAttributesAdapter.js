@@ -3,10 +3,7 @@ import { NodeState } from "./BFSAlgorithm";
 import { NodeAttributes } from "./BFSAlgorithm";
 import Globals from "./Globals";
 
-const GRAY_COLOR = "#888888";
-const BLACK_COLOR = "#000000";
-
-export default class BFSNodeVisualAdapter extends NodeAttributesAdapter {
+export default class BFSNodeAttributesAdapter extends NodeAttributesAdapter {
 
     adapt(key, attributes) {
         let ret = {};
@@ -17,10 +14,10 @@ export default class BFSNodeVisualAdapter extends NodeAttributesAdapter {
                 ret["color"] = Globals.DEFAULT_NODE_COLOR;
                 break;
             case NodeState.GRAY:
-                ret["color"] = GRAY_COLOR;
+                ret["color"] = Globals.Colors.GRAY;
                 break;
             case NodeState.BLACK:
-                ret["color"] = BLACK_COLOR;
+                ret["color"] = Globals.Colors.BLACK;
                 break;
             default:
         }

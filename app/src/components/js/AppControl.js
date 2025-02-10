@@ -15,8 +15,8 @@ import graphExamplesArray from "../../graph_examples/all_examples.js";
 import GraphDataApplier from '../../classes/GraphDataApplier.js';
 import AlgorithmTag from '../../classes/AlgorithmTag.js';
 import BFSAlgorithm from '../../classes/BFSAlgorithm.js';
-import BFSNodeVisualAdapter from '../../classes/BFSNodeAttributesAdapter.js';
-import BFSEdgeVisualAdapter from '../../classes/BFSEdgeAttributesAdapter.js';
+import BFSNodeAttributesAdapter from '../../classes/BFSNodeAttributesAdapter.js';
+import BFSEdgeAttributesAdapter from '../../classes/BFSEdgeAttributesAdapter.js';
 import BFSSideComponentsFactory from '../../classes/BFSSideComponentsFactory.js';
 import AlgorithmFacade from '../../classes/AlgorithmFacade.js';
 import GraphAlgorithmForm from './GraphAlgorithmForm.js';
@@ -36,7 +36,7 @@ const firstAlgGraph = graphTags[0].getAlgorithmGraph();
 //Initializing algorithms
 const bfs = new AlgorithmTag(
   "Breadth-first search (BFS)", 
-  BFSAlgorithm, BFSNodeVisualAdapter, BFSEdgeVisualAdapter, BFSSideComponentsFactory, BFSAlgorithmOptionsForm
+  BFSAlgorithm, BFSNodeAttributesAdapter, BFSEdgeAttributesAdapter, BFSSideComponentsFactory, BFSAlgorithmOptionsForm
 );
 
 const algorithmTags = [bfs];
