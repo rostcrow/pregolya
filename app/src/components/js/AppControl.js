@@ -66,9 +66,14 @@ export default function AppControl() {
         setSelectedGraphIndex(graphIndex);
 
         if (graphIndex === -1) {
+            //Graph preview off
+
             setCurrentVisibleGraph(currentWorkingGraph);
             setGraphPreview(false);
+
         } else {
+            //Graph preview on
+
             setCurrentVisibleGraph(graphTags[graphIndex].getDisplayGraph());
             setGraphPreview(true);
         }
@@ -104,7 +109,7 @@ export default function AppControl() {
     }
 
     //Handling form change
-    function changeCurrents() {
+    function changeWorkspace() {
         const graphTag = graphTags[selectedGraphIndex];
         const graph = graphTag.getDisplayGraph();
         const algorithmGraph = graphTag.getAlgorithmGraph();
@@ -141,7 +146,7 @@ export default function AppControl() {
             <GraphAlgorithmForm graphTags={graphTags} algorithmTags={algorithmTags} 
                 graphIndex={selectedGraphIndex} changeGraphFunc={changeGraph}
                 algorithmIndex={selectedAlgorithmIndex} changeAlgorithmFunc={changeAlgorithm}
-                changeCurrentsFunc={changeCurrents} optionsForm={optionsForm}/>
+                optionsForm={optionsForm} submitFunc={changeWorkspace} />
             <Container>
                 <Row>
                     <Col className="col-8">

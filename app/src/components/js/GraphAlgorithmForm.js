@@ -8,11 +8,11 @@ import AlgorithmSelect from './AlgorithmSelect';
 import Button from 'react-bootstrap/Button';
 
 export default function GraphAlgorithmForm ( 
-    {graphTags, algorithmTags, graphIndex, changeGraphFunc, algorithmIndex, changeAlgorithmFunc, changeCurrentsFunc, optionsForm} ) {
+    {graphTags, algorithmTags, graphIndex, changeGraphFunc, algorithmIndex, changeAlgorithmFunc, optionsForm, submitFunc} ) {
 
-    function handleChange() {
+    function handleSubmit() {
         if (graphIndex !== -1 && algorithmIndex !== -1) {
-            changeCurrentsFunc();
+            submitFunc();
         }
     }
 
@@ -43,7 +43,7 @@ export default function GraphAlgorithmForm (
                         {optionsComponents}
                         <Row>
                             <Col>
-                                <Button className="btn btn-primary mt-3" onClick={handleChange}>Change</Button>
+                                <Button className="btn btn-primary mt-3" onClick={handleSubmit}>Submit</Button>
                                 <Button className="btn btn-secondary mt-3 ms-3" onClick={handleClear}>Clear</Button>
                             </Col>
                         </Row>
