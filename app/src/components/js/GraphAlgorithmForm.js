@@ -6,39 +6,25 @@ import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import AlgorithmSelect from './AlgorithmSelect';
 import Button from 'react-bootstrap/Button';
-import { useState } from 'react';
 
 export default function GraphAlgorithmForm ( 
-    {graphTags, algorithmTags, graphIndex, setGraphIndexFunc, changeGraphFunc, changeCurrentsFunc} ) {
-
-    const [selectedAlgorithmIndex, setSelectedAlgorithmIndex] = useState(-1);
-    const [options, setOptions] = useState([]);
-
-    const bothSelected = (graphIndex !== -1) && (selectedAlgorithmIndex !== -1);
-    let optionsForm = null;
-    let optionsFormComponents = <></>;
-    if (bothSelected) {
-        const graph = graphTags[graphIndex].getAlgorithmGraph();
-        const optionsFormClass = algorithmTags[selectedAlgorithmIndex].getOptionsFormClass();
-
-        optionsForm = new optionsFormClass(options, setOptions, graph);
-        optionsFormComponents = optionsForm.getComponents();
-    }
+    {graphTags, algorithmTags, graphIndex, changeGraphFunc, algorithmIndex, changeAlgorithmFunc, changeCurrentsFunc, optionsForm} ) {
 
     function handleChange() {
-
-        if (graphIndex === -1 || selectedAlgorithmIndex === -1) {
-            return;
+        if (graphIndex !== -1 && algorithmIndex !== -1) {
+            changeCurrentsFunc();
         }
-
-        changeCurrentsFunc(graphIndex, selectedAlgorithmIndex, options);
-        setGraphIndexFunc(-1);
-        setSelectedAlgorithmIndex(-1);
     }
 
     function handleClear() {
         changeGraphFunc(-1);
-        setSelectedAlgorithmIndex(-1);
+        changeAlgorithmFunc(-1);
+    }
+
+
+    let optionsComponents = <></>;
+    if (optionsForm !== null) {
+        optionsComponents = optionsForm.getComponents();
     }
 
     return (
@@ -48,13 +34,13 @@ export default function GraphAlgorithmForm (
                     <Form>
                         <Row>
                             <Col>
-                                <GraphSelect graphTags={graphTags} selected={graphIndex} changeFunc={changeGraphFunc}/>
+                                <GraphSelect tags={graphTags} selected={graphIndex} changeFunc={changeGraphFunc}/>
                             </Col>
                             <Col>
-                                <AlgorithmSelect tags={algorithmTags} selected={selectedAlgorithmIndex} setFunc={setSelectedAlgorithmIndex}/>
+                                <AlgorithmSelect tags={algorithmTags} selected={algorithmIndex} changeFunc={changeAlgorithmFunc}/>
                             </Col>
                         </Row>
-                        {optionsFormComponents}
+                        {optionsComponents}
                         <Row>
                             <Col>
                                 <Button className="btn btn-primary mt-3" onClick={handleChange}>Change</Button>

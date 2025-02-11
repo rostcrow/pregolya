@@ -1,7 +1,7 @@
 
 import Form from 'react-bootstrap/Form';
 
-export default function AlgorithmSelect ({tags, selected, setFunc}) {
+export default function AlgorithmSelect ({tags, selected, changeFunc}) {
 
     let options = [];
     for (const [index, tag] of tags.entries()) {
@@ -9,7 +9,7 @@ export default function AlgorithmSelect ({tags, selected, setFunc}) {
     }
 
     function handleChange(e) {
-        setFunc(Number(e.target.value));
+        changeFunc(Number(e.target.value));
     } 
 
     return (

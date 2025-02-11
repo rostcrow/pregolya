@@ -47,8 +47,12 @@ export default function AppControl() {
     //States
     const [currentVisibleGraph, setCurrentVisibleGraph] = useState(firstGraph);
     const [currentWorkingGraph, setCurrentWorkingGraph] = useState(firstGraph);
+
     const [selectedGraphIndex, setSelectedGraphIndex] = useState(-1);
     const [graphPreview, setGraphPreview] = useState(false);
+    const [selectedAlgorithmIndex, setSelectedAlgorithmIndex] = useState(-1);
+    const [options, setOptions] = useState([]);
+    const [optionsForm, setOptionsForm] = useState(null);
 
     const [graphRefreshState, setGraphRefreshState] = useState(true);
     const [sideComponents, setSideComponents] = useState(firstAlgorithmFacade.getCurrentSideComponents());
@@ -68,15 +72,48 @@ export default function AppControl() {
             setCurrentVisibleGraph(graphTags[graphIndex].getDisplayGraph());
             setGraphPreview(true);
         }
+
+        changeAlgorithmOptionsForm(graphIndex, selectedAlgorithmIndex);
+    }
+
+    //Handling algorithm change in form
+    function changeAlgorithm (algorithmIndex) {
+        setSelectedAlgorithmIndex(algorithmIndex);
+        changeAlgorithmOptionsForm(selectedGraphIndex, algorithmIndex);
+    }
+
+    //Handling options form change
+    function changeAlgorithmOptionsForm (graphIndex, algorithmIndex) {
+
+        if (graphIndex !== -1 && algorithmIndex !== -1) {
+            //Options form shown
+
+            const optionsFormClass = algorithmTags[algorithmIndex].getOptionsFormClass();
+            const optionsForm = new optionsFormClass(options, setOptions, graphTags[graphIndex].getAlgorithmGraph());
+            const defaultOptions = optionsForm.getDefaultOptions();
+
+            setOptions(defaultOptions);
+            setOptionsForm(optionsForm);
+
+        } else {
+            //Options form hidden
+
+            setOptions([]);
+            setOptionsForm(null);
+        }
     }
 
     //Handling form change
-    function changeCurrents(graphIndex, algorithmIndex, algorithmOptions) {
-        const graphTag = graphTags[graphIndex];
+    function changeCurrents() {
+        const graphTag = graphTags[selectedGraphIndex];
         const graph = graphTag.getDisplayGraph();
         const algorithmGraph = graphTag.getAlgorithmGraph();
-        const algorithmFacade = new AlgorithmFacade(algorithmGraph, algorithmTags[algorithmIndex], ...algorithmOptions);
+        const algorithmFacade = new AlgorithmFacade(algorithmGraph, algorithmTags[selectedAlgorithmIndex], ...options);
 
+        setSelectedGraphIndex(-1);
+        setSelectedAlgorithmIndex(-1);
+        setOptions([]);
+        setOptionsForm(null);
         setCurrentVisibleGraph(graph);
         setCurrentWorkingGraph(graph);
         setGraphPreview(false);
@@ -102,8 +139,9 @@ export default function AppControl() {
     return (
         <>
             <GraphAlgorithmForm graphTags={graphTags} algorithmTags={algorithmTags} 
-                graphIndex={selectedGraphIndex} setGraphIndexFunc={setSelectedGraphIndex}                
-                changeGraphFunc={changeGraph} changeCurrentsFunc={changeCurrents}/>
+                graphIndex={selectedGraphIndex} changeGraphFunc={changeGraph}
+                algorithmIndex={selectedAlgorithmIndex} changeAlgorithmFunc={changeAlgorithm}
+                changeCurrentsFunc={changeCurrents} optionsForm={optionsForm}/>
             <Container>
                 <Row>
                     <Col className="col-8">

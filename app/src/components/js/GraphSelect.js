@@ -1,11 +1,11 @@
 
 import Form from 'react-bootstrap/Form';
 
-export default function GraphSelect( {graphTags, selected, changeFunc} ) {
+export default function GraphSelect( {tags, selected, changeFunc} ) {
 
     let options = [];
-    for (const [index, graphTag] of graphTags.entries()) {
-        const graphName = graphTag.getName();
+    for (const [index, tag] of tags.entries()) {
+        const graphName = tag.getName();
         options.push(<option key={index} value={index}>{graphName}</option>);
     }
 
