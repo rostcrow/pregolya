@@ -26,6 +26,21 @@ export default class GraphTag {
         return this.#name;
     }
 
+    getNameWithType() {
+
+        let typeString = "";
+
+        if (this.#directed && this.#weighted) {
+            typeString = " (directed and weighted)";
+        } else if (this.#directed) {
+            typeString = " (directed)";
+        } else if (this.#weighted) {
+            typeString = " (weighted)";
+        }
+
+        return this.#name + typeString;
+    }
+
     isDirected() {
         return this.#directed;
     }

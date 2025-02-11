@@ -5,7 +5,7 @@ export default function GraphSelect( {tags, selected, changeFunc} ) {
 
     let options = [];
     for (const [index, tag] of tags.entries()) {
-        const graphName = tag.getName();
+        const graphName = tag.getNameWithType();
         options.push(<option key={index} value={index}>{graphName}</option>);
     }
 
