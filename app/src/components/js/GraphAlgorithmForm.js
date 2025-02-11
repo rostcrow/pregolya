@@ -21,11 +21,7 @@ export default function GraphAlgorithmForm (
         changeAlgorithmFunc(-1);
     }
 
-
-    let optionsComponents = <></>;
-    if (optionsForm !== null) {
-        optionsComponents = optionsForm.getComponents();
-    }
+    const optionsComponents = optionsForm.getComponents();
 
     return (
         <>

@@ -22,6 +22,7 @@ import AlgorithmFacade from '../../classes/AlgorithmFacade.js';
 import GraphAlgorithmForm from './GraphAlgorithmForm.js';
 import BFSAlgorithmOptionsForm from '../../classes/BFSAlgorithmOptionsForm.js';
 import GraphTag from '../../classes/GraphTag.js';
+import NullAlgorithmOptionsForm from '../../classes/NullAlgorithmOptionsForm.js';
 
 //Initializing graphs
 const graphsJSON = graphExamplesArray;
@@ -42,6 +43,9 @@ const bfs = new AlgorithmTag(
 const algorithmTags = [bfs];
 const firstAlgorithmFacade = new AlgorithmFacade(firstAlgGraph, algorithmTags[0], "0");
 
+//Initializing options form
+const firstOptionsForm = new NullAlgorithmOptionsForm();
+
 export default function AppControl() {
 
     //States
@@ -51,8 +55,9 @@ export default function AppControl() {
     const [selectedGraphIndex, setSelectedGraphIndex] = useState(-1);
     const [graphPreview, setGraphPreview] = useState(false);
     const [selectedAlgorithmIndex, setSelectedAlgorithmIndex] = useState(-1);
-    const [options, setOptions] = useState([]);
-    const [optionsForm, setOptionsForm] = useState(null);
+
+    const [options, setOptions] = useState(firstOptionsForm.getDefaultOptions());
+    const [optionsForm, setOptionsForm] = useState(firstOptionsForm);
 
     const [graphRefreshState, setGraphRefreshState] = useState(true);
     const [sideComponents, setSideComponents] = useState(firstAlgorithmFacade.getCurrentSideComponents());
@@ -90,22 +95,19 @@ export default function AppControl() {
     //Handling options form change
     function changeAlgorithmOptionsForm (graphIndex, algorithmIndex) {
 
+        let newOptionsForm = new NullAlgorithmOptionsForm();
+
         if (graphIndex !== -1 && algorithmIndex !== -1) {
             //Options form shown
 
             const optionsFormClass = algorithmTags[algorithmIndex].getOptionsFormClass();
-            const optionsForm = new optionsFormClass(options, setOptions, graphTags[graphIndex].getAlgorithmGraph());
-            const defaultOptions = optionsForm.getDefaultOptions();
-
-            setOptions(defaultOptions);
-            setOptionsForm(optionsForm);
-
-        } else {
-            //Options form hidden
-
-            setOptions([]);
-            setOptionsForm(null);
+            newOptionsForm = new optionsFormClass(options, setOptions, graphTags[graphIndex].getAlgorithmGraph());
         }
+
+        const defaultOptions = newOptionsForm.getDefaultOptions();
+
+        setOptions(defaultOptions);
+        setOptionsForm(newOptionsForm);
     }
 
     //Handling form change
@@ -117,8 +119,11 @@ export default function AppControl() {
 
         setSelectedGraphIndex(-1);
         setSelectedAlgorithmIndex(-1);
-        setOptions([]);
-        setOptionsForm(null);
+
+        const nullOptionsForm = new NullAlgorithmOptionsForm();
+        setOptions(nullOptionsForm.getDefaultOptions());
+        setOptionsForm(nullOptionsForm);
+
         setCurrentVisibleGraph(graph);
         setCurrentWorkingGraph(graph);
         setGraphPreview(false);
