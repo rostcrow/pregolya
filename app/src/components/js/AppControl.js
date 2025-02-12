@@ -104,9 +104,12 @@ export default function AppControl() {
             newOptionsForm = new optionsFormClass(options, setOptions, graphTags[graphIndex].getAlgorithmGraph());
         }
 
+        //Setting default options
         const defaultOptions = newOptionsForm.getDefaultOptions();
-
+        newOptionsForm.setOptions(defaultOptions);
         setOptions(defaultOptions);
+
+        //Setting options form
         setOptionsForm(newOptionsForm);
     }
 

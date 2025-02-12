@@ -29,6 +29,10 @@ export default class AlgorithmOptionsForm {
         return this.#options;
     }
 
+    setOptions(options) {
+        this.#options = options;
+    }
+
     getSetOptionsFunc() {
         return this.#setOptionsFunc;
     }
