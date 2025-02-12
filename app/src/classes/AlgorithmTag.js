@@ -2,14 +2,16 @@
 export default class AlgorithmTag {
 
     #name;
+    #compatibleGraphTypes;
     #algorithmClass;
     #nodeAttributesAdapterClass;
     #edgeAttributesAdapterClass;
     #sideComponentsFactoryClass;
     #optionsFormClass;
 
-    constructor(name, algorithmClass, nodeAttributesAdapterClass, edgeAttributesAdapterClass, sideComponentsFactoryClass, optionsFormClass) {
+    constructor(name, compatibleGraphTypes, algorithmClass, nodeAttributesAdapterClass, edgeAttributesAdapterClass, sideComponentsFactoryClass, optionsFormClass) {
         this.#name = name;
+        this.#compatibleGraphTypes = compatibleGraphTypes;
         this.#algorithmClass = algorithmClass;
         this.#nodeAttributesAdapterClass = nodeAttributesAdapterClass;
         this.#edgeAttributesAdapterClass = edgeAttributesAdapterClass;
@@ -19,6 +21,10 @@ export default class AlgorithmTag {
     
     getName() {
         return this.#name;
+    }
+
+    getCompatibleGraphTypes() {
+        return this.#compatibleGraphTypes;
     }
 
     getAlgorithmClass() {

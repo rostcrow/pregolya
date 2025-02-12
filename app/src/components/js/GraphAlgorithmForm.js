@@ -6,6 +6,8 @@ import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import AlgorithmSelect from './AlgorithmSelect';
 import Button from 'react-bootstrap/Button';
+import GraphAlgorithmCompatibilityChecker from '../../classes/GraphAlgorithmCompatibilityChecker';
+import CompatibilityAlert from './CompatibilityAlert';
 
 export default function GraphAlgorithmForm ( 
     {graphTags, algorithmTags, graphIndex, changeGraphFunc, algorithmIndex, changeAlgorithmFunc, optionsForm, submitFunc} ) {
@@ -19,12 +21,23 @@ export default function GraphAlgorithmForm (
         changeAlgorithmFunc(-1);
     }
 
-    const optionsComponents = optionsForm.getComponents();
+    //Checking compatibility
+    let compatibilityComponent = <></>;
+    let optionsComponents = <></>;
+    let submitButtonDisabled = true;
 
-    let submitButtonClass = "btn btn-primary mt-3";
-    if (graphIndex === -1 || algorithmIndex === -1) {
-        submitButtonClass += " disabled";
-    }
+    if (graphIndex !== -1 && algorithmIndex !== -1) {
+        const compatibilityMessage = GraphAlgorithmCompatibilityChecker.check(graphTags[graphIndex], algorithmTags[algorithmIndex]);
+
+        if (compatibilityMessage.isCompatible()) {
+            //Compatible, showing options, submit allowed
+            optionsComponents = optionsForm.getComponents();
+            submitButtonDisabled = false;
+        } else {
+            //Not compatible, showing message
+            compatibilityComponent = <CompatibilityAlert message={compatibilityMessage.getMessage()}/>;
+        }
+    }    
 
     return (
         <>
@@ -39,10 +52,12 @@ export default function GraphAlgorithmForm (
                                 <AlgorithmSelect tags={algorithmTags} selected={algorithmIndex} changeFunc={changeAlgorithmFunc}/>
                             </Col>
                         </Row>
+                        {compatibilityComponent}
                         {optionsComponents}
                         <Row>
                             <Col>
-                                <Button className={submitButtonClass} onClick={handleSubmit}>Submit</Button>
+                                <Button className="btn btn-primary mt-3" onClick={handleSubmit} 
+                                    disabled={submitButtonDisabled}>Submit</Button>
                                 <Button className="btn btn-secondary mt-3 ms-3" onClick={handleClear}>Clear</Button>
                             </Col>
                         </Row>

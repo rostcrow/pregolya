@@ -21,7 +21,7 @@ import BFSSideComponentsFactory from '../../classes/BFSSideComponentsFactory.js'
 import AlgorithmFacade from '../../classes/AlgorithmFacade.js';
 import GraphAlgorithmForm from './GraphAlgorithmForm.js';
 import BFSAlgorithmOptionsForm from '../../classes/BFSAlgorithmOptionsForm.js';
-import GraphTag from '../../classes/GraphTag.js';
+import GraphTag, { GraphType } from '../../classes/GraphTag.js';
 import NullAlgorithmOptionsForm from '../../classes/NullAlgorithmOptionsForm.js';
 
 //Initializing graphs
@@ -36,7 +36,7 @@ const firstAlgGraph = graphTags[0].getAlgorithmGraph();
 
 //Initializing algorithms
 const bfs = new AlgorithmTag(
-  "Breadth-first search (BFS)", 
+  "Breadth-first search (BFS)", [GraphType.NORMAL, GraphType.DIRECTED],
   BFSAlgorithm, BFSNodeAttributesAdapter, BFSEdgeAttributesAdapter, BFSSideComponentsFactory, BFSAlgorithmOptionsForm
 );
 
