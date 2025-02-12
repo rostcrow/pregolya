@@ -8,6 +8,13 @@ import GraphDataApplier from "./GraphDataApplier";
 import GraphDataExtractor from "./GraphDataExtractor";
 import ErrorThrower from "./ErrorThrower";
 
+export const GraphType = {
+    NORMAL: 0,
+    DIRECTED: 1,
+    WEIGHTED: 2,
+    DIRECTED_WEIGHTED: 3
+}
+
 export default class GraphTag {
 
     #name;
@@ -28,17 +35,10 @@ export default class GraphTag {
 
     getNameWithType() {
 
-        let typeString = "";
+        const type = this.getType();
+        const typeStrings = ["", " (directed)", " (weighted)", " (directed and weighted)"];
 
-        if (this.#directed && this.#weighted) {
-            typeString = " (directed and weighted)";
-        } else if (this.#directed) {
-            typeString = " (directed)";
-        } else if (this.#weighted) {
-            typeString = " (weighted)";
-        }
-
-        return this.#name + typeString;
+        return this.#name + typeStrings[type];
     }
 
     isDirected() {
@@ -47,6 +47,22 @@ export default class GraphTag {
 
     isWeighted() {
         return this.#weighted;
+    }
+
+    getType() {
+        if (this.#directed && this.#weighted) {
+            return GraphType.DIRECTED_WEIGHTED;
+        }
+
+        if (this.#directed) {
+            return GraphType.DIRECTED;
+        }
+
+        if (this.#weighted) {
+            return GraphType.WEIGHTED;
+        }
+
+        return GraphType.NORMAL;
     }
 
     #getRawGraph(nodes, edges) {
