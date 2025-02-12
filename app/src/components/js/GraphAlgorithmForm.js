@@ -23,6 +23,11 @@ export default function GraphAlgorithmForm (
 
     const optionsComponents = optionsForm.getComponents();
 
+    let submitButtonClass = "btn btn-primary mt-3";
+    if (graphIndex === -1 || algorithmIndex === -1) {
+        submitButtonClass += " disabled";
+    }
+
     return (
         <>
             <Card className="my-3 mx-5">
@@ -39,7 +44,7 @@ export default function GraphAlgorithmForm (
                         {optionsComponents}
                         <Row>
                             <Col>
-                                <Button className="btn btn-primary mt-3" onClick={handleSubmit}>Submit</Button>
+                                <Button className={submitButtonClass} onClick={handleSubmit}>Submit</Button>
                                 <Button className="btn btn-secondary mt-3 ms-3" onClick={handleClear}>Clear</Button>
                             </Col>
                         </Row>
