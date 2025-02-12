@@ -8,17 +8,39 @@ import AlgorithmSelect from './AlgorithmSelect';
 import Button from 'react-bootstrap/Button';
 import GraphAlgorithmCompatibilityChecker from '../../classes/GraphAlgorithmCompatibilityChecker';
 import CompatibilityAlert from './CompatibilityAlert';
+import GraphTag from '../../classes/GraphTag';
 
-export default function GraphAlgorithmForm ( 
-    {graphTags, algorithmTags, graphIndex, changeGraphFunc, algorithmIndex, changeAlgorithmFunc, optionsForm, submitFunc} ) {
-
+export default function GraphAlgorithmForm ( {graphTags, selectedGraphIndex, changeSelectedGraphIndexFunc, changeImportedGraphFunc, 
+    chosenGraph, algorithmTags, selectedAlgorithmIndex, changeSelectedAlgorithmIndexFunc, optionsForm, submitFunc, clearFunc} ) {
+    
+    //Funcs
     function handleSubmit() {
         submitFunc();
     }
 
     function handleClear() {
-        changeGraphFunc(-1);
-        changeAlgorithmFunc(-1);
+        clearFunc();
+    }
+
+    function handleImportFileChange(e) {
+
+        let file = e.target.files[0];
+
+        if (file.size > 0) {
+            var reader = new FileReader();
+
+            reader.onload = function(e) {
+
+                let content = e.target.result;
+                let graphTag = new GraphTag(JSON.parse(content));
+
+
+                changeImportedGraphFunc(graphTag);
+            };
+
+            reader.readAsText(file);
+        }
+
     }
 
     //Checking compatibility
@@ -26,8 +48,9 @@ export default function GraphAlgorithmForm (
     let optionsComponents = <></>;
     let submitButtonDisabled = true;
 
-    if (graphIndex !== -1 && algorithmIndex !== -1) {
-        const compatibilityMessage = GraphAlgorithmCompatibilityChecker.check(graphTags[graphIndex], algorithmTags[algorithmIndex]);
+    if (chosenGraph !== null && selectedAlgorithmIndex !== -1) {
+        const compatibilityMessage = 
+            GraphAlgorithmCompatibilityChecker.check(chosenGraph, algorithmTags[selectedAlgorithmIndex]);
 
         if (compatibilityMessage.isCompatible()) {
             //Compatible, showing options, submit allowed
@@ -46,11 +69,22 @@ export default function GraphAlgorithmForm (
                     <Form>
                         <Row>
                             <Col>
-                                <GraphSelect tags={graphTags} selected={graphIndex} changeFunc={changeGraphFunc}/>
+                                <GraphSelect tags={graphTags} selectedIndex={selectedGraphIndex} 
+                                    changeFunc={changeSelectedGraphIndexFunc}/>
                             </Col>
                             <Col>
-                                <AlgorithmSelect tags={algorithmTags} selected={algorithmIndex} changeFunc={changeAlgorithmFunc}/>
+                                <AlgorithmSelect tags={algorithmTags} selectedIndex={selectedAlgorithmIndex} 
+                                    changeFunc={changeSelectedAlgorithmIndexFunc}/>
                             </Col>
+                        </Row>
+                        <Row>
+                            <Col>
+                                <Form.Group className='mt-2'>
+                                    <Form.Label>or import file</Form.Label>
+                                    <Form.Control id="file-input" type="file" onChange={e => handleImportFileChange(e)}/>
+                                </Form.Group>
+                            </Col>
+                            <Col></Col>
                         </Row>
                         {compatibilityComponent}
                         {optionsComponents}

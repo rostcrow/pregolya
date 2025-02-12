@@ -1,7 +1,7 @@
 
 import Form from 'react-bootstrap/Form';
 
-export default function AlgorithmSelect ({tags, selected, changeFunc}) {
+export default function AlgorithmSelect ({tags, selectedIndex, changeFunc}) {
 
     let options = [];
     for (const [index, tag] of tags.entries()) {
@@ -15,7 +15,7 @@ export default function AlgorithmSelect ({tags, selected, changeFunc}) {
     return (
         <>
             <Form.Label>Choose algorithm</Form.Label>
-            <Form.Select value={selected} onChange={e => handleChange(e)}>
+            <Form.Select value={selectedIndex} onChange={e => handleChange(e)}>
                 <option key="-1" value="-1">...</option>
                 {options}
             </Form.Select>
