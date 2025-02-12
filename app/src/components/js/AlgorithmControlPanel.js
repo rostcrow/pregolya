@@ -118,6 +118,11 @@ export default function AlgorithmControlPanel( {running, controlState, setContro
                 updateFunc();
                 await sleep(sleepDurationMs);
             }
+
+            if (algorithmFacade.algorithmIsOnEnd()) {
+                running.current = false;
+                setStartMiddleEnd();
+            }
         }
 
         run();
