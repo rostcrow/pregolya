@@ -1,6 +1,6 @@
 
 //Libraries
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import Container from 'react-bootstrap/esm/Container.js';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -64,6 +64,7 @@ export default function AppControl() {
 
     const [currentAlgorithmFacade, setCurrentAlgorithmFacade] = useState(firstAlgorithmFacade);
     const [algorithmControlState, setAlgorithmControlState] = useState("start");
+    const running = useRef(false);
   
     //Handling graph change in form
     function changeGraph (graphIndex) {
@@ -132,6 +133,7 @@ export default function AppControl() {
         setGraphPreview(false);
         setCurrentAlgorithmFacade(algorithmFacade);
         setSideComponents(algorithmFacade.getCurrentSideComponents());
+        running.current = false;
         setAlgorithmControlState("start");
     }
 
@@ -159,7 +161,7 @@ export default function AppControl() {
                 <Row>
                     <Col className="col-8">
                         <GraphCanvas graph={currentVisibleGraph} refreshState={graphRefreshState} graphPreview={graphPreview}/>
-                        <AlgorithmControlPanel controlState={algorithmControlState} 
+                        <AlgorithmControlPanel running={running} controlState={algorithmControlState} 
                             setControlStateFunc={setAlgorithmControlState} 
                             algorithmFacade={currentAlgorithmFacade} updateFunc={update} graphPreview={graphPreview} />
                     </Col>

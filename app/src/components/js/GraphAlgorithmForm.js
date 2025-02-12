@@ -11,9 +11,7 @@ export default function GraphAlgorithmForm (
     {graphTags, algorithmTags, graphIndex, changeGraphFunc, algorithmIndex, changeAlgorithmFunc, optionsForm, submitFunc} ) {
 
     function handleSubmit() {
-        if (graphIndex !== -1 && algorithmIndex !== -1) {
-            submitFunc();
-        }
+        submitFunc();
     }
 
     function handleClear() {

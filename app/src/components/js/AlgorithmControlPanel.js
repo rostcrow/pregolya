@@ -1,14 +1,12 @@
 import Container from "react-bootstrap/esm/Container";
 import { BsChevronBarLeft, BsChevronLeft, BsChevronRight, BsChevronBarRight, BsPlay, BsStop } from "react-icons/bs";
-import { useState } from "react";
+import { useState  } from "react";
 import Form from "react-bootstrap/Form";
 
 const DEFAULT_RUN_BUTTON_STYLE = "btn btn-primary mt-2 ms-2";
 const DEFAULT_OTHER_BUTTON_STYLE = "btn btn-secondary mt-2 ms-2";
 
-let running = false;
-
-export default function AlgorithmControlPanel( {controlState, setControlStateFunc, algorithmFacade, updateFunc, graphPreview} ) {
+export default function AlgorithmControlPanel( {running, controlState, setControlStateFunc, algorithmFacade, updateFunc, graphPreview} ) {
 
     //States
     const [runSpeed, setRunSpeed] = useState(6);
@@ -96,13 +94,12 @@ export default function AlgorithmControlPanel( {controlState, setControlStateFun
     function handleRun() {
 
         //Run/stop logic
-        if (running) {
-            running = false;
+        if (running.current === true) {
+            running.current = false;
             setStartMiddleEnd();
-
             return;
         } else {
-            running = true;
+            running.current = true;
             setControlStateFunc("running");
         }
 
@@ -116,15 +113,11 @@ export default function AlgorithmControlPanel( {controlState, setControlStateFun
 
         //Run function
         async function run() {
-            while(running && !algorithmFacade.algorithmIsOnEnd()) {
+            while(running.current && !algorithmFacade.algorithmIsOnEnd()) {
                 algorithmFacade.forward();
                 updateFunc();
                 await sleep(sleepDurationMs);
             }
-
-            //Run end
-            running = false;
-            setStartMiddleEnd();
         }
 
         run();
