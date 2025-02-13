@@ -5,9 +5,8 @@ export default function CompatibilityAlert ( {message} ) {
 
     return (
         <Alert className={"mt-3"} key={"compatibility-alert"} variant={"danger"}>
-            {message}
+            <Alert.Heading>Graph and algorithm are not compatible</Alert.Heading>
+            <p>{message}</p>
         </Alert>
     );
-
-
 }

@@ -24,6 +24,7 @@ export default function GraphAlgorithmForm ( {graphTags, selectedGraphIndex, cha
     
     //Checking compatibility
     let compatibilityComponent = <></>;
+    let optionsHeading = <></>;
     let optionsComponents = <></>;
     let submitButtonDisabled = true;
 
@@ -33,13 +34,14 @@ export default function GraphAlgorithmForm ( {graphTags, selectedGraphIndex, cha
 
         if (compatibilityMessage.isCompatible()) {
             //Compatible, showing options, submit allowed
+            optionsHeading = <h3 className='mt-3'>Options</h3>;
             optionsComponents = optionsForm.getComponents();
             submitButtonDisabled = false;
         } else {
             //Not compatible, showing message
             compatibilityComponent = <CompatibilityAlert message={compatibilityMessage.getMessage()}/>;
         }
-    }    
+    }
 
     return (
         <>
@@ -62,8 +64,8 @@ export default function GraphAlgorithmForm ( {graphTags, selectedGraphIndex, cha
                             </Col>
                             <Col></Col>
                         </Row>
-
                         {compatibilityComponent}
+                        {optionsHeading}
                         {optionsComponents}
                         <Row>
                             <Col>
