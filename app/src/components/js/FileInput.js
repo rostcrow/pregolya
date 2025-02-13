@@ -34,11 +34,16 @@ export default function FileInput( {changeImportedGraphFunc} ) {
         //Getting file
         let file = e.target.files[0];
 
+        //Checking file undefined
+        if (file === undefined) {
+            return;
+        }
+
         //Checking file size
         if (file.size > MAX_FILE_SIZE_KB * 1024) {
             //Too big
 
-            const message = `Maximum size of chosen file can be ${MAX_FILE_SIZE_KB} kB.`;
+            const message = `Maximum size of chosen file can be ${MAX_FILE_SIZE_KB} kB`;
             invokeFileAlert("File too large", [message]);
 
             return;
@@ -47,7 +52,7 @@ export default function FileInput( {changeImportedGraphFunc} ) {
         if (file.size === 0) {
             //Empty
 
-            const message = "Chosen file is empty.";
+            const message = "Chosen file is empty";
             invokeFileAlert("Empty file", [message]);
 
             return;
