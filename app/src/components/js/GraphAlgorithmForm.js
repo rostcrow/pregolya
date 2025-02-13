@@ -45,33 +45,30 @@ export default function GraphAlgorithmForm ( {graphTags, selectedGraphIndex, cha
 
     return (
         <>
-            <Card className="my-3 mx-5">
+            <Card className="my-3 mx-5 bg-light">
                 <Card.Body>
                     <Form>
                         <Row>
-                            <Col>
+                            <Col className="col-12 col-lg-6">
                                 <GraphSelect tags={graphTags} selectedIndex={selectedGraphIndex} 
                                     changeFunc={changeSelectedGraphIndexFunc}/>
+                                <FileInput changeImportedGraphFunc={changeImportedGraphFunc} />
                             </Col>
-                            <Col>
+                            <Col className="col-12 col-lg-6 mt-2 mt-lg-0">
                                 <AlgorithmSelect tags={algorithmTags} selectedIndex={selectedAlgorithmIndex} 
                                     changeFunc={changeSelectedAlgorithmIndexFunc}/>
                             </Col>
                         </Row>
-                        <Row>
-                            <Col>
-                                <FileInput changeImportedGraphFunc={changeImportedGraphFunc} />
-                            </Col>
-                            <Col></Col>
-                        </Row>
                         {compatibilityComponent}
                         {optionsHeading}
                         {optionsComponents}
-                        <Row>
-                            <Col>
-                                <Button className="btn btn-primary mt-3" onClick={handleSubmit} 
-                                    disabled={submitButtonDisabled}>Submit</Button>
-                                <Button className="btn btn-secondary mt-3 ms-3" onClick={handleClear}>Clear</Button>
+                        <Row className="mt-3">
+                            <Col className="text-end p-0">
+                                <Button className="btn btn-primary me-2" onClick={handleSubmit}
+                                disabled={submitButtonDisabled}>Submit</Button>
+                            </Col>
+                            <Col className="text-start p-0">
+                                <Button className="btn btn-secondary ms-2" onClick={handleClear}>Clear</Button>
                             </Col>
                         </Row>
                     </Form>

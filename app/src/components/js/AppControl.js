@@ -209,21 +209,20 @@ export default function AppControl() {
                 chosenGraph={chosenGraph} algorithmTags={algorithmTags} selectedAlgorithmIndex={selectedAlgorithmIndex}
                 changeSelectedAlgorithmIndexFunc={handleChangeSelectedAlgorithmIndex}
                 optionsForm={optionsForm} submitFunc={handleChangeWorkspace} clearFunc={handleClearForm} />
-            <Container>
-                <Row>
-                    <Col className="col-8">
+            <Container className='px-5 mb-5' fluid={true}>
+                <Row className='p-0 m-0'>
+                    <Col className="col-12 col-lg-8 p-0 pe-lg-2 m-0">
                         <GraphCanvas graph={visibleGraph} refreshState={graphRefreshState} graphPreview={graphPreview}/>
                         <AlgorithmControlPanel running={running} controlState={algorithmControlState} 
                             setControlStateFunc={setAlgorithmControlState} 
                             algorithmFacade={algorithmFacade} updateFunc={update} graphPreview={graphPreview} />
                     </Col>
-                    <Col className="col-4">
+                    <Col className="col-12 col-lg-4 pt-2 pb-0 ps-0 pe-0 pt-lg-0 pb-lg-0 ps-lg-2 pe-lg-0 m-0">
                         <SidePanel sideComponents={sideComponents} graphPreview={graphPreview}/>
                     </Col>
                 </Row>
             </Container>
         </>
-
     );
 
 }

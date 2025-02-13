@@ -30,7 +30,7 @@ export default class BFSAlgorithmOptionsForm extends AlgorithmOptionsForm {
 
         return (
             <>
-                <Form.Label className='mt-3'>Starting node</Form.Label>
+                <Form.Label>Starting node</Form.Label>
                 <Form.Select value={options[0]} onChange={e => this.#startingNodeChange(e)}>
                     {optionsHtml}
                 </Form.Select>           

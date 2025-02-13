@@ -135,7 +135,7 @@ export default function GraphCanvas( {graph, refreshState, graphPreview} ) {
   }
 
   //Determining card style based on graph preview boolean
-  let cardClass = "mx-3 my-3 p-0";
+  let cardClass = "p-0";
   if (graphPreview) {
     cardClass += " border border-5 border-primary-subtle";
   }

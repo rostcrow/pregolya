@@ -1,6 +1,7 @@
 import Nav from 'react-bootstrap/Nav';
 import { useState } from 'react';
 import Container from 'react-bootstrap/Container';
+import Card from 'react-bootstrap/Card';
 
 export default function SidePanel ( {sideComponents, graphPreview} ) {
 
@@ -44,14 +45,17 @@ export default function SidePanel ( {sideComponents, graphPreview} ) {
     }
 
     return (
-        <div style={style}>
-            <Nav className="mt-2" variant="tabs" defaultActiveKey="0">
-                {navItems}
-            </Nav>
-            <Container className="pt-2">
-                {tabComponents}
-            </Container>
-        </div>
+        <Card className="m-0 p-0 bg-light" style={style}>
+            <Card.Body>
+                <Nav className="mt-1" variant="pills" defaultActiveKey="0">
+                    {navItems}
+                </Nav>
+                <Container className="pt-2">
+                    {tabComponents}
+                </Container>
+            </Card.Body>
+
+        </Card>
     );
 
 }
