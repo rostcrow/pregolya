@@ -20,6 +20,7 @@ export default function FileInput( {changeImportedGraphFunc} ) {
     }
 
     function invokeFileAlert(heading, errorStack) {
+        changeImportedGraphFunc(null);
         clearFileInput();
         setFileAlertHeading(heading);
         setFileAlertErrorStack(errorStack);

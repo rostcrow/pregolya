@@ -93,6 +93,22 @@ export default function AppControl() {
     //Handles importing graph from file
     function handleChangeImportedGraph(graphTag) {
 
+        if (graphTag === null) {
+            //Unsuccessful import
+
+            if (selectedGraphIndex === -1) {
+                //Clearing preview of previously imported
+                setChosenGraph(null);
+                setVisibleGraph(workingGraph);
+                setGraphPreview(false);
+    
+                changeOptionsForm(null, algorithmTags[selectedAlgorithmIndex]);
+            }
+
+            return;
+        } 
+
+        //Successful import
         setChosenGraph(graphTag);
         setVisibleGraph(graphTag.getDisplayGraph());
         setGraphPreview(true);
