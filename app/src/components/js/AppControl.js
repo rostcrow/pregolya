@@ -23,6 +23,11 @@ import GraphAlgorithmForm from './GraphAlgorithmForm.js';
 import BFSAlgorithmOptionsForm from '../../classes/BFSAlgorithmOptionsForm.js';
 import GraphTag, { GraphType } from '../../classes/GraphTag.js';
 import NullAlgorithmOptionsForm from '../../classes/NullAlgorithmOptionsForm.js';
+import DFSAlgorithm from '../../classes/DFSAlgorithm.js';
+import DFSSideComponentsFactory from '../../classes/DFSSideComponentsFactory.js';
+import DFSNodeAttributesAdapter from '../../classes/DFSNodeAttributesAdapter.js';
+import DFSEdgeAttributesAdapter from '../../classes/DFSEdgeAttributesAdapter.js';
+import DFSAlgorithmOptionsForm from '../../classes/DFSAlgorithmOptionsForm.js';
 
 //Initializing graphs
 const graphsJSON = graphExamplesArray;
@@ -40,7 +45,12 @@ const bfs = new AlgorithmTag(
   BFSAlgorithm, BFSNodeAttributesAdapter, BFSEdgeAttributesAdapter, BFSSideComponentsFactory, BFSAlgorithmOptionsForm
 );
 
-const algorithmTags = [bfs];
+const dfs = new AlgorithmTag(
+    "Depth-first search (DFS)", [GraphType.NORMAL, GraphType.DIRECTED],
+    DFSAlgorithm, DFSNodeAttributesAdapter, DFSEdgeAttributesAdapter, DFSSideComponentsFactory, DFSAlgorithmOptionsForm
+  );
+
+const algorithmTags = [bfs, dfs];
 const firstAlgorithmFacade = new AlgorithmFacade(firstAlgGraph, algorithmTags[0], "0");
 
 //Initializing options form

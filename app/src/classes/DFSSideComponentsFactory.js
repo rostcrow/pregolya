@@ -2,27 +2,27 @@
 import ListGroup from 'react-bootstrap/ListGroup';
 import SideComponent from './SideComponent';
 import GraphView from '../components/js/GraphView';
-import { NodeAttributes, NodeState } from './BFSAlgorithm';
+import { NodeAttributes, NodeState } from './DFSAlgorithm';
 import TreeGraphLayout from './TreeGraphLayout';
 import GraphTag from './GraphTag';
 import SideComponentsFactory from "./SideComponentsFactory";
 
-export default class BFSSideComponentsFactory extends SideComponentsFactory {
+export default class DFSSideComponentsFactory extends SideComponentsFactory {
 
     createSideComponents(algorithmState) {
 
         const graphData = algorithmState.getGraphData();
         const additionalData = algorithmState.getAdditionalData();
 
-        //Queue
-        let queue = additionalData.get("queue");
+        //Stack
+        let stack = additionalData.get("stack");
 
         let items = [];
-        for (const [index, node] of queue.entries()) {
+        for (const [index, node] of stack.entries()) {
             items.push(<ListGroup.Item key={index}>{node}</ListGroup.Item>);
         }
 
-        let queueComponent = 
+        let stackComponent = 
             <ListGroup>
                 {items}
             </ListGroup>;
@@ -59,7 +59,7 @@ export default class BFSSideComponentsFactory extends SideComponentsFactory {
         let graph = new GraphTag(graphJSON).getDisplayGraph();
         let treeComponent = <GraphView graph={graph} layout={new TreeGraphLayout()}></GraphView>;
 
-        return [new SideComponent("Queue", queueComponent), new SideComponent("Tree", treeComponent)];
+        return [new SideComponent("Stack", stackComponent), new SideComponent("Tree", treeComponent)];
     }
 
 }
