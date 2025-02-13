@@ -1,0 +1,43 @@
+{
+    "name": "Prague Center Metro",
+    "directed": false,
+    "weighted": true,
+    "nodes": [
+        "Hradčanská", 
+        "Malostranská", 
+        "Staroměstská",
+        "Můstek",
+        "Muzeum",
+        "Náměstí Míru",
+        "Jiřího z Poděbrad",
+        "Anděl",
+        "Karlovo Náměstí",
+        "Národní třída",
+        "Náměstí Republiky",
+        "Florenc",
+        "Křižíkova",
+        "Vyšehrad",
+        "I. P. Pavlova",
+        "Hlavní nádraží",
+        "Vltavská"
+    ],
+    "edges": [
+        {"source": "Hradčanská", "target": "Malostranská", "weight": 2},
+        {"source": "Malostranská", "target": "Staroměstská", "weight": 1},
+        {"source": "Staroměstská", "target": "Můstek", "weight": 2},
+        {"source": "Můstek", "target": "Muzeum", "weight": 1},
+        {"source": "Muzeum", "target": "Náměstí Míru", "weight": 2},
+        {"source": "Náměstí Míru", "target": "Jiřího z Poděbrad", "weight": 2},
+        {"source": "Anděl", "target": "Karlovo Náměstí", "weight": 2},
+        {"source": "Karlovo Náměstí", "target": "Národní třída", "weight": 1},
+        {"source": "Národní třída", "target": "Můstek", "weight": 1},
+        {"source": "Můstek", "target": "Náměstí Republiky", "weight": 2},
+        {"source": "Náměstí Republiky", "target": "Florenc", "weight": 1},
+        {"source": "Florenc", "target": "Křižíkova", "weight": 2},
+        {"source": "Vyšehrad", "target": "I. P. Pavlova", "weight": 2},
+        {"source": "I. P. Pavlova", "target": "Muzeum", "weight": 1},
+        {"source": "Muzeum", "target": "Hlavní nádraží", "weight": 1},
+        {"source": "Hlavní nádraží", "target": "Florenc", "weight": 2},
+        {"source": "Florenc", "target": "Vltavská", "weight": 1}
+    ]
+}

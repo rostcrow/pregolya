@@ -1,11 +1,9 @@
-import simple from "./simple.json";
-import directed from "./directed.json";
-import weighted from "./weighted.json";
-import directedWeighted from "./directed_weighted.json";
-import multi from "./multi.json";
-import bfs_test from "./bfs_test.json";
-import bfs_test_directed from "./bfs_test_directed.json";
 
-const graphExamplesArray = [bfs_test, bfs_test_directed, simple, directed, weighted, directedWeighted, multi];
+import sevenBridges from "./seven_bridges_of_konigsberg.json"
+import machine from "./machine.json"
+import pragueCenterMetro from "./prague_center_metro.json"
+import flowNetwork from "./flow_network.json";
+
+const graphExamplesArray = [sevenBridges, machine, pragueCenterMetro, flowNetwork];
 
 export default graphExamplesArray;
