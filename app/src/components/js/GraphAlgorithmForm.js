@@ -8,7 +8,7 @@ import AlgorithmSelect from './AlgorithmSelect';
 import Button from 'react-bootstrap/Button';
 import GraphAlgorithmCompatibilityChecker from '../../classes/GraphAlgorithmCompatibilityChecker';
 import CompatibilityAlert from './CompatibilityAlert';
-import GraphTag from '../../classes/GraphTag';
+import FileInput from './FileInput';
 
 export default function GraphAlgorithmForm ( {graphTags, selectedGraphIndex, changeSelectedGraphIndexFunc, changeImportedGraphFunc, 
     chosenGraph, algorithmTags, selectedAlgorithmIndex, changeSelectedAlgorithmIndexFunc, optionsForm, submitFunc, clearFunc} ) {
@@ -21,28 +21,7 @@ export default function GraphAlgorithmForm ( {graphTags, selectedGraphIndex, cha
     function handleClear() {
         clearFunc();
     }
-
-    function handleImportFileChange(e) {
-
-        let file = e.target.files[0];
-
-        if (file.size > 0) {
-            var reader = new FileReader();
-
-            reader.onload = function(e) {
-
-                let content = e.target.result;
-                let graphTag = new GraphTag(JSON.parse(content));
-
-
-                changeImportedGraphFunc(graphTag);
-            };
-
-            reader.readAsText(file);
-        }
-
-    }
-
+    
     //Checking compatibility
     let compatibilityComponent = <></>;
     let optionsComponents = <></>;
@@ -79,13 +58,11 @@ export default function GraphAlgorithmForm ( {graphTags, selectedGraphIndex, cha
                         </Row>
                         <Row>
                             <Col>
-                                <Form.Group className='mt-2'>
-                                    <Form.Label>or import file</Form.Label>
-                                    <Form.Control id="file-input" type="file" onChange={e => handleImportFileChange(e)}/>
-                                </Form.Group>
+                                <FileInput changeImportedGraphFunc={changeImportedGraphFunc} />
                             </Col>
                             <Col></Col>
                         </Row>
+
                         {compatibilityComponent}
                         {optionsComponents}
                         <Row>
