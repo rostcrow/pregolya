@@ -141,7 +141,6 @@ export default function AppControl() {
 
         if (graphTag !== null && algorithmTag !== undefined) {
             //Options form shown
-            console.log(graphTag);
             const optionsFormClass = algorithmTag.getOptionsFormClass();
             newOptionsForm = new optionsFormClass(options, setOptions, graphTag.getAlgorithmGraph());
         }

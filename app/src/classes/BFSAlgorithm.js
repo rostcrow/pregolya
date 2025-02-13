@@ -105,98 +105,89 @@ export default class BFSAlgorithm extends Algorithm {
     }
 
     #stateNodeFromQueue (graph) {
-        //Checking queue
-        if (this.#queue.length === 0) {
-
-            //Searching for WHITE node
-            let nodes = graph.nodes();
-            let nodesLength = nodes.length;
-            for (let i = 0; i < nodesLength; i++) {
-                if (graph.getNodeAttribute(nodes[i], NodeAttributes.STATE) === NodeState.WHITE) {
-                    //Found
-
-                    this.#queue.push(nodes[i]);
-                    break;
-                }
-            }
-
-            if (this.#queue.length === 0) {
-                //Not found, algorithm ends
-                
-                this.setFinished();
-                return;
-            }
-        }
 
         //Getting node from queue
         this.#currentNode = this.#queue.shift();
         graph.setNodeAttribute(this.#currentNode, NodeAttributes.STATE, NodeState.BLACK);
 
         //Setting neighbors
-        this.#currentNodeNeighbors = graph.outboundNeighbors(this.#currentNode);
+        this.#currentNodeNeighbors = [];
+        const neighbors = graph.outboundNeighbors(this.#currentNode);
+        for (const neighbor of neighbors) {
+            if (graph.getNodeAttribute(neighbor, NodeAttributes.STATE) === NodeState.WHITE) {
+                this.#currentNodeNeighbors.push(neighbor);
+            }
+        }
 
         //Switching state
-        if (this.#currentNodeNeighbors.length !== 0) {
+        if (this.#currentNodeNeighbors.length === 0) {
+            if (this.#queue.length === 0) {
+                this.#searchWhiteNode(graph);
+            }
+        } else {
             this.#state = State.COLORING_NEIGHBORS;
         }
     }
     
     #stateColoringNeighbors(graph) {
 
-        let noNeighborColored = false;
+        //Getting neighbor
+        let neighbor = this.#currentNodeNeighbors.shift();
 
-        while (true) {
-            if (this.#currentNodeNeighbors.length !== 0) {
+        //Coloring neighbor
+        this.#queue.push(neighbor);
+        graph.setNodeAttribute(neighbor, NodeAttributes.STATE, NodeState.GRAY);
+        graph.setNodeAttribute(neighbor, NodeAttributes.VISITED_FROM, this.#currentNode);
 
-                //Getting neighbor
-                let neighbor = this.#currentNodeNeighbors.shift();
+        //Counting distance from starting node
+        let distance;
+        const previousDistance = graph.getNodeAttribute(this.#currentNode, NodeAttributes.DISTANCE_FROM_START);
+        if (previousDistance === INFINITY) {
+            distance = INFINITY;
+        } else {
+            distance = previousDistance + 1;
+        }
+        
+        graph.setNodeAttribute(neighbor, NodeAttributes.DISTANCE_FROM_START, distance);
 
-                if (graph.getNodeAttribute(neighbor, NodeAttributes.STATE) === NodeState.WHITE) {
-                    //Coloring neighbor
+        //Highlighting edge
+        this.#highlightedEdge = graph.edges(this.#currentNode, neighbor)[0];
+        graph.setEdgeAttribute(this.#highlightedEdge, EdgeAttributes.STATE, EdgeState.HIGHLIGHTED);
 
-                    this.#queue.push(neighbor);
-                    graph.setNodeAttribute(neighbor, NodeAttributes.STATE, NodeState.GRAY);
-                    graph.setNodeAttribute(neighbor, NodeAttributes.VISITED_FROM, this.#currentNode);
 
-                    //Counting distance from starting node
-                    let distance;
-                    const previousDistance = graph.getNodeAttribute(this.#currentNode, NodeAttributes.DISTANCE_FROM_START);
-                    if (previousDistance === INFINITY) {
-                        distance = INFINITY;
-                    } else {
-                        distance = previousDistance + 1;
-                    }
-                    
-                    graph.setNodeAttribute(neighbor, NodeAttributes.DISTANCE_FROM_START, distance);
-
-                    //Highlighting edge
-                    this.#highlightedEdge = graph.edges(this.#currentNode, neighbor)[0];
-                    graph.setEdgeAttribute(this.#highlightedEdge, EdgeAttributes.STATE, EdgeState.HIGHLIGHTED);
-
-                    break;
-
-                } else {
-                    //Neighbor already colored
-                    continue;
-                }
-
+        //Switching state
+        if (this.#currentNodeNeighbors.length === 0) {
+            if (this.#queue.length === 0) {
+                this.#searchWhiteNode();
             } else {
-                //No neighbors left
-                noNeighborColored = true;
+                this.#state = State.NODE_FROM_QUEUE;
+            }
+        }
+    }
+
+    #searchWhiteNode(graph) {
+
+        let nodes = graph.nodes();
+        let nodesLength = nodes.length;
+        for (let i = 0; i < nodesLength; i++) {
+            if (graph.getNodeAttribute(nodes[i], NodeAttributes.STATE) === NodeState.WHITE) {
+                //Found
+
+                this.#queue.push(nodes[i]);
+                graph.setNodeAttribute(nodes[i], NodeAttributes.STATE, NodeState.GRAY);
                 break;
             }
         }
 
-        //Switching state if needed
-        if (this.#currentNodeNeighbors.length === 0) {
-            this.#state = State.NODE_FROM_QUEUE
-
-            if (noNeighborColored) {
-                //Nothing happened, run again
-                this.forward();
-            }
+        if (this.#queue.length === 0) {
+            //Not found, algorithm ends
+            
+            this.setFinished();
+            return;
         }
 
+        //Found, algorithm continues
+        this.#state = State.NODE_FROM_QUEUE;
     }
 
     getAdditionalData() {
