@@ -147,6 +147,7 @@ export default class BFSAlgorithm extends Algorithm {
 
         //Setting current node as finished
         graph.setNodeAttribute(this.#currentNode, NodeAttributes.STATE, NodeState.FINISHED);
+        this.#currentNode = null;
 
         //Switching state
         if (this.#queue.length !== 0) {
@@ -216,7 +217,29 @@ export default class BFSAlgorithm extends Algorithm {
     }
 
     getAdditionalData() {
-        return new AdditionalData({"queue": this.#queue});
+
+        let graph = this.getGraph();
+
+        function getJSON (node) {
+            const visitedFrom = graph.getNodeAttribute(node, NodeAttributes.VISITED_FROM);
+            const distance = graph.getNodeAttribute(node, NodeAttributes.DISTANCE_FROM_START);
+            return {"key": node, "visitedFrom": visitedFrom, "distance": distance};
+        }
+
+        //Current node
+        let resCurrentNode = null;
+
+        if (this.#currentNode !== null) {
+            resCurrentNode = getJSON(this.#currentNode);
+        }
+
+        //Queue
+        let resQueue = [];
+        for (const node of this.#queue) {
+            resQueue.push(getJSON(node));
+        }
+
+        return new AdditionalData({"currentNode": resCurrentNode, "queue": resQueue});
     }
 
 }

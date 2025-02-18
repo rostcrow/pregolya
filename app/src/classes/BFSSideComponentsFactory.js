@@ -6,6 +6,7 @@ import { NodeAttributes, NodeState } from './BFSAlgorithm';
 import TreeGraphLayout from './TreeGraphLayout';
 import GraphTag from './GraphTag';
 import SideComponentsFactory from "./SideComponentsFactory";
+import Globals from './Globals';
 
 export default class BFSSideComponentsFactory extends SideComponentsFactory {
 
@@ -14,18 +15,36 @@ export default class BFSSideComponentsFactory extends SideComponentsFactory {
         const graphData = algorithmState.getGraphData();
         const additionalData = algorithmState.getAdditionalData();
 
+        function getText(node) {
+            return `${node["key"]} (Visited from: ${node["visitedFrom"]}, Distance from start: ${node["distance"]})`;
+        }
+
         //Queue
+        const currentNode = additionalData.get("currentNode");
+        let currentText;
+        if (currentNode !== null) {
+            currentText = getText(currentNode);
+        } else {
+            currentText = "No current node";
+        }
+
         let queue = additionalData.get("queue");
 
         let items = [];
         for (const [index, node] of queue.entries()) {
-            items.push(<ListGroup.Item key={index}>{node}</ListGroup.Item>);
+            const text = getText(node);
+            items.push(<ListGroup.Item key={index}>{text}</ListGroup.Item>);
         }
 
-        let queueComponent = 
-            <ListGroup>
-                {items}
-            </ListGroup>;
+        const queueComponent = 
+            <>
+                <ListGroup className='mb-3'>
+                    <ListGroup.Item key={-1} style={{color: Globals.Colors.RED}}>{currentText}</ListGroup.Item>
+                </ListGroup>
+                <ListGroup>
+                    {items}
+                </ListGroup> 
+            </>;
 
         //Tree
         const nodes = graphData.getNodes();
