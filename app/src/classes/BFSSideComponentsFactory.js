@@ -2,11 +2,16 @@
 import ListGroup from 'react-bootstrap/ListGroup';
 import SideComponent from './SideComponent';
 import GraphView from '../components/js/GraphView';
-import { NodeAttributes, NodeState } from './BFSAlgorithm';
+import { EdgeAttributes, EdgeState, NodeAttributes, NodeState } from './BFSAlgorithm';
 import TreeGraphLayout from './TreeGraphLayout';
 import GraphTag from './GraphTag';
 import SideComponentsFactory from "./SideComponentsFactory";
 import Globals from './Globals';
+import GraphDataExtractor from './GraphDataExtractor';
+import GraphDataAdapter from './GraphDataAdapter';
+import BFSNodeAttributesAdapter from './BFSNodeAttributesAdapter';
+import BFSEdgeAttributesAdapter from './BFSEdgeAttributesAdapter';
+import GraphDataApplier from './GraphDataApplier';
 
 export default class BFSSideComponentsFactory extends SideComponentsFactory {
 
@@ -64,14 +69,21 @@ export default class BFSSideComponentsFactory extends SideComponentsFactory {
 
         //Counting nodes and edges
         for (const key in nodes) {
-            if (nodes[key][NodeAttributes.STATE] !== NodeState.WHITE) {
-                //Saving nonwhite nodes
+            if (nodes[key][NodeAttributes.STATE] !== NodeState.NOT_VISITED) {
+                //Saving not visited nodes
                 outputNodes.push(key);
             }
             
             if (nodes[key][NodeAttributes.VISITED_FROM] !== null) {
+
+                //Determining state
+                let state = EdgeState.USED;
+                if (nodes[key][NodeAttributes.STATE] === NodeState.NEW_IN_QUEUE) {
+                    state = EdgeState.HIGHLIGHTED;
+                }
+
                 //Making edge between child and its parent
-                outputEdges.push({"source": nodes[key][NodeAttributes.VISITED_FROM], "target": key});
+                outputEdges.push({"source": nodes[key][NodeAttributes.VISITED_FROM], "target": key, "state": state});
             }
         }
 
@@ -84,8 +96,28 @@ export default class BFSSideComponentsFactory extends SideComponentsFactory {
                 "edges": outputEdges
             };
 
-        //Making graph and component
+        //Making graph
         let graph = new GraphTag(graphJSON).getDisplayGraph();
+
+        //Filling with attributes
+        graph.forEachNode((node) => {
+            for (const attribute in nodes[node]) {
+                graph.setNodeAttribute(node, attribute, nodes[node][attribute]);
+            }
+        });
+
+        const graphEdges = graph.edges();
+        for (let i = 0; i < graphEdges.length; i++) {
+            graph.setEdgeAttribute(graphEdges[i], EdgeAttributes.STATE, outputEdges[i]["state"]);
+        }
+
+        //Setting visual appereance
+        const outputGraphData = GraphDataExtractor.extractData(graph);
+        const outputGraphAdapter = new GraphDataAdapter(new BFSNodeAttributesAdapter(), new BFSEdgeAttributesAdapter());
+        const adaptedGraphData = outputGraphAdapter.adapt(outputGraphData);
+        GraphDataApplier.apply(graph, adaptedGraphData);
+
+        //Making component
         let treeComponent = <GraphView graph={graph} layout={new TreeGraphLayout()}></GraphView>;
 
         return [new SideComponent("Queue", queueComponent), new SideComponent("Tree", treeComponent)];
