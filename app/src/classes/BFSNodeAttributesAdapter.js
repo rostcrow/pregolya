@@ -10,15 +10,19 @@ export default class BFSNodeAttributesAdapter extends NodeAttributesAdapter {
 
         //Setting color
         switch(attributes[NodeAttributes.STATE]) {
-            case NodeState.WHITE:
+            case NodeState.NOT_VISITED:
                 ret["color"] = Globals.Colors.DEFAULT_NODE_COLOR;
                 break;
-            case NodeState.GRAY:
+            case NodeState.IN_QUEUE:
                 ret["color"] = Globals.Colors.GRAY;
                 break;
-            case NodeState.BLACK:
+            case NodeState.CURRENT:
+                ret["color"] = Globals.Colors.RED;
+                break;
+            case NodeState.FINISHED:
                 ret["color"] = Globals.Colors.BLACK;
                 break;
+            
             default:
         }
 

@@ -16,6 +16,9 @@ export default class BFSEdgeAttributesAdapter extends EdgeAttributesAdapter {
             case EdgeState.HIGHLIGHTED:
                 ret["color"] = Globals.Colors.RED;
                 break;
+            case EdgeState.USED:
+                ret["color"] = Globals.Colors.DARK_GRAY;
+                break;
             default:
         }
 

@@ -16,4 +16,8 @@ export default class ErrorThrower {
     static edgeWithoutWeight() {
         this.#throw("Edge doesn't have 'weight' attribute");
     }
+
+    static notExpectedState() {
+        this.#throw("Not expected state");
+    }
 }

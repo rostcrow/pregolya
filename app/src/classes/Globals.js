@@ -10,7 +10,8 @@ export default class Globals {
         DEFAULT_NODE_COLOR: "#0D6EFD",
         DEFAULT_EDGE_COLOR: "#CCCCCC",
         GRAY: "#888888",
+        DARK_GRAY: "#666666",
         BLACK: "#000000",
-        RED: "#FF0000"
+        RED: "#DC3545"
     }
 }

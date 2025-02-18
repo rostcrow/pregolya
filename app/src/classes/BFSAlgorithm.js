@@ -1,12 +1,15 @@
 import AdditionalData from "./AdditionalData";
 import Algorithm from "./Algorithm";
+import ErrorThrower from "./ErrorThrower";
 
 const INFINITY = "∞";
 
 const State = {
-    SETTING_STARTING_NODE: 0,
+    STARTING_NODE_TO_QUEUE: 0,
     NODE_FROM_QUEUE: 1,
-    COLORING_NEIGHBORS: 2
+    CURRENT_NODE_FINISHED: 2,
+    NEW_ROOT_TO_QUEUE: 3,
+    NEIGHBOR_TO_QUEUE: 4
 }
 
 export const NodeAttributes = {
@@ -16,9 +19,10 @@ export const NodeAttributes = {
 }
 
 export const NodeState = {
-    WHITE: 0,
-    GRAY: 1,
-    BLACK: 2
+    NOT_VISITED: 0,
+    IN_QUEUE: 1,
+    CURRENT: 2,
+    FINISHED: 3
 }
 
 export const EdgeAttributes = {
@@ -27,7 +31,8 @@ export const EdgeAttributes = {
 
 export const EdgeState = {
     NORMAL: 0,
-    HIGHLIGHTED: 1
+    HIGHLIGHTED: 1,
+    USED: 2
 }
 
 export default class BFSAlgorithm extends Algorithm {
@@ -38,21 +43,23 @@ export default class BFSAlgorithm extends Algorithm {
     #currentNode;
     #currentNodeNeighbors;
     #highlightedEdge;
+    #newRootNode;
 
     constructor(graph, startingNode) {
         super(graph);
 
         //Initializing attributes
         this.#startingNode = startingNode;
-        this.#state = State.SETTING_STARTING_NODE;
+        this.#state = State.STARTING_NODE_TO_QUEUE;
         this.#queue = [];
-        this.#currentNode = -1;
+        this.#currentNode = null;
         this.#currentNodeNeighbors = [];
-        this.#highlightedEdge = -1;
+        this.#highlightedEdge = null;
+        this.#newRootNode = null;
 
         //Setting state for all nodes
         graph.forEachNode((node) => {
-            graph.setNodeAttribute(node, NodeAttributes.STATE, NodeState.WHITE);
+            graph.setNodeAttribute(node, NodeAttributes.STATE, NodeState.NOT_VISITED);
             graph.setNodeAttribute(node, NodeAttributes.VISITED_FROM, null);
             graph.setNodeAttribute(node, NodeAttributes.DISTANCE_FROM_START, INFINITY);
         });
@@ -68,38 +75,47 @@ export default class BFSAlgorithm extends Algorithm {
         let graph = this.getGraph();
 
         //Setting highlighted edge to normal
-        if (this.#highlightedEdge !== -1) {
-            graph.setEdgeAttribute(this.#highlightedEdge, EdgeAttributes.STATE, EdgeState.NORMAL);
+        if (this.#highlightedEdge !== null) {
+            graph.setEdgeAttribute(this.#highlightedEdge, EdgeAttributes.STATE, EdgeState.USED);
         }
         
+        //Choosing function to call
         switch (this.#state) {
-            case State.SETTING_STARTING_NODE:
-                this.#stateSettingStartingNode(graph);
+            case State.STARTING_NODE_TO_QUEUE:
+                this.#stateStartingNodeToQueue(graph);
                 break;
 
             case State.NODE_FROM_QUEUE:
                 this.#stateNodeFromQueue(graph);
                 break;
 
-            case State.COLORING_NEIGHBORS:
-                this.#stateColoringNeighbors(graph);
+            case State.CURRENT_NODE_FINISHED:
+                this.#stateCurrentNodeFinished(graph);
+                break;
+            
+            case State.NEW_ROOT_TO_QUEUE:
+                this.#stateNewRootToQueue(graph);
+                break;
+
+            case State.NEIGHBOR_TO_QUEUE:
+                this.#stateNeighborToQueue(graph);
                 break;
 
             default:
-                throw new Error("Not expected state");
+                ErrorThrower.notExpectedState();
 
         }
 
     }
 
-    #stateSettingStartingNode(graph) {
+    #stateStartingNodeToQueue(graph) {
 
         //Setting starting node
         this.#queue.push(this.#startingNode);
-        graph.setNodeAttribute(this.#startingNode, NodeAttributes.STATE, NodeState.GRAY);
+        graph.setNodeAttribute(this.#startingNode, NodeAttributes.STATE, NodeState.IN_QUEUE);
         graph.setNodeAttribute(this.#startingNode, NodeAttributes.DISTANCE_FROM_START, 0);
 
-        //Changing state
+        //Switching state
         this.#state = State.NODE_FROM_QUEUE;
 
     }
@@ -108,35 +124,71 @@ export default class BFSAlgorithm extends Algorithm {
 
         //Getting node from queue
         this.#currentNode = this.#queue.shift();
-        graph.setNodeAttribute(this.#currentNode, NodeAttributes.STATE, NodeState.BLACK);
+        graph.setNodeAttribute(this.#currentNode, NodeAttributes.STATE, NodeState.CURRENT);
 
         //Setting neighbors
         this.#currentNodeNeighbors = [];
         const neighbors = graph.outboundNeighbors(this.#currentNode);
         for (const neighbor of neighbors) {
-            if (graph.getNodeAttribute(neighbor, NodeAttributes.STATE) === NodeState.WHITE) {
+            if (graph.getNodeAttribute(neighbor, NodeAttributes.STATE) === NodeState.NOT_VISITED) {
                 this.#currentNodeNeighbors.push(neighbor);
             }
         }
 
         //Switching state
         if (this.#currentNodeNeighbors.length === 0) {
-            if (this.#queue.length === 0) {
-                this.#searchWhiteNode(graph);
-            }
+            this.#state = State.CURRENT_NODE_FINISHED;
         } else {
-            this.#state = State.COLORING_NEIGHBORS;
+            this.#state = State.NEIGHBOR_TO_QUEUE;
         }
     }
+
+    #stateCurrentNodeFinished(graph) {
+
+        //Setting current node as finished
+        graph.setNodeAttribute(this.#currentNode, NodeAttributes.STATE, NodeState.FINISHED);
+
+        //Switching state
+        if (this.#queue.length !== 0) {
+            this.#state = State.NODE_FROM_QUEUE;
+            return;
+        }
+
+        //Trying to find not visited node
+        let nodes = graph.nodes();
+        for (let i = 0; i < nodes.length; i++) {
+            if (graph.getNodeAttribute(nodes[i], NodeAttributes.STATE) === NodeState.NOT_VISITED) {
+                //Found
+
+                this.#newRootNode = nodes[i];
+                this.#state = State.NEW_ROOT_TO_QUEUE;
+                return;
+            }
+        }
+
+        //Not found, algorithm ends
+        this.setFinished();
+
+    }
+
+    #stateNewRootToQueue(graph) {
+
+        //Pushing to queue
+        this.#queue.push(this.#newRootNode);
+        graph.setNodeAttribute(this.#newRootNode, NodeAttributes.STATE, NodeState.IN_QUEUE);
+
+        //Switching state
+        this.#state = State.NODE_FROM_QUEUE;
+    }
     
-    #stateColoringNeighbors(graph) {
+    #stateNeighborToQueue(graph) {
 
         //Getting neighbor
         let neighbor = this.#currentNodeNeighbors.shift();
 
-        //Coloring neighbor
+        //Pushing neighbor to queue
         this.#queue.push(neighbor);
-        graph.setNodeAttribute(neighbor, NodeAttributes.STATE, NodeState.GRAY);
+        graph.setNodeAttribute(neighbor, NodeAttributes.STATE, NodeState.IN_QUEUE);
         graph.setNodeAttribute(neighbor, NodeAttributes.VISITED_FROM, this.#currentNode);
 
         //Counting distance from starting node
@@ -157,37 +209,10 @@ export default class BFSAlgorithm extends Algorithm {
 
         //Switching state
         if (this.#currentNodeNeighbors.length === 0) {
-            if (this.#queue.length === 0) {
-                this.#searchWhiteNode();
-            } else {
-                this.#state = State.NODE_FROM_QUEUE;
-            }
+            this.#state = State.CURRENT_NODE_FINISHED;
+        } else {
+            this.#state = State.NEIGHBOR_TO_QUEUE;
         }
-    }
-
-    #searchWhiteNode(graph) {
-
-        let nodes = graph.nodes();
-        let nodesLength = nodes.length;
-        for (let i = 0; i < nodesLength; i++) {
-            if (graph.getNodeAttribute(nodes[i], NodeAttributes.STATE) === NodeState.WHITE) {
-                //Found
-
-                this.#queue.push(nodes[i]);
-                graph.setNodeAttribute(nodes[i], NodeAttributes.STATE, NodeState.GRAY);
-                break;
-            }
-        }
-
-        if (this.#queue.length === 0) {
-            //Not found, algorithm ends
-            
-            this.setFinished();
-            return;
-        }
-
-        //Found, algorithm continues
-        this.#state = State.NODE_FROM_QUEUE;
     }
 
     getAdditionalData() {
