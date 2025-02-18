@@ -20,9 +20,10 @@ export const NodeAttributes = {
 
 export const NodeState = {
     NOT_VISITED: 0,
-    IN_QUEUE: 1,
-    CURRENT: 2,
-    FINISHED: 3
+    NEW_IN_QUEUE: 1,
+    IN_QUEUE: 2,
+    CURRENT: 3,
+    FINISHED: 4
 }
 
 export const EdgeAttributes = {
@@ -112,7 +113,7 @@ export default class BFSAlgorithm extends Algorithm {
 
         //Setting starting node
         this.#queue.push(this.#startingNode);
-        graph.setNodeAttribute(this.#startingNode, NodeAttributes.STATE, NodeState.IN_QUEUE);
+        graph.setNodeAttribute(this.#startingNode, NodeAttributes.STATE, NodeState.NEW_IN_QUEUE);
         graph.setNodeAttribute(this.#startingNode, NodeAttributes.DISTANCE_FROM_START, 0);
 
         //Switching state
@@ -145,6 +146,9 @@ export default class BFSAlgorithm extends Algorithm {
 
     #stateCurrentNodeFinished(graph) {
 
+        //Resetting queue novelty
+        this.#resetQueueNovelty(graph);
+
         //Setting current node as finished
         graph.setNodeAttribute(this.#currentNode, NodeAttributes.STATE, NodeState.FINISHED);
         this.#currentNode = null;
@@ -176,7 +180,7 @@ export default class BFSAlgorithm extends Algorithm {
 
         //Pushing to queue
         this.#queue.push(this.#newRootNode);
-        graph.setNodeAttribute(this.#newRootNode, NodeAttributes.STATE, NodeState.IN_QUEUE);
+        graph.setNodeAttribute(this.#newRootNode, NodeAttributes.STATE, NodeState.NEW_IN_QUEUE);
 
         //Switching state
         this.#state = State.NODE_FROM_QUEUE;
@@ -184,12 +188,15 @@ export default class BFSAlgorithm extends Algorithm {
     
     #stateNeighborToQueue(graph) {
 
+        //Resetting queue novelty
+        this.#resetQueueNovelty(graph);
+
         //Getting neighbor
         let neighbor = this.#currentNodeNeighbors.shift();
 
         //Pushing neighbor to queue
         this.#queue.push(neighbor);
-        graph.setNodeAttribute(neighbor, NodeAttributes.STATE, NodeState.IN_QUEUE);
+        graph.setNodeAttribute(neighbor, NodeAttributes.STATE, NodeState.NEW_IN_QUEUE);
         graph.setNodeAttribute(neighbor, NodeAttributes.VISITED_FROM, this.#currentNode);
 
         //Counting distance from starting node
@@ -216,14 +223,23 @@ export default class BFSAlgorithm extends Algorithm {
         }
     }
 
+    #resetQueueNovelty(graph) {
+
+        if (this.#queue.length !== 0) {
+            const topNode = this.#queue[this.#queue.length - 1];
+            graph.setNodeAttribute(topNode, NodeAttributes.STATE, NodeState.IN_QUEUE);
+        }
+    }
+
     getAdditionalData() {
 
         let graph = this.getGraph();
 
         function getJSON (node) {
+            const state = graph.getNodeAttribute(node, NodeAttributes.STATE);
             const visitedFrom = graph.getNodeAttribute(node, NodeAttributes.VISITED_FROM);
             const distance = graph.getNodeAttribute(node, NodeAttributes.DISTANCE_FROM_START);
-            return {"key": node, "visitedFrom": visitedFrom, "distance": distance};
+            return {"key": node, "state": state, "visitedFrom": visitedFrom, "distance": distance};
         }
 
         //Current node

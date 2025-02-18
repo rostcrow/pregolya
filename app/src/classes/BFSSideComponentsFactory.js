@@ -32,8 +32,18 @@ export default class BFSSideComponentsFactory extends SideComponentsFactory {
 
         let items = [];
         for (const [index, node] of queue.entries()) {
+
+            //Generating text
             const text = getText(node);
-            items.push(<ListGroup.Item key={index}>{text}</ListGroup.Item>);
+
+            //Settign style
+            let style = {};
+            if (node["state"] === NodeState.NEW_IN_QUEUE) {
+                style = {color: Globals.Colors.GREEN};
+            }
+
+            //Pushing item
+            items.push(<ListGroup.Item key={index} style={style}>{text}</ListGroup.Item>);
         }
 
         const queueComponent = 

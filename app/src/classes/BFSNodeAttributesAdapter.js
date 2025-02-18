@@ -13,6 +13,9 @@ export default class BFSNodeAttributesAdapter extends NodeAttributesAdapter {
             case NodeState.NOT_VISITED:
                 ret["color"] = Globals.Colors.DEFAULT_NODE_COLOR;
                 break;
+            case NodeState.NEW_IN_QUEUE:
+                ret["color"] = Globals.Colors.GREEN;
+                break;
             case NodeState.IN_QUEUE:
                 ret["color"] = Globals.Colors.GRAY;
                 break;
