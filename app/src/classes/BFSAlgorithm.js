@@ -14,8 +14,9 @@ const State = {
 
 export const NodeAttributes = {
     STATE: 0,
-    VISITED_FROM: 1,
-    DISTANCE_FROM_START: 2
+    ORDER_OF_VISIT: 1,
+    VISITED_FROM: 2,
+    DISTANCE_FROM_START: 3
 }
 
 export const NodeState = {
@@ -45,6 +46,7 @@ export default class BFSAlgorithm extends Algorithm {
     #currentNodeNeighbors;
     #highlightedEdge;
     #newRootNode;
+    #orderOfVisit;
 
     constructor(graph, startingNode) {
         super(graph);
@@ -57,12 +59,14 @@ export default class BFSAlgorithm extends Algorithm {
         this.#currentNodeNeighbors = [];
         this.#highlightedEdge = null;
         this.#newRootNode = null;
+        this.#orderOfVisit = 1;
 
         //Setting state for all nodes
         graph.forEachNode((node) => {
             graph.setNodeAttribute(node, NodeAttributes.STATE, NodeState.NOT_VISITED);
             graph.setNodeAttribute(node, NodeAttributes.VISITED_FROM, null);
             graph.setNodeAttribute(node, NodeAttributes.DISTANCE_FROM_START, INFINITY);
+            graph.setNodeAttribute(node, NodeAttributes.ORDER_OF_VISIT, null);
         });
 
         //Setting state for all edges
@@ -115,6 +119,7 @@ export default class BFSAlgorithm extends Algorithm {
         this.#queue.push(this.#startingNode);
         graph.setNodeAttribute(this.#startingNode, NodeAttributes.STATE, NodeState.NEW_IN_QUEUE);
         graph.setNodeAttribute(this.#startingNode, NodeAttributes.DISTANCE_FROM_START, 0);
+        graph.setNodeAttribute(this.#startingNode, NodeAttributes.ORDER_OF_VISIT, this.#orderOfVisit++);
 
         //Switching state
         this.#state = State.NODE_FROM_QUEUE;
@@ -181,6 +186,7 @@ export default class BFSAlgorithm extends Algorithm {
         //Pushing to queue
         this.#queue.push(this.#newRootNode);
         graph.setNodeAttribute(this.#newRootNode, NodeAttributes.STATE, NodeState.NEW_IN_QUEUE);
+        graph.setNodeAttribute(this.#newRootNode, NodeAttributes.ORDER_OF_VISIT, this.#orderOfVisit++);
 
         //Switching state
         this.#state = State.NODE_FROM_QUEUE;
@@ -198,6 +204,7 @@ export default class BFSAlgorithm extends Algorithm {
         this.#queue.push(neighbor);
         graph.setNodeAttribute(neighbor, NodeAttributes.STATE, NodeState.NEW_IN_QUEUE);
         graph.setNodeAttribute(neighbor, NodeAttributes.VISITED_FROM, this.#currentNode);
+        graph.setNodeAttribute(neighbor, NodeAttributes.ORDER_OF_VISIT, this.#orderOfVisit++);
 
         //Counting distance from starting node
         let distance;
@@ -237,9 +244,10 @@ export default class BFSAlgorithm extends Algorithm {
 
         function getJSON (node) {
             const state = graph.getNodeAttribute(node, NodeAttributes.STATE);
+            const order = graph.getNodeAttribute(node, NodeAttributes.ORDER_OF_VISIT);
             const visitedFrom = graph.getNodeAttribute(node, NodeAttributes.VISITED_FROM);
             const distance = graph.getNodeAttribute(node, NodeAttributes.DISTANCE_FROM_START);
-            return {"key": node, "state": state, "visitedFrom": visitedFrom, "distance": distance};
+            return {"key": node, "order": order, "state": state, "visitedFrom": visitedFrom, "distance": distance};
         }
 
         //Current node
@@ -255,7 +263,19 @@ export default class BFSAlgorithm extends Algorithm {
             resQueue.push(getJSON(node));
         }
 
-        return new AdditionalData({"currentNode": resCurrentNode, "queue": resQueue});
+        //Order of visit
+        let order = [];
+        graph.forEachNode((node, attributes) => {
+            if (attributes[NodeAttributes.ORDER_OF_VISIT] !== null) {
+                order.push(getJSON(node));
+            }
+        });
+
+        order.sort((a, b) => {
+            return a["order"] - b["order"];
+        });
+
+        return new AdditionalData({"currentNode": resCurrentNode, "queue": resQueue, "order": order});
     }
 
 }

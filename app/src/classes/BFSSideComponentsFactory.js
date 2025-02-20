@@ -24,7 +24,7 @@ export default class BFSSideComponentsFactory extends SideComponentsFactory {
             return `${node["key"]} (Visited from: ${node["visitedFrom"]}, Distance from start: ${node["distance"]})`;
         }
 
-        //Queue
+        //QUEUE
         const currentNode = additionalData.get("currentNode");
         let currentText;
         if (currentNode !== null) {
@@ -41,7 +41,7 @@ export default class BFSSideComponentsFactory extends SideComponentsFactory {
             //Generating text
             const text = getText(node);
 
-            //Settign style
+            //Setting style
             let style = {};
             if (node["state"] === NodeState.NEW_IN_QUEUE) {
                 style = {color: Globals.Colors.GREEN};
@@ -56,12 +56,12 @@ export default class BFSSideComponentsFactory extends SideComponentsFactory {
                 <ListGroup className='mb-3'>
                     <ListGroup.Item key={-1} style={{color: Globals.Colors.RED}}>{currentText}</ListGroup.Item>
                 </ListGroup>
-                <ListGroup>
+                <ListGroup className='overflow-auto' style={{maxHeight: 500}}>
                     {items}
                 </ListGroup> 
             </>;
 
-        //Tree
+        //TREE
         const nodes = graphData.getNodes();
 
         let outputNodes = [];
@@ -120,7 +120,32 @@ export default class BFSSideComponentsFactory extends SideComponentsFactory {
         //Making component
         let treeComponent = <GraphView graph={graph} layout={new TreeGraphLayout()}></GraphView>;
 
-        return [new SideComponent("Queue", queueComponent), new SideComponent("Tree", treeComponent)];
+        //ORDER OF VISIT
+        const order = additionalData.get("order");
+
+        let orderItems = [];
+        for (const [index, node] of order.entries()) {
+
+            //Setting text
+            const text = 
+                `#${node["order"]} ${node["key"]} (Visited from: ${node["visitedFrom"]}, Distance from start: ${node["distance"]})`;
+
+            //Setting style
+            let style = {};
+            if (node["state"] === NodeState.NEW_IN_QUEUE) {
+                style = {color: Globals.Colors.GREEN};
+            }
+
+            orderItems.push(<ListGroup.Item key={index} style={style}>{text}</ListGroup.Item>);
+        }
+        
+        const orderComponent = 
+            <ListGroup className='text-start overflow-auto' style={{maxHeight: 500}}>
+                {orderItems}
+            </ListGroup>
+
+        return [new SideComponent("Queue", queueComponent), new SideComponent("Tree", treeComponent), 
+            new SideComponent("Order of visit", orderComponent)];
     }
 
 }

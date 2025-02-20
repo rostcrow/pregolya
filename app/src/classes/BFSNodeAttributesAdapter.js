@@ -30,10 +30,16 @@ export default class BFSNodeAttributesAdapter extends NodeAttributesAdapter {
         }
 
         //Setting label
+        let ov = attributes[NodeAttributes.ORDER_OF_VISIT];
+        let ovStr = "null";
+        if (ov !== null) {
+            ovStr = `#${ov}`;
+        }
+
         let vf = attributes[NodeAttributes.VISITED_FROM];
         let dfsn = attributes[NodeAttributes.DISTANCE_FROM_START];
 
-        ret["label"] = `${key}\nVisited from: ${vf}\nDistance from start: ${dfsn}`;
+        ret["label"] = `${key}\nOrder of visit: ${ovStr}\nVisited from: ${vf}\nDistance from start: ${dfsn}`;
 
         return ret;
     }
