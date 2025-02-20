@@ -16,21 +16,21 @@ export default function SidePanel ( {sideComponents, graphPreview} ) {
         navItems.push(<Nav.Item key={index}><Nav.Link key={index} eventKey={index} onClick={() => handleClick(index)}>{sideComponent.getName()}</Nav.Link></Nav.Item>);
 
         //Counting if sideComponent is hidden or not
+        let style;
         if (index === componentIndex) {
             //Visible
-            tabComponents.push(
-                <div key={index}>
-                    {sideComponent.getComponent()}
-                </div>
-            );
+            style = {};
         } else {
             //Hidden
-            tabComponents.push(
-                <div key={index} style={{height: 0, marginBottom: 0, padding: 0, visibility: "hidden"}}>
-                    {sideComponent.getComponent()}
-                </div>
-            );
+            style = {height: 0, marginBottom: 0, padding: 0, visibility: "hidden"};
         }
+
+        //Pushing
+        tabComponents.push(
+            <div key={index} style={style}>
+                {sideComponent.getComponent()}
+            </div>
+        );
     }
 
     //Handling click
