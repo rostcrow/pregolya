@@ -37,7 +37,6 @@ export default class AlgorithmController {
 
             //Making next step in algorithm
             this.#algorithm.forward();
-            console.log(this.#algorithm.isFinished());
 
             //Saving to history
             this.#saveState();

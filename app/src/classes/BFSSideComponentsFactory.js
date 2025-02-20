@@ -64,26 +64,40 @@ export default class BFSSideComponentsFactory extends SideComponentsFactory {
         //TREE
         const nodes = graphData.getNodes();
 
+        //Creating array from an object
+        const nodesArray = [];
+        for (const key in nodes) {
+            let attributes = nodes[key];
+            attributes["key"] = key;
+
+            nodesArray.push(attributes);
+        }
+        
+        //Sorting array by order
+        nodesArray.sort((a, b) => {
+            return a[NodeAttributes.ORDER_OF_VISIT] - b[NodeAttributes.ORDER_OF_VISIT];
+        });
+
+        //Counting nodes and edges
         let outputNodes = [];
         let outputEdges = [];
 
-        //Counting nodes and edges
-        for (const key in nodes) {
-            if (nodes[key][NodeAttributes.STATE] !== NodeState.NOT_VISITED) {
+        for (let i = 0; i < nodesArray.length; i++) {
+            if (nodesArray[i][NodeAttributes.STATE] !== NodeState.NOT_VISITED) {
                 //Saving not visited nodes
-                outputNodes.push(key);
+                outputNodes.push(nodesArray[i]["key"]);
             }
             
-            if (nodes[key][NodeAttributes.VISITED_FROM] !== null) {
+            if (nodesArray[i][NodeAttributes.VISITED_FROM] !== null) {
 
                 //Determining state
                 let state = EdgeState.USED;
-                if (nodes[key][NodeAttributes.STATE] === NodeState.NEW_IN_QUEUE) {
+                if (nodesArray[i][NodeAttributes.STATE] === NodeState.NEW_IN_QUEUE) {
                     state = EdgeState.HIGHLIGHTED;
                 }
 
                 //Making edge between child and its parent
-                outputEdges.push({"source": nodes[key][NodeAttributes.VISITED_FROM], "target": key, "state": state});
+                outputEdges.push({"source": nodesArray[i][NodeAttributes.VISITED_FROM], "target": nodesArray[i]["key"], "state": state});
             }
         }
 
