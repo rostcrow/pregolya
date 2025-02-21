@@ -243,7 +243,23 @@ export default class DFSAlgorithm extends Algorithm {
     }
 
     getAdditionalData() {
-        return new AdditionalData({});
+
+        let graph = this.getGraph();
+
+        function getAttributes(node) {
+            const attributes = structuredClone(graph.getNodeAttributes(node));
+            attributes["key"] = node;
+
+            return attributes;
+        }
+
+        //Stack
+        let stack = [];
+        for (const node of this.#stack) {
+            stack.push(getAttributes(node));
+        }
+
+        return new AdditionalData({"stack": stack});
     }
 
 }
