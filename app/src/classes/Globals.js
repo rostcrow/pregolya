@@ -13,6 +13,9 @@ export default class Globals {
         DARK_GRAY: "#666666",
         BLACK: "#000000",
         RED: "#DC3545",
-        GREEN: "#14A44D"
+        GREEN: "#14A44D",
+        LIGHT_ORANGE: "#FFE599",
+        LIGHT_PURPLE: "#CCCCFF",
+        LIGHT_CYAN: "#CCFFFF"
     }
 }

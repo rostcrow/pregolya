@@ -1,34 +1,42 @@
 
 import AdditionalData from "./AdditionalData";
 import Algorithm from "./Algorithm";
-
-const INFINITY = "∞";
+import ErrorThrower from "./ErrorThrower";
 
 const State = {
-    SETTING_STARTING_NODE: 0,
-    NODE_FROM_QUEUE: 1,
-    COLORING_NEIGHBORS: 2
+    STARTING_NODE_TO_STACK: 0,
+    NODE_FROM_STACK: 1,
+    HANDLE_CURRENT: 2,
+    NEW_ROOT_TO_STACK: 3
 }
 
 export const NodeAttributes = {
     STATE: 0,
     VISITED_FROM: 1,
-    DISTANCE_FROM_START: 2
+    ORDER_OF_VISIT: 2,
+    TIME_OF_VISIT: 3,
+    ORDER_OF_FINISH: 4,
+    TIME_OF_FINISH: 5,
 }
 
 export const NodeState = {
-    WHITE: 0,
-    GRAY: 1,
-    BLACK: 2
+    NOT_VISITED: 0,
+    NEW_IN_STACK: 1,
+    IN_STACK: 2,
+    CURRENT: 3,
+    FINISHED: 4
 }
 
 export const EdgeAttributes = {
-    STATE: 0
+    STATE: 0,
 }
 
 export const EdgeState = {
     NORMAL: 0,
-    HIGHLIGHTED: 1
+    TREE: 1,
+    BACK: 2,
+    FORWARD: 3,
+    CROSS: 4
 }
 
 export default class DFSAlgorithm extends Algorithm {
@@ -37,171 +45,205 @@ export default class DFSAlgorithm extends Algorithm {
     #state;
     #stack;
     #currentNode;
-    #currentNodeNeighbors;
-    #highlightedEdge;
+    #orderOfVisit;
+    #orderOfFinish;
+    #time;
+    #newRoot;
 
     constructor(graph, startingNode) {
         super(graph);
 
         //Initializing attributes
         this.#startingNode = startingNode;
-        this.#state = State.SETTING_STARTING_NODE;
+        this.#state = State.STARTING_NODE_TO_STACK;
         this.#stack = [];
-        this.#currentNode = -1;
-        this.#currentNodeNeighbors = [];
-        this.#highlightedEdge = -1;
+        this.#currentNode = null;
+        this.#orderOfVisit = 1;
+        this.#orderOfFinish = 1;
+        this.#time = 1;
+        this.#newRoot = null;
 
-        //Setting state for all nodes
+        //Setting up nodes
         graph.forEachNode((node) => {
-            graph.setNodeAttribute(node, NodeAttributes.STATE, NodeState.WHITE);
+            graph.setNodeAttribute(node, NodeAttributes.STATE, NodeState.NOT_VISITED);
             graph.setNodeAttribute(node, NodeAttributes.VISITED_FROM, null);
-            graph.setNodeAttribute(node, NodeAttributes.DISTANCE_FROM_START, INFINITY);
+            graph.setNodeAttribute(node, NodeAttributes.ORDER_OF_VISIT, null);
+            graph.setNodeAttribute(node, NodeAttributes.TIME_OF_VISIT, null);
+            graph.setNodeAttribute(node, NodeAttributes.ORDER_OF_FINISH, null);
+            graph.setNodeAttribute(node, NodeAttributes.TIME_OF_FINISH, null);
         });
 
-        //Setting state for all edges
+        //Setting up edges
         graph.forEachEdge((edge) => {
             graph.setEdgeAttribute(edge, EdgeAttributes.STATE, EdgeState.NORMAL);
         });
+
     }
 
     forward() {
 
         let graph = this.getGraph();
 
-        //Setting highlighted edge to normal
-        if (this.#highlightedEdge !== -1) {
-            graph.setEdgeAttribute(this.#highlightedEdge, EdgeAttributes.STATE, EdgeState.NORMAL);
-        }
-        
-        switch (this.#state) {
-            case State.SETTING_STARTING_NODE:
-                this.#stateSettingStartingNode(graph);
+        switch(this.#state) {
+            case State.STARTING_NODE_TO_STACK:
+                this.#stateStartingNodeToStack(graph);
                 break;
-
-            case State.NODE_FROM_QUEUE:
-                this.#stateNodeFromQueue(graph);
+            case State.NODE_FROM_STACK:
+                this.#stateNodeFromStack(graph);
                 break;
-
-            case State.COLORING_NEIGHBORS:
-                this.#stateColoringNeighbors(graph);
+            case State.HANDLE_CURRENT:
+                this.#stateHandleCurrent(graph);
                 break;
-
+            case State.NEW_ROOT_TO_STACK:
+                this.#stateNewRootToStack(graph);
+                break;
             default:
-                throw new Error("Not expected state");
-
+                ErrorThrower.notExpectedState();
         }
 
     }
 
-    #stateSettingStartingNode(graph) {
+    #stateStartingNodeToStack(graph) {
 
-        //Setting starting node
+        //Pushing starting node to stack
         this.#stack.push(this.#startingNode);
-        graph.setNodeAttribute(this.#startingNode, NodeAttributes.STATE, NodeState.GRAY);
-        graph.setNodeAttribute(this.#startingNode, NodeAttributes.DISTANCE_FROM_START, 0);
-
-        //Changing state
-        this.#state = State.NODE_FROM_QUEUE;
-
-    }
-
-    #stateNodeFromQueue (graph) {
-        //Checking queue
-        if (this.#stack.length === 0) {
-
-            //Searching for WHITE node
-            let nodes = graph.nodes();
-            let nodesLength = nodes.length;
-            for (let i = 0; i < nodesLength; i++) {
-                if (graph.getNodeAttribute(nodes[i], NodeAttributes.STATE) === NodeState.WHITE) {
-                    //Found
-
-                    this.#stack.push(nodes[i]);
-                    break;
-                }
-            }
-
-            if (this.#stack.length === 0) {
-                //Not found, algorithm ends
-                
-                this.setFinished();
-                return;
-            }
-        }
-
-        //Getting node from queue
-        this.#currentNode = this.#stack.pop();
-        graph.setNodeAttribute(this.#currentNode, NodeAttributes.STATE, NodeState.BLACK);
-
-        //Setting neighbors
-        this.#currentNodeNeighbors = graph.outboundNeighbors(this.#currentNode);
+        graph.setNodeAttribute(this.#startingNode, NodeAttributes.STATE, NodeState.NEW_IN_STACK);
+        graph.setNodeAttribute(this.#startingNode, NodeAttributes.ORDER_OF_VISIT, this.#orderOfVisit++);
+        graph.setNodeAttribute(this.#startingNode, NodeAttributes.TIME_OF_VISIT, this.#time++);
 
         //Switching state
-        if (this.#currentNodeNeighbors.length !== 0) {
-            this.#state = State.COLORING_NEIGHBORS;
-        }
+        this.#state = State.NODE_FROM_STACK;
     }
-    
-    #stateColoringNeighbors(graph) {
 
-        let noNeighborColored = false;
+    #stateNodeFromStack(graph) {
 
-        while (true) {
-            if (this.#currentNodeNeighbors.length !== 0) {
+        //Last current change
+        if (this.#currentNode !== null && graph.getNodeAttribute(this.#currentNode, NodeAttributes.STATE) === NodeState.CURRENT) {
+            graph.setNodeAttribute(this.#currentNode, NodeAttributes.STATE, NodeState.IN_STACK);
+        }
 
-                //Getting neighbor
-                let neighbor = this.#currentNodeNeighbors.shift();
+        //Popping from stack
+        this.#currentNode = this.#stack[this.#stack.length - 1];
+        graph.setNodeAttribute(this.#currentNode, NodeAttributes.STATE, NodeState.CURRENT);
 
-                if (graph.getNodeAttribute(neighbor, NodeAttributes.STATE) === NodeState.WHITE) {
-                    //Coloring neighbor
+        //Switching state
+        this.#state = State.HANDLE_CURRENT;
 
-                    this.#stack.push(neighbor);
-                    graph.setNodeAttribute(neighbor, NodeAttributes.STATE, NodeState.GRAY);
-                    graph.setNodeAttribute(neighbor, NodeAttributes.VISITED_FROM, this.#currentNode);
+    }
 
-                    //Counting distance from starting node
-                    let distance;
-                    const previousDistance = graph.getNodeAttribute(this.#currentNode, NodeAttributes.DISTANCE_FROM_START);
-                    if (previousDistance === INFINITY) {
-                        distance = INFINITY;
-                    } else {
-                        distance = previousDistance + 1;
-                    }
-                    
-                    graph.setNodeAttribute(neighbor, NodeAttributes.DISTANCE_FROM_START, distance);
+    #stateHandleCurrent(graph) {
 
-                    //Highlighting edge
-                    this.#highlightedEdge = graph.edges(this.#currentNode, neighbor)[0];
-                    graph.setEdgeAttribute(this.#highlightedEdge, EdgeAttributes.STATE, EdgeState.HIGHLIGHTED);
+        //Finding next appropriate edge
+        const edges = graph.outboundEdges(this.#currentNode);
+        let nextEdge = null;
 
-                    break;
-
-                } else {
-                    //Neighbor already colored
-                    continue;
-                }
-
-            } else {
-                //No neighbors left
-                noNeighborColored = true;
+        for (const edge of edges) {
+            if (graph.getEdgeAttribute(edge, EdgeAttributes.STATE) === EdgeState.NORMAL) {
+                nextEdge = edge;
                 break;
             }
         }
 
-        //Switching state if needed
-        if (this.#currentNodeNeighbors.length === 0) {
-            this.#state = State.NODE_FROM_QUEUE
+        if (nextEdge !== null) {
+            //Next edge found
 
-            if (noNeighborColored) {
-                //Nothing happened, run again
-                this.forward();
+            //Determining edge state
+            let edgeState = null;
+            const opposite = graph.opposite(this.#currentNode, nextEdge);
+            const oppositeState = graph.getNodeAttribute(opposite, NodeAttributes.STATE);
+
+            switch (oppositeState) {
+                case NodeState.NOT_VISITED:
+                    edgeState = EdgeState.TREE;
+    
+                    //Pushing to stack
+                    this.#stack.push(opposite);
+                    graph.setNodeAttribute(opposite, NodeAttributes.STATE, NodeState.NEW_IN_STACK);
+                    graph.setNodeAttribute(opposite, NodeAttributes.VISITED_FROM, this.#currentNode);
+                    graph.setNodeAttribute(opposite, NodeAttributes.ORDER_OF_VISIT, this.#orderOfVisit++);
+                    graph.setNodeAttribute(opposite, NodeAttributes.TIME_OF_VISIT, this.#time++);
+                    break;
+    
+                case NodeState.NEW_IN_STACK:
+                case NodeState.IN_STACK:
+                case NodeState.CURRENT:
+                    edgeState = EdgeState.BACK;
+                    break;
+    
+                case NodeState.FINISHED:
+                    const currentTimeOfVisit = graph.getNodeAttribute(this.#currentNode, NodeAttributes.TIME_OF_VISIT);
+                    const oppositeTimeOfVisit = graph.getNodeAttribute(opposite, NodeAttributes.TIME_OF_VISIT);
+    
+                    if (currentTimeOfVisit < oppositeTimeOfVisit) {
+                        edgeState = EdgeState.FORWARD;
+                    } else if (currentTimeOfVisit > oppositeTimeOfVisit) {
+                        edgeState = EdgeState.CROSS;
+                    }
+                    break;
+                
+                default:
+                    ErrorThrower.notExpectedState();
             }
+
+            //Changing edge state
+            graph.setEdgeAttribute(nextEdge, EdgeAttributes.STATE, edgeState);
+
+            //Switching state
+            if (edgeState === EdgeState.TREE) {
+                this.#state = State.NODE_FROM_STACK;
+            } else {
+                this.#state = State.HANDLE_CURRENT;
+            }
+
+        } else {
+            //Next edge not found
+
+            //Setting current as finished
+            this.#stack.pop();
+            graph.setNodeAttribute(this.#currentNode, NodeAttributes.STATE, NodeState.FINISHED);
+            graph.setNodeAttribute(this.#currentNode, NodeAttributes.ORDER_OF_FINISH, this.#orderOfFinish++);
+            graph.setNodeAttribute(this.#currentNode, NodeAttributes.TIME_OF_FINISH, this.#time++);
+            this.#currentNode = null;
+
+            //Switching state
+            if (this.#stack.length !== 0) {
+                this.#state = State.NODE_FROM_STACK;
+                return;
+            }
+
+            //Finding not visited node
+            const nodes = graph.nodes();
+            for (let i = 0; i < nodes.length; i++) {
+                if (graph.getNodeAttribute(nodes[i], NodeAttributes.STATE) === NodeState.NOT_VISITED) {
+                    //Found
+
+                    this.#newRoot = nodes[i];
+                    this.#state = State.NEW_ROOT_TO_STACK;
+                    return;
+                }
+            }
+
+            //Not found, algorithm ends
+            this.setFinished();
+
         }
+    }
+
+    #stateNewRootToStack(graph) {
+
+        //Pushing starting node to stack
+        this.#stack.push(this.#newRoot);
+        graph.setNodeAttribute(this.#newRoot, NodeAttributes.STATE, NodeState.NEW_IN_STACK);
+        graph.setNodeAttribute(this.#newRoot, NodeAttributes.ORDER_OF_VISIT, this.#orderOfVisit++);
+        graph.setNodeAttribute(this.#newRoot, NodeAttributes.TIME_OF_VISIT, this.#time++);
+
+        //Switching state
+        this.#state = State.NODE_FROM_STACK;
 
     }
 
     getAdditionalData() {
-        return new AdditionalData({"stack": this.#stack});
+        return new AdditionalData({});
     }
 
 }
