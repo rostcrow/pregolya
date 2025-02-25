@@ -1,12 +1,12 @@
-import EdgeAttributesAdapter from "./EdgeAttributesAdapter";
+import EdgeStyler from "./EdgeStyler";
 import { EdgeState } from "./DFSAlgorithm";
 import { EdgeAttributes } from "./DFSAlgorithm";
 import Globals from "./Globals";
 import ErrorThrower from "./ErrorThrower";
 
-export default class DFSEdgeAttributesAdapter extends EdgeAttributesAdapter {
+export default class DFSEdgeStyler extends EdgeStyler {
 
-    adapt(key, attributes) {
+    style(attributes) {
 
         let ret = {"forceLabel": true};
 

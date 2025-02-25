@@ -1,22 +1,22 @@
 
 import AlgorithmController from "./AlgorithmController";
-import GraphDataAdapter from "./GraphDataAdapter";
+import GraphDataStyler from "./GraphDataStyler";
 
 export default class AlgorithmFacade {
 
     #algorithmController;
-    #graphDataAdapter;
+    #graphDataStyler;
     #sideComponentsFactory; 
 
     constructor(graph, algorithmTag, ...algorithmOptions) {
 
         const algorithmClass = algorithmTag.getAlgorithmClass();
-        const nodeAttributesAdapterClass = algorithmTag.getNodeAttributesAdapterClass();
-        const edgeAttributesAdapterClass = algorithmTag.getEdgeAttributesAdapterClass();
+        const nodeStylerClass = algorithmTag.getNodeStylerClass();
+        const edgeStylerClass = algorithmTag.getEdgeStylerClass();
         const sideComponentsFactoryClass = algorithmTag.getSideComponentsFactoryClass();
 
         this.#algorithmController = new AlgorithmController (new algorithmClass (graph, ...algorithmOptions));
-        this.#graphDataAdapter = new GraphDataAdapter (new nodeAttributesAdapterClass(), new edgeAttributesAdapterClass());
+        this.#graphDataStyler = new GraphDataStyler (new nodeStylerClass(), new edgeStylerClass());
         this.#sideComponentsFactory = new sideComponentsFactoryClass();
     }
 
@@ -44,9 +44,9 @@ export default class AlgorithmFacade {
         return this.#algorithmController.algorithmIsOnEnd();
     }
 
-    getCurrentGraphAttributes() {
+    getCurrentGraphData() {
         let graphData = this.#algorithmController.getCurrentState().getGraphData();
-        return this.#graphDataAdapter.adapt(graphData);
+        return this.#graphDataStyler.style(graphData);
     }
 
     getCurrentSideComponents() {

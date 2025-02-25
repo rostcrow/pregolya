@@ -1,12 +1,12 @@
-import NodeAttributesAdapter from "./NodeAttributesAdapter";
+import NodeStyler from "./NodeStyler";
 import { NodeState } from "./DFSAlgorithm";
 import { NodeAttributes } from "./DFSAlgorithm";
 import Globals from "./Globals";
 import ErrorThrower from "./ErrorThrower";
 
-export default class DFSNodeAttributesAdapter extends NodeAttributesAdapter {
+export default class DFSNodeStyler extends NodeStyler {
 
-    adapt(key, attributes) {
+    style(attributes) {
 
         let ret = {};
 
@@ -32,6 +32,7 @@ export default class DFSNodeAttributesAdapter extends NodeAttributesAdapter {
         }
 
         //Label
+        const k = attributes["key"];
         const vf = attributes[NodeAttributes.VISITED_FROM];
 
         const ov = attributes[NodeAttributes.ORDER_OF_VISIT];
@@ -51,7 +52,7 @@ export default class DFSNodeAttributesAdapter extends NodeAttributesAdapter {
         const tf = attributes[NodeAttributes.TIME_OF_FINISH];
 
         const label = 
-`${key}
+`${k}
 Visited from: ${vf}
 Order of visit: ${ovStr}
 Time of visit: ${tv}

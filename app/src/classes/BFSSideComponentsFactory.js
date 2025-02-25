@@ -1,16 +1,16 @@
 
 import ListGroup from 'react-bootstrap/ListGroup';
 import SideComponent from './SideComponent';
-import GraphView from '../components/js/GraphView';
-import { EdgeAttributes, EdgeState, NodeAttributes, NodeState } from './BFSAlgorithm';
-import TreeGraphLayout from './TreeGraphLayout';
-import GraphTag from './GraphTag';
 import SideComponentsFactory from "./SideComponentsFactory";
 import Globals from './Globals';
-import GraphDataExtractor from './GraphDataExtractor';
-import GraphDataAdapter from './GraphDataAdapter';
-import BFSNodeAttributesAdapter from './BFSNodeAttributesAdapter';
-import BFSEdgeAttributesAdapter from './BFSEdgeAttributesAdapter';
+import { EdgeAttributes, EdgeState, NodeAttributes, NodeState } from './BFSAlgorithm';
+import GraphDataStyler from './GraphDataStyler';
+import BFSNodeStyler from './BFSNodeStyler';
+import BFSEdgeStyler from './BFSEdgeStyler';
+import GraphData from './GraphData';
+import GraphFactory from './GraphFactory';
+import GraphView from '../components/js/GraphView';
+import BFSTreeGraphLayout from './BFSTreeGraphLayout';
 import GraphDataApplier from './GraphDataApplier';
 
 export default class BFSSideComponentsFactory extends SideComponentsFactory {
@@ -63,76 +63,47 @@ export default class BFSSideComponentsFactory extends SideComponentsFactory {
 
         //TREE
         const nodes = graphData.getNodes();
+        const edges = graphData.getEdges();
 
-        //Creating array from an object
-        const nodesArray = [];
+        //Creating output nodes
+        let outputNodes = {};
         for (const key in nodes) {
-            let attributes = nodes[key];
-            attributes["key"] = key;
-
-            nodesArray.push(attributes);
-        }
-        
-        //Sorting array by order
-        nodesArray.sort((a, b) => {
-            return a[NodeAttributes.ORDER_OF_VISIT] - b[NodeAttributes.ORDER_OF_VISIT];
-        });
-
-        //Counting nodes and edges
-        let outputNodes = [];
-        let outputEdges = [];
-
-        for (let i = 0; i < nodesArray.length; i++) {
-            if (nodesArray[i][NodeAttributes.STATE] !== NodeState.NOT_VISITED) {
-                //Saving not visited nodes
-                outputNodes.push(nodesArray[i]["key"]);
+            if (nodes[key][NodeAttributes.STATE] !== NodeState.NOT_VISITED) {
+                outputNodes[key] = nodes[key];
             }
-            
-            if (nodesArray[i][NodeAttributes.VISITED_FROM] !== null) {
+        }
 
-                //Determining state
-                let state = EdgeState.USED;
-                if (nodesArray[i][NodeAttributes.STATE] === NodeState.NEW_IN_QUEUE) {
-                    state = EdgeState.HIGHLIGHTED;
+        //Creating output edges
+        let outputEdges = {};
+        for (const key in edges) {
+            if (edges[key][EdgeAttributes.STATE] !== EdgeState.NORMAL) {
+                
+                let edge = edges[key];
+
+                //Changing direction of edge if needed
+                const sourceNode = edge["source"];
+                const targetNode = edge["target"];
+
+                if (nodes[sourceNode][NodeAttributes.VISITED_FROM] === targetNode) {
+                    edge["source"] = targetNode;
+                    edge["target"] = sourceNode;
                 }
 
-                //Making edge between child and its parent
-                outputEdges.push({"source": nodesArray[i][NodeAttributes.VISITED_FROM], "target": nodesArray[i]["key"], "state": state});
+                outputEdges[key] = edge;
             }
         }
-
-        //Making json
-        let graphJSON = 
-            {
-                "directed": true, 
-                "weighted": false,
-                "nodes": outputNodes,
-                "edges": outputEdges
-            };
 
         //Making graph
-        let graph = new GraphTag(graphJSON).getDisplayGraph();
+        const treeGraphData = new GraphData(true, false, outputNodes, outputEdges);
+        const treeGraph = GraphFactory.createDisplayGraph(treeGraphData);
 
-        //Filling with attributes
-        graph.forEachNode((node) => {
-            for (const attribute in nodes[node]) {
-                graph.setNodeAttribute(node, attribute, nodes[node][attribute]);
-            }
-        });
-
-        const graphEdges = graph.edges();
-        for (let i = 0; i < graphEdges.length; i++) {
-            graph.setEdgeAttribute(graphEdges[i], EdgeAttributes.STATE, outputEdges[i]["state"]);
-        }
-
-        //Setting visual appereance
-        const outputGraphData = GraphDataExtractor.extractData(graph);
-        const outputGraphAdapter = new GraphDataAdapter(new BFSNodeAttributesAdapter(), new BFSEdgeAttributesAdapter());
-        const adaptedGraphData = outputGraphAdapter.adapt(outputGraphData);
-        GraphDataApplier.apply(graph, adaptedGraphData);
+        //Styling graph
+        const graphDataStyler = new GraphDataStyler(new BFSNodeStyler(), new BFSEdgeStyler());
+        const styledTreeGraphData = graphDataStyler.style(treeGraphData);
+        GraphDataApplier.applyAll(treeGraph, styledTreeGraphData);
 
         //Making component
-        let treeComponent = <GraphView graph={graph} layout={new TreeGraphLayout()}></GraphView>;
+        const treeComponent = <GraphView graph={treeGraph} layout={new BFSTreeGraphLayout()}></GraphView>;
 
         //ORDER OF VISIT
         const order = additionalData.get("order");
@@ -158,7 +129,7 @@ export default class BFSSideComponentsFactory extends SideComponentsFactory {
                 {orderItems}
             </ListGroup>
 
-        return [new SideComponent("Queue", queueComponent), new SideComponent("Tree", treeComponent), 
+        return [new SideComponent("Queue", queueComponent), new SideComponent("Tree", treeComponent),
             new SideComponent("Order of visit", orderComponent)];
     }
 

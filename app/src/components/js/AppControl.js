@@ -15,19 +15,20 @@ import graphExamplesArray from "../../graph_examples/all_examples.js";
 import GraphDataApplier from '../../classes/GraphDataApplier.js';
 import AlgorithmTag from '../../classes/AlgorithmTag.js';
 import BFSAlgorithm from '../../classes/BFSAlgorithm.js';
-import BFSNodeAttributesAdapter from '../../classes/BFSNodeAttributesAdapter.js';
-import BFSEdgeAttributesAdapter from '../../classes/BFSEdgeAttributesAdapter.js';
+import BFSNodeStyler from "../../classes/BFSNodeStyler.js";
+import BFSEdgeStyler from "../../classes/BFSEdgeStyler.js";
 import BFSSideComponentsFactory from '../../classes/BFSSideComponentsFactory.js';
 import AlgorithmFacade from '../../classes/AlgorithmFacade.js';
 import GraphAlgorithmForm from './GraphAlgorithmForm.js';
 import BFSAlgorithmOptionsForm from '../../classes/BFSAlgorithmOptionsForm.js';
-import GraphTag, { GraphType } from '../../classes/GraphTag.js';
+import GraphTag from '../../classes/GraphTag.js';
 import NullAlgorithmOptionsForm from '../../classes/NullAlgorithmOptionsForm.js';
 import DFSAlgorithm from '../../classes/DFSAlgorithm.js';
 import DFSSideComponentsFactory from '../../classes/DFSSideComponentsFactory.js';
-import DFSNodeAttributesAdapter from '../../classes/DFSNodeAttributesAdapter.js';
-import DFSEdgeAttributesAdapter from '../../classes/DFSEdgeAttributesAdapter.js';
+import DFSNodeStyler from "../../classes/DFSNodeStyler.js";
+import DFSEdgeStyler from "../../classes/DFSEdgeStyler.js";
 import DFSAlgorithmOptionsForm from '../../classes/DFSAlgorithmOptionsForm.js';
+import Globals from '../../classes/Globals.js';
 
 //Initializing graphs
 const graphsJSON = graphExamplesArray;
@@ -41,13 +42,13 @@ const firstAlgGraph = graphTags[0].getAlgorithmGraph();
 
 //Initializing algorithms
 const bfs = new AlgorithmTag(
-  "Breadth-first search (BFS)", [GraphType.NORMAL, GraphType.DIRECTED],
-  BFSAlgorithm, BFSNodeAttributesAdapter, BFSEdgeAttributesAdapter, BFSSideComponentsFactory, BFSAlgorithmOptionsForm
+  "Breadth-first search (BFS)", [Globals.GraphTypes.NORMAL, Globals.GraphTypes.DIRECTED],
+  BFSAlgorithm, BFSNodeStyler, BFSEdgeStyler, BFSSideComponentsFactory, BFSAlgorithmOptionsForm
 );
 
 const dfs = new AlgorithmTag(
-    "Depth-first search (DFS)", [GraphType.NORMAL, GraphType.DIRECTED],
-    DFSAlgorithm, DFSNodeAttributesAdapter, DFSEdgeAttributesAdapter, DFSSideComponentsFactory, DFSAlgorithmOptionsForm
+    "Depth-first search (DFS)", [Globals.GraphTypes.NORMAL, Globals.GraphTypes.DIRECTED],
+    DFSAlgorithm, DFSNodeStyler, DFSEdgeStyler, DFSSideComponentsFactory, DFSAlgorithmOptionsForm
   );
 
 const algorithmTags = [bfs, dfs];
@@ -202,8 +203,8 @@ export default function AppControl() {
     function update() {
   
       //Updating GraphCanvas
-      const graphAttributes = algorithmFacade.getCurrentGraphAttributes();
-      GraphDataApplier.apply(workingGraph, graphAttributes);
+      const graphData = algorithmFacade.getCurrentGraphData();
+      GraphDataApplier.applyNodesEdges(workingGraph, graphData);
       setGraphRefreshState(graphRefreshState => !graphRefreshState);
   
       //Updating SidePanel

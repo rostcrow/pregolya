@@ -1,11 +1,11 @@
-import NodeAttributesAdapter from "./NodeAttributesAdapter";
+import NodeStyler from "./NodeStyler";
 import { NodeState } from "./BFSAlgorithm";
 import { NodeAttributes } from "./BFSAlgorithm";
 import Globals from "./Globals";
 
-export default class BFSNodeAttributesAdapter extends NodeAttributesAdapter {
+export default class BFSNodeStyler extends NodeStyler {
 
-    adapt(key, attributes) {
+    style(attributes) {
         let ret = {};
 
         //Setting color
@@ -30,16 +30,18 @@ export default class BFSNodeAttributesAdapter extends NodeAttributesAdapter {
         }
 
         //Setting label
-        let ov = attributes[NodeAttributes.ORDER_OF_VISIT];
+        const k = attributes["key"];
+
+        const ov = attributes[NodeAttributes.ORDER_OF_VISIT];
         let ovStr = "null";
         if (ov !== null) {
             ovStr = `#${ov}`;
         }
 
-        let vf = attributes[NodeAttributes.VISITED_FROM];
-        let dfsn = attributes[NodeAttributes.DISTANCE_FROM_START];
+        const vf = attributes[NodeAttributes.VISITED_FROM];
+        const dfsn = attributes[NodeAttributes.DISTANCE_FROM_START];
 
-        ret["label"] = `${key}\nOrder of visit: ${ovStr}\nVisited from: ${vf}\nDistance from start: ${dfsn}`;
+        ret["label"] = `${k}\nOrder of visit: ${ovStr}\nVisited from: ${vf}\nDistance from start: ${dfsn}`;
 
         return ret;
     }

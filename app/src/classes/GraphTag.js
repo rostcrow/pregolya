@@ -1,32 +1,16 @@
 
-import Graph from "graphology";
-import { indexParallelEdgesIndex, DEFAULT_EDGE_CURVATURE} from "@sigma/edge-curve";
-import GraphDataAdapter from "./GraphDataAdapter";
-import DefaultNodeAttributesAdapter from "./DefaultNodeAttributesAdapter";
-import DefaultEdgeAttributesAdapter from "./DefaultEdgeAttributesAdapter";
-import GraphDataApplier from "./GraphDataApplier";
-import GraphDataExtractor from "./GraphDataExtractor";
-import ErrorThrower from "./ErrorThrower";
-
-export const GraphType = {
-    NORMAL: 0,
-    DIRECTED: 1,
-    WEIGHTED: 2,
-    DIRECTED_WEIGHTED: 3
-}
+import GraphFactory from "./GraphFactory";
+import JsonToGraphDataAdapter from "./JsonToGraphDataAdapter";
+import Globals from "./Globals";
 
 export default class GraphTag {
 
     #name;
-    #directed;
-    #weighted;
-    #rawGraph;
+    #graphData;
 
     constructor(json) {
         this.#name = json["name"];
-        this.#directed = json["directed"];
-        this.#weighted = json["weighted"];
-        this.#rawGraph = this.#getRawGraph(json["nodes"], json["edges"]);
+        this.#graphData = JsonToGraphDataAdapter.adapt(json);
     }
 
     getName() {
@@ -42,140 +26,34 @@ export default class GraphTag {
     }
 
     isDirected() {
-        return this.#directed;
+        return this.#graphData.isDirected();
     }
 
     isWeighted() {
-        return this.#weighted;
+        return this.#graphData.isWeighted();
     }
 
     getType() {
-        if (this.#directed && this.#weighted) {
-            return GraphType.DIRECTED_WEIGHTED;
+        if (this.#graphData.isDirected() && this.#graphData.isWeighted()) {
+            return Globals.GraphTypes.DIRECTED_WEIGHTED;
         }
 
-        if (this.#directed) {
-            return GraphType.DIRECTED;
+        if (this.#graphData.isDirected()) {
+            return Globals.GraphTypes.DIRECTED;
         }
 
-        if (this.#weighted) {
-            return GraphType.WEIGHTED;
+        if (this.#graphData.isWeighted()) {
+            return Globals.GraphTypes.WEIGHTED;
         }
 
-        return GraphType.NORMAL;
-    }
-
-    #getRawGraph(nodes, edges) {
-        
-        const type = "un".repeat(!this.#directed) + "directed";
-        let graph = new Graph({multi: true, type: type});
-
-        //Adding nodes
-        for (const node of nodes) {
-            graph.addNode(node);
-        }
-
-        //Creating edge key generator
-        function incrementalId() {
-            let i = 0;
-
-            return () => i++;
-        }
-
-        const edgeKeyGenerator = incrementalId();
-
-        //Adding edges
-        for (const edge of edges) {
-            const key = edgeKeyGenerator();
-            graph.addEdgeWithKey(key, edge["source"], edge["target"]);
-
-            //Adding weigth
-            if (this.#weighted) {
-                graph.setEdgeAttribute(key, "weight", edge["weight"]);
-            }
-        }
-
-        return graph;
+        return Globals.GraphTypes.NORMAL;
     }
 
     getDisplayGraph() {
-
-        let graph = this.#rawGraph.copy();
-
-        //Setting default attributes to nodes and edges
-        const graphData = GraphDataExtractor.extractData(graph);
-        const graphDataAdapter = 
-            new GraphDataAdapter(new DefaultNodeAttributesAdapter(), new DefaultEdgeAttributesAdapter());
-        const adaptedData = graphDataAdapter.adapt(graphData);
-
-        GraphDataApplier.apply(graph, adaptedData);
-        
-        //Setting edges
-        graph.forEachEdge((edge) => {
-
-            //Setting weight label
-            if (this.#weighted) {
-                if (graph.hasEdgeAttribute(edge, "weight")) {
-
-                    let weight = graph.getEdgeAttribute(edge, "weight").toString();
-                    graph.setEdgeAttribute(edge, "label", weight);
-                    graph.setEdgeAttribute(edge, "forceLabel", true);
-
-                } else {
-                    //Edge in weighted graph doesn't have weight
-                    ErrorThrower.edgeWithoutWeight();
-                }
-            }
-        });
-
-        //Determining edge types
-        indexParallelEdgesIndex(graph, { edgeIndexAttribute: "parallelIndex", edgeMaxIndexAttribute: "parallelMaxIndex"});
-
-        graph.forEachEdge((edge, attributes, source, target) => {
-
-            if (source === target) {
-                //Loop edge
-
-                if (this.#directed) {
-                    graph.setEdgeAttribute(edge, "type", "loopArrow");
-                } else {
-                    graph.setEdgeAttribute(edge, "type", "loop");
-                }
-                
-            } else {
-
-                if (graph.getEdgeAttribute(edge, "parallelIndex") != null) {
-                    //Parallel edge
-                    
-                    let parallelIndex = graph.getEdgeAttribute(edge, "parallelIndex");
-                    let parallelMaxIndex = graph.getEdgeAttribute(edge, "parallelMaxIndex");
-
-                    graph.setEdgeAttribute(edge, "curvature", 
-                        DEFAULT_EDGE_CURVATURE + (3 * DEFAULT_EDGE_CURVATURE * parallelIndex) / (parallelMaxIndex || 1));
-                    
-                    if (this.#directed) {
-                        graph.setEdgeAttribute(edge, "type", "curvedArrow");
-                    } else {
-                        graph.setEdgeAttribute(edge, "type", "curved");
-                    }
-
-                } else {
-                    //Non-parallel edge
-
-                    if (this.#directed) {
-                        graph.setEdgeAttribute(edge, "type", "arrow");
-                    } else {
-                        graph.setEdgeAttribute(edge, "type", "line");
-                    }
-                }
-            }
-        });
-
-        return graph;
+        return GraphFactory.createDisplayGraph(this.#graphData);
     }
 
     getAlgorithmGraph() {
-        return this.#rawGraph.copy();
+        return GraphFactory.createAlgorithmGraph(this.#graphData);
     }
-
 }

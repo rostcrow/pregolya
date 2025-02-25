@@ -18,4 +18,11 @@ export default class Globals {
         LIGHT_PURPLE: "#CCCCFF",
         LIGHT_CYAN: "#CCFFFF"
     }
+
+    static GraphTypes = {
+        NORMAL: 0,
+        DIRECTED: 1,
+        WEIGHTED: 2,
+        DIRECTED_WEIGHTED: 3
+    }
 }

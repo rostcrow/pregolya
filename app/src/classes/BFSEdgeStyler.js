@@ -1,11 +1,11 @@
-import EdgeAttributesAdapter from "./EdgeAttributesAdapter";
+import EdgeStyler from "./EdgeStyler";
 import { EdgeState } from "./BFSAlgorithm";
 import { EdgeAttributes } from "./BFSAlgorithm";
 import Globals from "./Globals";
 
-export default class BFSEdgeAttributesAdapter extends EdgeAttributesAdapter {
+export default class BFSEdgeStyler extends EdgeStyler {
 
-    adapt(key, attributes) {
+    style(attributes) {
 
         let ret = {};
 
