@@ -5,7 +5,7 @@ import Form from 'react-bootstrap/Form';
 export default class BFSAlgorithmOptionsForm extends AlgorithmOptionsForm {
     
     getDefaultOptions() {
-        return [0];
+        return ["0"];
     }
 
     #startingNodeChange(e) {
@@ -13,7 +13,7 @@ export default class BFSAlgorithmOptionsForm extends AlgorithmOptionsForm {
         let options = this.getOptions();
         const setOptionsFunc = this.getSetOptionsFunc();
 
-        options[0] = Number(e.target.value);
+        options[0] = e.target.value;
 
         setOptionsFunc([...options]);
     }
