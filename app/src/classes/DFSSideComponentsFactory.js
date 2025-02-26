@@ -116,7 +116,6 @@ export default class DFSSideComponentsFactory extends SideComponentsFactory {
         let orderOfVisitItems = [];
         for (const node of orderOfVisit) {
 
-            //Text
             const k = node["key"];
             const ov = node[NodeAttributes.ORDER_OF_VISIT];
             const tv = node[NodeAttributes.TIME_OF_VISIT];
@@ -160,9 +159,47 @@ export default class DFSSideComponentsFactory extends SideComponentsFactory {
                 </Table>
             </div>;
 
+        //Order of finish
+        const orderOfFinish = additionalData.get("orderOfFinish");
+
+        let orderOfFinishItems = [];
+        for (const node of orderOfFinish) {
+
+            const k = node["key"];
+            const of = node[NodeAttributes.ORDER_OF_FINISH];
+            const tf = node[NodeAttributes.TIME_OF_FINISH];
+            const tv = node[NodeAttributes.TIME_OF_VISIT];
+
+            orderOfFinishItems.push(
+                <tr>
+                    <td>{of}</td>
+                    <td>{k}</td>
+                    <td>{tf}</td>
+                    <td>{tv}</td>
+                </tr>
+            );
+        }
+
+        const orderOfFinishComponent = 
+            <div className="overflow-auto" style={{maxHeight: 500}}>
+                <Table hover={true}>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Node</th>
+                            <th>Time of finish</th>
+                            <th>Time of visit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {orderOfFinishItems}
+                    </tbody>
+                </Table>
+            </div>;
 
         return [new SideComponent("Stack", stackComponent), new SideComponent("Tree", treeComponent), 
-            new SideComponent("Order of visit", orderOfVisitComponent)];
+            new SideComponent("Order of visit", orderOfVisitComponent), 
+            new SideComponent("Order of finish", orderOfFinishComponent)];
     }
 
 }
