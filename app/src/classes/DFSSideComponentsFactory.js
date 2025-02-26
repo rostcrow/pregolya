@@ -109,7 +109,36 @@ export default class DFSSideComponentsFactory extends SideComponentsFactory {
         //Making component
         const treeComponent = <GraphView graph={treeGraph} layout={new DFSTreeGraphLayout()}></GraphView>;
 
-        return [new SideComponent("Stack", stackComponent), new SideComponent("Tree", treeComponent)];
+        //Order of visit
+        const orderOfVisit = additionalData.get("orderOfVisit");
+
+        let orderOfVisitItems = [];
+        for (const node of orderOfVisit) {
+
+            //Text
+            const k = node["key"];
+            const ov = node[NodeAttributes.ORDER_OF_VISIT];
+            const tv = node[NodeAttributes.TIME_OF_VISIT];
+            const vf = node[NodeAttributes.VISITED_FROM];
+
+            const text = `#${ov} ${k} (Time of visit: ${tv}, Visited from: ${vf})`;
+
+            //Style
+            let style = {};
+            if (node[NodeAttributes.STATE] === NodeState.NEW_IN_STACK) {
+                style = {color: Globals.Colors.GREEN};
+            }
+
+            orderOfVisitItems.push(<ListGroup.Item style={style}>{text}</ListGroup.Item>);
+        }
+
+        const orderOfVisitComponent = 
+            <ListGroup className="text-start overflow-auto" style={{maxHeight: 500}}>
+                {orderOfVisitItems}
+            </ListGroup>;
+
+        return [new SideComponent("Stack", stackComponent), new SideComponent("Tree", treeComponent), 
+            new SideComponent("Order of visit", orderOfVisitComponent)];
     }
 
 }

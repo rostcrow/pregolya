@@ -259,7 +259,19 @@ export default class DFSAlgorithm extends Algorithm {
             stack.push(getAttributes(node));
         }
 
-        return new AdditionalData({"stack": stack});
+        //Order of visit
+        let orderOfVisit = [];
+        graph.forEachNode((node, attributes) => {
+            if (attributes[NodeAttributes.ORDER_OF_VISIT] !== null) {
+                orderOfVisit.push(getAttributes(node));
+            }
+        });
+
+        orderOfVisit.sort((a, b) => {
+            return a[NodeAttributes.ORDER_OF_VISIT] - b[NodeAttributes.ORDER_OF_VISIT];
+        });
+
+        return new AdditionalData({"stack": stack, "orderOfVisit": orderOfVisit});
     }
 
 }
