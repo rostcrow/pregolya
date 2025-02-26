@@ -1,5 +1,4 @@
 
-import ListGroup from 'react-bootstrap/ListGroup';
 import SideComponent from './SideComponent';
 import SideComponentsFactory from "./SideComponentsFactory";
 import Globals from './Globals';
@@ -21,26 +20,36 @@ export default class BFSSideComponentsFactory extends SideComponentsFactory {
         const graphData = algorithmState.getGraphData();
         const additionalData = algorithmState.getAdditionalData();
 
-        function getText(node) {
-            return `${node["key"]} (Visited from: ${node["visitedFrom"]}, Distance from start: ${node["distance"]})`;
-        }
-
         //QUEUE
         const currentNode = additionalData.get("currentNode");
-        let currentText;
+
+        const currrentNodeItemStyle = {color: Globals.Colors.RED};
+        let currentNodeItem;
         if (currentNode !== null) {
-            currentText = getText(currentNode);
+
+            let vf = currentNode["visitedFrom"]
+            if (vf === null) {
+                vf = "null";
+            }
+
+            currentNodeItem = 
+                <tr>
+                    <td style={currrentNodeItemStyle}>{currentNode["key"]}</td>
+                    <td style={currrentNodeItemStyle}>{vf}</td>
+                    <td style={currrentNodeItemStyle}>{currentNode["distance"]}</td>
+                </tr>;
         } else {
-            currentText = "No current node";
+
+            currentNodeItem = 
+                <tr>
+                    <td colSpan={3} style={currrentNodeItemStyle}>None</td>
+                </tr>;
         }
 
         let queue = additionalData.get("queue");
 
         let items = [];
-        for (const [index, node] of queue.entries()) {
-
-            //Generating text
-            const text = getText(node);
+        for (const node of queue) {
 
             //Setting style
             let style = {};
@@ -48,18 +57,62 @@ export default class BFSSideComponentsFactory extends SideComponentsFactory {
                 style = {color: Globals.Colors.GREEN};
             }
 
+            let vf = node["visitedFrom"]
+            if (vf === null) {
+                vf = "null";
+            }
+
             //Pushing item
-            items.push(<ListGroup.Item key={index} style={style}>{text}</ListGroup.Item>);
+            items.push(
+                <tr>
+                    <td style={style}>{node["key"]}</td>
+                    <td style={style}>{vf}</td>
+                    <td style={style}>{node["distance"]}</td>
+                </tr>
+            );
         }
 
         const queueComponent = 
             <>
-                <ListGroup className='mb-3'>
-                    <ListGroup.Item key={-1} style={{color: Globals.Colors.RED}}>{currentText}</ListGroup.Item>
-                </ListGroup>
-                <ListGroup className='overflow-auto' style={{maxHeight: 500}}>
-                    {items}
-                </ListGroup> 
+                <div className="overflow-auto" style={{maxHeight: 500}}>
+                    <Table hover={true}>
+                        <thead>
+                            <tr>
+                                <th colSpan={3}>Current node</th>
+                            </tr>
+                            <tr>
+                                <td>Node</td>
+                                <td>Visited from</td>
+                                <td>Distance from start</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {currentNodeItem}
+                        </tbody>
+                    </Table>
+                </div>
+                <div className="overflow-auto" style={{maxHeight: 500}}>
+                    <Table hover={true}>
+                        <thead>
+                            <tr>
+                                <th colSpan={3}>Front of queue</th>
+                            </tr>
+                            <tr>
+                                <td>Node</td>
+                                <td>Visited from</td>
+                                <td>Distance from start</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {items}
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th colSpan={3}>Back of queue</th>
+                            </tr>
+                        </tfoot>
+                    </Table>
+                </div>
             </>;
 
         //TREE
