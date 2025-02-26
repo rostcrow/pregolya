@@ -1,5 +1,4 @@
 
-import ListGroup from "react-bootstrap/ListGroup";
 import SideComponentsFactory from "./SideComponentsFactory";
 import SideComponent from "./SideComponent";
 import { EdgeAttributes, EdgeState, NodeAttributes, NodeState } from "./DFSAlgorithm";
@@ -27,7 +26,7 @@ export default class DFSSideComponentsFactory extends SideComponentsFactory {
         stack.reverse();
 
         let stackItems = [];
-        for (const [index, node] of stack.entries()) {
+        for (const node of stack) {
             
             //Color
             let style = {};
@@ -37,20 +36,45 @@ export default class DFSSideComponentsFactory extends SideComponentsFactory {
                 style = {color: Globals.Colors.RED};
             }
 
-            //Text
             const k = node["key"];
-            const vf = node[NodeAttributes.VISITED_FROM];
+            let vf = node[NodeAttributes.VISITED_FROM];
+            if (vf === null) {
+                vf = "null";
+            }
             const tv = node[NodeAttributes.TIME_OF_VISIT];
 
-            const text = `${k} (Visited from: ${vf}, Time of visit: ${tv})`;
-
-            stackItems.push(<ListGroup.Item key={index} style={style}>{text}</ListGroup.Item>);
+            stackItems.push(
+                <tr>
+                    <td style={style}>{k}</td>
+                    <td style={style}>{vf}</td>
+                    <td style={style}>{tv}</td>
+                </tr>
+            );
         }
 
         const stackComponent =
-            <ListGroup>
-                {stackItems}
-            </ListGroup>;
+            <div className="overflow-auto" style={{maxHeight: 500}}>
+                <Table>
+                    <thead>
+                        <tr>
+                            <th colSpan={3}>Top of stack</th>
+                        </tr>
+                        <tr>
+                            <td>Node</td>
+                            <td>Visited from</td>
+                            <td>Time of visit</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {stackItems}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th colSpan={3}>Bottom of stack</th>
+                        </tr>
+                    </tfoot>
+                </Table>
+            </div>
 
         //Tree
         const nodes = graphData.getNodes();
