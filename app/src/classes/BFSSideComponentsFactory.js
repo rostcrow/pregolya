@@ -12,6 +12,7 @@ import GraphFactory from './GraphFactory';
 import GraphView from '../components/js/GraphView';
 import BFSTreeGraphLayout from './BFSTreeGraphLayout';
 import GraphDataApplier from './GraphDataApplier';
+import Table from "react-bootstrap/Table";
 
 export default class BFSSideComponentsFactory extends SideComponentsFactory {
 
@@ -109,25 +110,47 @@ export default class BFSSideComponentsFactory extends SideComponentsFactory {
         const order = additionalData.get("order");
 
         let orderItems = [];
-        for (const [index, node] of order.entries()) {
-
-            //Setting text
-            const text = 
-                `#${node["order"]} ${node["key"]} (Visited from: ${node["visitedFrom"]}, Distance from start: ${node["distance"]})`;
+        for (const node of order) {
 
             //Setting style
             let style = {};
             if (node["state"] === NodeState.NEW_IN_QUEUE) {
                 style = {color: Globals.Colors.GREEN};
+            } else if (node["state"] === NodeState.CURRENT) {
+                style = {color: Globals.Colors.RED};
             }
 
-            orderItems.push(<ListGroup.Item key={index} style={style}>{text}</ListGroup.Item>);
+            let vf = node["visitedFrom"]
+            if (vf === null) {
+                vf = "null";
+            }
+
+            orderItems.push(
+                <tr>
+                    <td style={style}>{node["order"]}</td>
+                    <td style={style}>{node["key"]}</td>
+                    <td style={style}>{vf}</td>
+                    <td style={style}>{node["distance"]}</td>
+                </tr>
+            );
         }
         
         const orderComponent = 
-            <ListGroup className='text-start overflow-auto' style={{maxHeight: 500}}>
-                {orderItems}
-            </ListGroup>
+            <div className="overflow-auto" style={{maxHeight: 500}}>
+                <Table hover={true}>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Node</th>
+                            <th>Visited from</th>
+                            <th>Distance from start</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {orderItems}
+                    </tbody>
+                </Table>
+            </div>;
 
         return [new SideComponent("Queue", queueComponent), new SideComponent("Tree", treeComponent),
             new SideComponent("Order of visit", orderComponent)];

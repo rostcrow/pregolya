@@ -13,6 +13,7 @@ import GraphDataApplier from "./GraphDataApplier";
 import GraphView from "../components/js/GraphView";
 import DFSTreeGraphLayout from "./DFSTreeGraphLayout";
 import GraphDataExtractor from "./GraphDataExtractor";
+import Table from "react-bootstrap/Table";
 
 export default class DFSSideComponentsFactory extends SideComponentsFactory {
 
@@ -119,23 +120,46 @@ export default class DFSSideComponentsFactory extends SideComponentsFactory {
             const k = node["key"];
             const ov = node[NodeAttributes.ORDER_OF_VISIT];
             const tv = node[NodeAttributes.TIME_OF_VISIT];
-            const vf = node[NodeAttributes.VISITED_FROM];
-
-            const text = `#${ov} ${k} (Time of visit: ${tv}, Visited from: ${vf})`;
+            let vf = node[NodeAttributes.VISITED_FROM];
+            if (vf === null) {
+                vf = "null";
+            }
 
             //Style
             let style = {};
             if (node[NodeAttributes.STATE] === NodeState.NEW_IN_STACK) {
                 style = {color: Globals.Colors.GREEN};
+            } else if (node[NodeAttributes.STATE] === NodeState.CURRENT) {
+                style = {color: Globals.Colors.RED};
             }
 
-            orderOfVisitItems.push(<ListGroup.Item style={style}>{text}</ListGroup.Item>);
+            orderOfVisitItems.push(
+                <tr>
+                    <td style={style}>{ov}</td>
+                    <td style={style}>{k}</td>
+                    <td style={style}>{tv}</td>
+                    <td style={style}>{vf}</td>
+                </tr>
+            );
         }
 
         const orderOfVisitComponent = 
-            <ListGroup className="text-start overflow-auto" style={{maxHeight: 500}}>
-                {orderOfVisitItems}
-            </ListGroup>;
+            <div className="overflow-auto" style={{maxHeight: 500}}>
+                <Table hover={true}>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Node</th>
+                            <th>Time of visit</th>
+                            <th>Visited from</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {orderOfVisitItems}
+                    </tbody>
+                </Table>
+            </div>;
+
 
         return [new SideComponent("Stack", stackComponent), new SideComponent("Tree", treeComponent), 
             new SideComponent("Order of visit", orderOfVisitComponent)];
