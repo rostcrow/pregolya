@@ -12,6 +12,7 @@ import GraphView from '../components/js/GraphView';
 import BFSTreeGraphLayout from './BFSTreeGraphLayout';
 import GraphDataApplier from './GraphDataApplier';
 import Table from "react-bootstrap/Table";
+import Legend from '../components/js/Legend';
 
 export default class BFSSideComponentsFactory extends SideComponentsFactory {
 
@@ -205,8 +206,26 @@ export default class BFSSideComponentsFactory extends SideComponentsFactory {
                 </Table>
             </div>;
 
+        //LEGEND
+        const legendData = [
+            {"title": "Nodes", "type": "circle", "rows": [
+                {"color": Globals.Colors.DEFAULT_NODE_COLOR, "key": "Not visited"},
+                {"color": Globals.Colors.GREEN, "key": "New in queue"},
+                {"color": Globals.Colors.GRAY, "key": "In queue"},
+                {"color": Globals.Colors.RED, "key": "Current"},
+                {"color": Globals.Colors.BLACK, "key": "Finished"},
+            ]},
+            {"title": "Edges", "type": "rectangle", "rows": [
+                {"color": Globals.Colors.DEFAULT_EDGE_COLOR, "key": "Not used"},
+                {"color": Globals.Colors.RED, "key": "Highlighted"},
+                {"color": Globals.Colors.DARK_GRAY, "key": "Used"}
+            ]},
+        ]
+
+        const legendComponent = <Legend data={legendData} />
+
         return [new SideComponent("Queue", queueComponent), new SideComponent("Tree", treeComponent),
-            new SideComponent("Order of visit", orderComponent)];
+            new SideComponent("Order of visit", orderComponent), new SideComponent("Legend", legendComponent)];
     }
 
 }

@@ -12,6 +12,7 @@ import GraphView from "../components/js/GraphView";
 import GraphDataExtractor from "./GraphDataExtractor";
 import Table from "react-bootstrap/Table";
 import BiconnectedComponentsSearchTreeGraphLayout from "./BiconnectedComponentsSearchTreeGraphLayout";
+import Legend from "../components/js/Legend";
 
 export default class BiconnectedComponentsSearchSideComponentsFactory extends SideComponentsFactory{
 
@@ -238,9 +239,32 @@ export default class BiconnectedComponentsSearchSideComponentsFactory extends Si
                 </Table>
             </div>;
 
+        //Legend
+        const legendData = [
+            {"title": "Nodes", "type": "circle", "rows": [
+                {"color": Globals.Colors.DEFAULT_NODE_COLOR, "key": "Not visited"},
+                {"color": Globals.Colors.GREEN, "key": "New in stack"},
+                {"color": Globals.Colors.GRAY, "key": "In stack"},
+                {"color": Globals.Colors.RED, "key": "Current"},
+                {"color": Globals.Colors.BLACK, "key": "Finished - Not articulation"},
+                {"color": Globals.Colors.TEAL, "key": "Finished - Articulation"},
+            ]},
+            {"title": "Edges", "type": "rectangle", "rows": [
+                {"color": Globals.Colors.DEFAULT_EDGE_COLOR, "key": "Not used"},
+                {"color": Globals.Colors.DARK_GRAY, "key": "Tree"},
+                {"color": Globals.Colors.PINK, "key": "Bridge"},
+                {"color": Globals.Colors.LIGHT_ORANGE, "key": "Back"},
+            ]},
+        ]
+
+        const legendComponent = <Legend data={legendData} />
+
+
         return [new SideComponent("Stack", stackComponent), new SideComponent("DFS tree", treeComponent), 
             new SideComponent("Order of visit", orderOfVisitComponent), 
-            new SideComponent("Order of finish", orderOfFinishComponent)];
+            new SideComponent("Order of finish", orderOfFinishComponent),
+            new SideComponent("Legend", legendComponent)
+        ];
 
     }
 

@@ -13,6 +13,7 @@ import GraphView from "../components/js/GraphView";
 import DFSTreeGraphLayout from "./DFSTreeGraphLayout";
 import GraphDataExtractor from "./GraphDataExtractor";
 import Table from "react-bootstrap/Table";
+import Legend from "../components/js/Legend";
 
 export default class DFSSideComponentsFactory extends SideComponentsFactory {
 
@@ -221,9 +222,40 @@ export default class DFSSideComponentsFactory extends SideComponentsFactory {
                 </Table>
             </div>;
 
+        //Legend
+        let edgesRows = [
+            {"color": Globals.Colors.DEFAULT_EDGE_COLOR, "key": "Not used"},
+            {"color": Globals.Colors.DARK_GRAY, "key": "Tree"},
+            {"color": Globals.Colors.LIGHT_ORANGE, "key": "Back"}
+        ];
+
+        if (graphData.isDirected()) {
+            edgesRows = [
+                {"color": Globals.Colors.DEFAULT_EDGE_COLOR, "key": "Not used"},
+                {"color": Globals.Colors.DARK_GRAY, "key": "Tree"},
+                {"color": Globals.Colors.LIGHT_ORANGE, "key": "Back"},
+                {"color": Globals.Colors.LIGHT_PURPLE, "key": "Forward"},
+                {"color": Globals.Colors.LIGHT_CYAN, "key": "Cross"}
+            ];
+        }
+
+        const legendData = [
+            {"title": "Nodes", "type": "circle", "rows": [
+                {"color": Globals.Colors.DEFAULT_NODE_COLOR, "key": "Not visited"},
+                {"color": Globals.Colors.GREEN, "key": "New in stack"},
+                {"color": Globals.Colors.GRAY, "key": "In stack"},
+                {"color": Globals.Colors.RED, "key": "Current"},
+                {"color": Globals.Colors.BLACK, "key": "Finished"},
+            ]},
+            {"title": "Edges", "type": "rectangle", "rows": edgesRows},
+        ]
+
+        const legendComponent = <Legend data={legendData} />
+
         return [new SideComponent("Stack", stackComponent), new SideComponent("Tree", treeComponent), 
             new SideComponent("Order of visit", orderOfVisitComponent), 
-            new SideComponent("Order of finish", orderOfFinishComponent)];
+            new SideComponent("Order of finish", orderOfFinishComponent), 
+            new SideComponent("Legend", legendComponent)];
     }
 
 }
