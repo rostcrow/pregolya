@@ -29,6 +29,12 @@ import DFSNodeStyler from "../../classes/DFSNodeStyler.js";
 import DFSEdgeStyler from "../../classes/DFSEdgeStyler.js";
 import DFSAlgorithmOptionsForm from '../../classes/DFSAlgorithmOptionsForm.js';
 import Globals from '../../classes/Globals.js';
+import BiconnectedComponentsSearchAlgorithm from "../../classes/BiconnectedComponentsSearchAlgorithm.js";
+import BiconnectedComponentsSearchNodeStyler from "../../classes/BiconnectedComponentsSearchNodeStyler.js";
+import BiconnectedComponentsSearchEdgeStyler from "../../classes/BiconnectedComponentsSearchEdgeStyler.js";
+import BiconnectedComponentsSearchAlgorithmOptionsForm from "../../classes/BiconnectedComponentsSearchAlgorithmOptionsForm.js";
+import BiconnectedComponentsSearchSideComponentsFactory from "../../classes/BiconnectedComponentsSearchSideComponentsFactory.js";
+
 
 //Initializing graphs
 const graphsJSON = graphExamplesArray;
@@ -51,7 +57,14 @@ const dfs = new AlgorithmTag(
     DFSAlgorithm, DFSNodeStyler, DFSEdgeStyler, DFSSideComponentsFactory, DFSAlgorithmOptionsForm
   );
 
-const algorithmTags = [bfs, dfs];
+const bcs = new AlgorithmTag(
+    "Biconnected components search", [Globals.GraphTypes.NORMAL],
+    BiconnectedComponentsSearchAlgorithm, BiconnectedComponentsSearchNodeStyler,
+    BiconnectedComponentsSearchEdgeStyler, BiconnectedComponentsSearchSideComponentsFactory,
+    BiconnectedComponentsSearchAlgorithmOptionsForm
+)
+
+const algorithmTags = [bfs, dfs, bcs];
 const firstAlgorithmFacade = new AlgorithmFacade(firstAlgGraph, algorithmTags[0], "0");
 
 //Initializing options form

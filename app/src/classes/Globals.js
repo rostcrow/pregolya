@@ -16,7 +16,9 @@ export default class Globals {
         GREEN: "#14A44D",
         LIGHT_ORANGE: "#FFE599",
         LIGHT_PURPLE: "#CCCCFF",
-        LIGHT_CYAN: "#CCFFFF"
+        LIGHT_CYAN: "#CCFFFF",
+        TEAL: "#17A2B8",
+        PINK: "#F37199"
     }
 
     static GraphTypes = {
