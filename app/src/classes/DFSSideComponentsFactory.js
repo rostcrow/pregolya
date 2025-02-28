@@ -191,15 +191,15 @@ export default class DFSSideComponentsFactory extends SideComponentsFactory {
 
             const k = node["key"];
             const of = node[NodeAttributes.ORDER_OF_FINISH];
-            const tf = node[NodeAttributes.TIME_OF_FINISH];
             const tv = node[NodeAttributes.TIME_OF_VISIT];
-
+            const tf = node[NodeAttributes.TIME_OF_FINISH];
+            
             orderOfFinishItems.push(
                 <tr>
                     <td>{of}</td>
                     <td>{k}</td>
-                    <td>{tf}</td>
                     <td>{tv}</td>
+                    <td>{tf}</td>
                 </tr>
             );
         }
@@ -211,8 +211,8 @@ export default class DFSSideComponentsFactory extends SideComponentsFactory {
                         <tr>
                             <th>#</th>
                             <th>Node</th>
-                            <th>Time of finish</th>
                             <th>Time of visit</th>
+                            <th>Time of finish</th>
                         </tr>
                     </thead>
                     <tbody>

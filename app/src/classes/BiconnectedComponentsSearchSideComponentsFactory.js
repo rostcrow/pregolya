@@ -203,9 +203,9 @@ export default class BiconnectedComponentsSearchSideComponentsFactory extends Si
 
             const k = node["key"];
             const of = node[NodeAttributes.ORDER_OF_FINISH];
-            const tf = node[NodeAttributes.TIME_OF_FINISH];
             const tv = node[NodeAttributes.TIME_OF_VISIT];
-
+            const tf = node[NodeAttributes.TIME_OF_FINISH];
+            
             let style = {}
             if (node[NodeAttributes.STATE] === NodeState.ARTICULATION) {
                 style = {color: Globals.Colors.TEAL}
@@ -215,8 +215,8 @@ export default class BiconnectedComponentsSearchSideComponentsFactory extends Si
                 <tr>
                     <td style={style}>{of}</td>
                     <td style={style}>{k}</td>
-                    <td style={style}>{tf}</td>
                     <td style={style}>{tv}</td>
+                    <td style={style}>{tf}</td>
                 </tr>
             );
         }
@@ -228,8 +228,8 @@ export default class BiconnectedComponentsSearchSideComponentsFactory extends Si
                         <tr>
                             <th>#</th>
                             <th>Node</th>
-                            <th>Time of finish</th>
                             <th>Time of visit</th>
+                            <th>Time of finish</th>
                         </tr>
                     </thead>
                     <tbody>
