@@ -216,9 +216,9 @@ export default class BFSSideComponentsFactory extends SideComponentsFactory {
                 {"color": Globals.Colors.BLACK, "key": NodeState.FINISHED},
             ]},
             {"title": "Edges", "type": "rectangle", "rows": [
-                {"color": Globals.Colors.DEFAULT_EDGE_COLOR, "key": "Not used"},
-                {"color": Globals.Colors.RED, "key": "Highlighted"},
-                {"color": Globals.Colors.DARK_GRAY, "key": "Used"}
+                {"color": Globals.Colors.DEFAULT_EDGE_COLOR, "key": EdgeState.NORMAL},
+                {"color": Globals.Colors.RED, "key": EdgeState.HIGHLIGHTED},
+                {"color": Globals.Colors.DARK_GRAY, "key": EdgeState.USED}
             ]},
         ]
 

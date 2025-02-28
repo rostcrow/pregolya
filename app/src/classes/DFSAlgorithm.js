@@ -32,11 +32,11 @@ export const EdgeAttributes = {
 }
 
 export const EdgeState = {
-    NORMAL: 0,
-    TREE: 1,
-    BACK: 2,
-    FORWARD: 3,
-    CROSS: 4
+    NORMAL: "Not used",
+    TREE: "Tree",
+    BACK: "Back",
+    FORWARD: "Forward",
+    CROSS: "Cross"
 }
 
 export default class DFSAlgorithm extends Algorithm {

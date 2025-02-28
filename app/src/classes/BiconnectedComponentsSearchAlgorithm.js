@@ -34,10 +34,10 @@ export const EdgeAttributes = {
 }
 
 export const EdgeState = {
-    NORMAL: 0,
-    TREE: 1,
-    BRIDGE: 2,
-    BACK: 3
+    NORMAL: "Not used",
+    TREE: "Tree",
+    BRIDGE: "Bridge",
+    BACK: "Back"
 }
 
 export default class BiconnectedComponentsSearchAlgorithm extends Algorithm {

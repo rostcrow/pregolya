@@ -250,10 +250,10 @@ export default class BiconnectedComponentsSearchSideComponentsFactory extends Si
                 {"color": Globals.Colors.TEAL, "key": NodeState.ARTICULATION},
             ]},
             {"title": "Edges", "type": "rectangle", "rows": [
-                {"color": Globals.Colors.DEFAULT_EDGE_COLOR, "key": "Not used"},
-                {"color": Globals.Colors.DARK_GRAY, "key": "Tree"},
-                {"color": Globals.Colors.PINK, "key": "Bridge"},
-                {"color": Globals.Colors.LIGHT_ORANGE, "key": "Back"},
+                {"color": Globals.Colors.DEFAULT_EDGE_COLOR, "key": EdgeState.NORMAL},
+                {"color": Globals.Colors.DARK_GRAY, "key": EdgeState.TREE},
+                {"color": Globals.Colors.PINK, "key": EdgeState.BRIDGE},
+                {"color": Globals.Colors.LIGHT_ORANGE, "key": EdgeState.BACK},
             ]},
         ]
 

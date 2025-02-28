@@ -224,18 +224,18 @@ export default class DFSSideComponentsFactory extends SideComponentsFactory {
 
         //Legend
         let edgesRows = [
-            {"color": Globals.Colors.DEFAULT_EDGE_COLOR, "key": "Not used"},
-            {"color": Globals.Colors.DARK_GRAY, "key": "Tree"},
-            {"color": Globals.Colors.LIGHT_ORANGE, "key": "Back"}
+            {"color": Globals.Colors.DEFAULT_EDGE_COLOR, "key": EdgeState.NORMAL},
+            {"color": Globals.Colors.DARK_GRAY, "key": EdgeState.TREE},
+            {"color": Globals.Colors.LIGHT_ORANGE, "key": EdgeState.BACK}
         ];
 
         if (graphData.isDirected()) {
             edgesRows = [
-                {"color": Globals.Colors.DEFAULT_EDGE_COLOR, "key": "Not used"},
-                {"color": Globals.Colors.DARK_GRAY, "key": "Tree"},
-                {"color": Globals.Colors.LIGHT_ORANGE, "key": "Back"},
-                {"color": Globals.Colors.LIGHT_PURPLE, "key": "Forward"},
-                {"color": Globals.Colors.LIGHT_CYAN, "key": "Cross"}
+                {"color": Globals.Colors.DEFAULT_EDGE_COLOR, "key": EdgeState.NORMAL},
+                {"color": Globals.Colors.DARK_GRAY, "key": EdgeState.TREE},
+                {"color": Globals.Colors.LIGHT_ORANGE, "key": EdgeState.BACK},
+                {"color": Globals.Colors.LIGHT_PURPLE, "key": EdgeState.FORWARD},
+                {"color": Globals.Colors.LIGHT_CYAN, "key": EdgeState.CROSS}
             ];
         }
 

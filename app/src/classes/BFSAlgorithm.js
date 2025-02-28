@@ -32,9 +32,9 @@ export const EdgeAttributes = {
 }
 
 export const EdgeState = {
-    NORMAL: 0,
-    HIGHLIGHTED: 1,
-    USED: 2
+    NORMAL: "Not used",
+    HIGHLIGHTED: "Highlighted",
+    USED: "Used"
 }
 
 export default class BFSAlgorithm extends Algorithm {
