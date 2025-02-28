@@ -20,11 +20,11 @@ export const NodeAttributes = {
 }
 
 export const NodeState = {
-    NOT_VISITED: 0,
-    NEW_IN_STACK: 1,
-    IN_STACK: 2,
-    CURRENT: 3,
-    FINISHED: 4
+    NOT_VISITED: "Not visited",
+    NEW_IN_STACK: "New in stack",
+    IN_STACK: "In stack",
+    CURRENT: "Current",
+    FINISHED: "Finished"
 }
 
 export const EdgeAttributes = {

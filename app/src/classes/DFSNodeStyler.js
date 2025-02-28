@@ -33,6 +33,7 @@ export default class DFSNodeStyler extends NodeStyler {
 
         //Label
         const k = attributes["key"];
+        const s = attributes[NodeAttributes.STATE];
         const vf = attributes[NodeAttributes.VISITED_FROM];
 
         const ov = attributes[NodeAttributes.ORDER_OF_VISIT];
@@ -53,6 +54,7 @@ export default class DFSNodeStyler extends NodeStyler {
 
         const label = 
 `${k}
+State: ${s}
 Visited from: ${vf}
 Order of visit: ${ovStr}
 Time of visit: ${tv}

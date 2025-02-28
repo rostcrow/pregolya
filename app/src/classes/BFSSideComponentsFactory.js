@@ -209,11 +209,11 @@ export default class BFSSideComponentsFactory extends SideComponentsFactory {
         //LEGEND
         const legendData = [
             {"title": "Nodes", "type": "circle", "rows": [
-                {"color": Globals.Colors.DEFAULT_NODE_COLOR, "key": "Not visited"},
-                {"color": Globals.Colors.GREEN, "key": "New in queue"},
-                {"color": Globals.Colors.GRAY, "key": "In queue"},
-                {"color": Globals.Colors.RED, "key": "Current"},
-                {"color": Globals.Colors.BLACK, "key": "Finished"},
+                {"color": Globals.Colors.DEFAULT_NODE_COLOR, "key": NodeState.NOT_VISITED},
+                {"color": Globals.Colors.GREEN, "key": NodeState.NEW_IN_QUEUE},
+                {"color": Globals.Colors.GRAY, "key": NodeState.IN_QUEUE},
+                {"color": Globals.Colors.RED, "key": NodeState.CURRENT},
+                {"color": Globals.Colors.BLACK, "key": NodeState.FINISHED},
             ]},
             {"title": "Edges", "type": "rectangle", "rows": [
                 {"color": Globals.Colors.DEFAULT_EDGE_COLOR, "key": "Not used"},

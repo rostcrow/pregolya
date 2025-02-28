@@ -32,6 +32,8 @@ export default class BFSNodeStyler extends NodeStyler {
         //Setting label
         const k = attributes["key"];
 
+        const s = attributes[NodeAttributes.STATE];
+
         const ov = attributes[NodeAttributes.ORDER_OF_VISIT];
         let ovStr = "null";
         if (ov !== null) {
@@ -41,7 +43,7 @@ export default class BFSNodeStyler extends NodeStyler {
         const vf = attributes[NodeAttributes.VISITED_FROM];
         const dfsn = attributes[NodeAttributes.DISTANCE_FROM_START];
 
-        ret["label"] = `${k}\nOrder of visit: ${ovStr}\nVisited from: ${vf}\nDistance from start: ${dfsn}`;
+        ret["label"] = `${k}\nState: ${s}\nOrder of visit: ${ovStr}\nVisited from: ${vf}\nDistance from start: ${dfsn}`;
 
         return ret;
     }

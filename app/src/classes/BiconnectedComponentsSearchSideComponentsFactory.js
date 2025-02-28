@@ -242,12 +242,12 @@ export default class BiconnectedComponentsSearchSideComponentsFactory extends Si
         //Legend
         const legendData = [
             {"title": "Nodes", "type": "circle", "rows": [
-                {"color": Globals.Colors.DEFAULT_NODE_COLOR, "key": "Not visited"},
-                {"color": Globals.Colors.GREEN, "key": "New in stack"},
-                {"color": Globals.Colors.GRAY, "key": "In stack"},
-                {"color": Globals.Colors.RED, "key": "Current"},
-                {"color": Globals.Colors.BLACK, "key": "Finished - Not articulation"},
-                {"color": Globals.Colors.TEAL, "key": "Finished - Articulation"},
+                {"color": Globals.Colors.DEFAULT_NODE_COLOR, "key": NodeState.NOT_VISITED},
+                {"color": Globals.Colors.GREEN, "key": NodeState.NEW_IN_STACK},
+                {"color": Globals.Colors.GRAY, "key": NodeState.IN_STACK},
+                {"color": Globals.Colors.RED, "key": NodeState.CURRENT},
+                {"color": Globals.Colors.BLACK, "key": NodeState.NOT_ARTICULATION},
+                {"color": Globals.Colors.TEAL, "key": NodeState.ARTICULATION},
             ]},
             {"title": "Edges", "type": "rectangle", "rows": [
                 {"color": Globals.Colors.DEFAULT_EDGE_COLOR, "key": "Not used"},
