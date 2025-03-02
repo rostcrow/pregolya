@@ -13,6 +13,7 @@ import GraphDataExtractor from "./GraphDataExtractor";
 import Table from "react-bootstrap/Table";
 import BiconnectedComponentsSearchTreeGraphLayout from "./BiconnectedComponentsSearchTreeGraphLayout";
 import Legend from "../components/js/Legend";
+import ComponentsList from "../components/js/ComponentsList";
 
 export default class BiconnectedComponentsSearchSideComponentsFactory extends SideComponentsFactory{
 
@@ -239,6 +240,10 @@ export default class BiconnectedComponentsSearchSideComponentsFactory extends Si
                 </Table>
             </div>;
 
+        //Components
+        const components = additionalData.get("components");
+        const componentsComponent = <ComponentsList components={components} />;
+        
         //Legend
         const legendData = [
             {"title": "Nodes", "type": "circle", "rows": [
@@ -263,6 +268,7 @@ export default class BiconnectedComponentsSearchSideComponentsFactory extends Si
         return [new SideComponent("Stack", stackComponent), new SideComponent("DFS tree", treeComponent), 
             new SideComponent("Order of visit", orderOfVisitComponent), 
             new SideComponent("Order of finish", orderOfFinishComponent),
+            new SideComponent("Components", componentsComponent),
             new SideComponent("Legend", legendComponent)
         ];
 

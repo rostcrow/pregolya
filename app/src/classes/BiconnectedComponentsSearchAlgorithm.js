@@ -461,6 +461,32 @@ export default class BiconnectedComponentsSearchAlgorithm extends Algorithm {
             return a[NodeAttributes.ORDER_OF_FINISH] - b[NodeAttributes.ORDER_OF_FINISH];
         });
 
-        return new AdditionalData({"stack": stack, "orderOfVisit": orderOfVisit, "orderOfFinish": orderOfFinish});
+        //Components
+        let components = [];
+
+        graph.forEachNode((node, attributes) => {
+
+            const nodecomponents = attributes[NodeAttributes.BICONNECTED_COMPONENTS];
+
+            for (const index in nodecomponents) {
+                const nodecomponent = nodecomponents[index];
+
+                //Checking accessibility of array in components variable
+                if (components.length < nodecomponent) {
+                    //Not accessible, need to make
+                    const d = nodecomponent - components.length;
+                    for (let i = 0; i < d; i++) {
+                        components.push([]);
+                    }
+                }
+
+                //Pushing node to component
+                components[nodecomponent - 1].push(node);
+            }
+
+        });
+
+        return new AdditionalData({"stack": stack, "orderOfVisit": orderOfVisit, "orderOfFinish": orderOfFinish,
+            "components": components});
     }
 }

@@ -1,6 +1,6 @@
 
 //Libraries
-import { useState, useRef } from 'react';
+import { useState, useRef, createContext, } from 'react';
 import Container from 'react-bootstrap/esm/Container.js';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -69,6 +69,9 @@ const firstAlgorithmFacade = new AlgorithmFacade(firstAlgGraph, algorithmTags[0]
 
 //Initializing options form
 const firstOptionsForm = new NullAlgorithmOptionsForm();
+
+//Creating graph context
+export const GraphContext = createContext(null);
 
 export default function AppControl() {
 
@@ -225,6 +228,13 @@ export default function AppControl() {
       setSideComponents(sideComp);
     }
 
+    //Creating graph context value used for potential side panel interactivity
+    const graphContextValue = {
+        "graph": visibleGraph, 
+        "state": graphRefreshState,
+        "setState": setGraphRefreshState
+    }
+
     return (
         <>
             <GraphAlgorithmForm graphTags={graphTags} selectedGraphIndex={selectedGraphIndex} 
@@ -241,7 +251,9 @@ export default function AppControl() {
                             algorithmFacade={algorithmFacade} updateFunc={update} graphPreview={graphPreview} />
                     </Col>
                     <Col className="col-12 col-lg-4 pt-2 pb-0 ps-0 pe-0 pt-lg-0 pb-lg-0 ps-lg-2 pe-lg-0 m-0">
-                        <SidePanel sideComponents={sideComponents} graphPreview={graphPreview}/>
+                        <GraphContext.Provider value={graphContextValue}>
+                            <SidePanel sideComponents={sideComponents} graphPreview={graphPreview}/>
+                        </GraphContext.Provider>
                     </Col>
                 </Row>
             </Container>
