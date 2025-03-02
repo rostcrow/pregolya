@@ -6,7 +6,8 @@ const State = {
     STARTING_NODE_TO_STACK: 0,
     NODE_FROM_STACK: 1,
     HANDLE_CURRENT: 2,
-    NEW_ROOT_TO_STACK: 3
+    NEW_ROOT_TO_STACK: 3,
+    COUNT_COMPONENTS: 4
 }
 
 export const NodeAttributes = {
@@ -17,7 +18,8 @@ export const NodeAttributes = {
     ORDER_OF_FINISH: 4,
     TIME_OF_FINISH: 5,
     DEPTH: 6,
-    LOWPOINT: 7
+    LOWPOINT: 7,
+    BICONNECTED_COMPONENTS: 8,
 }
 
 export const NodeState = {
@@ -74,6 +76,7 @@ export default class BiconnectedComponentsSearchAlgorithm extends Algorithm {
             graph.setNodeAttribute(node, NodeAttributes.TIME_OF_FINISH, null);
             graph.setNodeAttribute(node, NodeAttributes.DEPTH, null);
             graph.setNodeAttribute(node, NodeAttributes.LOWPOINT, null);
+            graph.setNodeAttribute(node, NodeAttributes.BICONNECTED_COMPONENTS, null);
         });
 
         //Setting up edges
@@ -99,6 +102,9 @@ export default class BiconnectedComponentsSearchAlgorithm extends Algorithm {
                 break;
             case State.NEW_ROOT_TO_STACK:
                 this.#stateNewRootToStack(graph);
+                break;
+            case State.COUNT_COMPONENTS:
+                this.#stateCountComponents(graph);
                 break;
             default:
                 ErrorThrower.notExpectedState();
@@ -313,8 +319,8 @@ export default class BiconnectedComponentsSearchAlgorithm extends Algorithm {
                 }
             }
 
-            //Not found, algorithm ends
-            this.setFinished();
+            //Not found
+            this.#state = State.COUNT_COMPONENTS;
 
         }
     }
@@ -330,6 +336,87 @@ export default class BiconnectedComponentsSearchAlgorithm extends Algorithm {
 
         //Switching state
         this.#state = State.NODE_FROM_STACK;
+
+    }
+
+    #stateCountComponents(graph) {
+
+        //Setting initial value for each node
+        graph.forEachNode((node) => {
+            graph.setNodeAttribute(node, NodeAttributes.BICONNECTED_COMPONENTS, []);
+        });
+
+        //Helpful funcs
+        function isVisited(node) {
+            const components = graph.getNodeAttribute(node, NodeAttributes.BICONNECTED_COMPONENTS);
+            return components.length !== 0;
+        }
+
+        function isBridge(edge) {
+            const state = graph.getEdgeAttribute(edge, EdgeAttributes.STATE);
+            return state === EdgeState.BRIDGE;
+        }
+
+        function isPartOfComponent(node, component) {
+            const components = graph.getNodeAttribute(node, NodeAttributes.BICONNECTED_COMPONENTS);
+            for (const comp of components) {
+                if (comp === component) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        function pushComponent(node, component) {
+            const components = graph.getNodeAttribute(node, NodeAttributes.BICONNECTED_COMPONENTS);
+            components.push(component);
+            graph.setNodeAttribute(node, NodeAttributes.BICONNECTED_COMPONENTS, components);
+        }
+
+        //Sorting nodes to components
+        let componentCounter = 1;
+
+        //Making bridge connected nodes as 2 node components
+        const edges = graph.edges();
+        for (const edge of edges) {
+            if (isBridge(edge)) {
+                pushComponent(graph.source(edge), componentCounter);
+                pushComponent(graph.target(edge), componentCounter);
+                componentCounter++;
+            }
+        }
+
+        //Making larger components
+        function dfsVisit(node) {
+            pushComponent(node, componentCounter);
+
+            const edges = graph.edges(node);
+            for (const edge of edges) {
+                if (!isBridge(edge)) {
+                    //Opposite node potentialy in same component
+
+                    const opposite = graph.opposite(node, edge);
+
+                    if (!isPartOfComponent(opposite, componentCounter)) {
+                        dfsVisit(opposite);
+                    }
+                }
+            }
+        }
+
+        const nodes = graph.nodes();        
+
+        for (const node of nodes) {
+            if (!isVisited(node)) {
+                //Node is not part of any component yet
+                dfsVisit(node);
+                componentCounter++;
+            }
+        }
+
+        //Algorithm ends
+        this.setFinished();
 
     }
 

@@ -1,6 +1,6 @@
 {
     "name": "Algortihm Test", 
-    "directed": true, 
+    "directed": false, 
     "weighted": false,
     "nodes": [
         "0",

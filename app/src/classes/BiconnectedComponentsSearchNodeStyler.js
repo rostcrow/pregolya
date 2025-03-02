@@ -66,6 +66,12 @@ export default class BiconnectedComponentsSearchNodeStyler extends NodeStyler {
             lpStr = `${lp}`;
         }
 
+        const poc = attributes[NodeAttributes.BICONNECTED_COMPONENTS];
+        let pocStr = "null";
+        if (poc !== null) {
+            pocStr = `${poc}`;
+        }
+
         const label = 
 `${k}
 State: ${s}
@@ -75,7 +81,8 @@ Time of visit: ${tv}
 Order of finish: ${ofStr}
 Time of finish: ${tf}
 Depth: ${dStr}
-Lowpoint: ${lpStr}`;
+Lowpoint: ${lpStr}
+Biconnected components: ${pocStr}`;
 
         ret["label"] = label;
 
