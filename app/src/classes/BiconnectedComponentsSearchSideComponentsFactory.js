@@ -45,7 +45,7 @@ export default class BiconnectedComponentsSearchSideComponentsFactory extends Si
             const tv = node[NodeAttributes.TIME_OF_VISIT];
 
             stackItems.push(
-                <tr>
+                <tr key={k}>
                     <td style={style}>{k}</td>
                     <td style={style}>{vf}</td>
                     <td style={style}>{tv}</td>
@@ -135,8 +135,6 @@ export default class BiconnectedComponentsSearchSideComponentsFactory extends Si
         let styledData = graphDataStyler.style(treeGraphData);
         GraphDataApplier.applyNodesEdges(treeGraph, styledData);
 
-        console.log(treeGraph);
-
         //Making component
         const treeComponent = <GraphView graph={treeGraph} layout={new BiconnectedComponentsSearchTreeGraphLayout()}></GraphView>;
 
@@ -171,7 +169,7 @@ export default class BiconnectedComponentsSearchSideComponentsFactory extends Si
             }
 
             orderOfVisitItems.push(
-                <tr>
+                <tr key={k}>
                     <td style={style}>{ov}</td>
                     <td style={style}>{k}</td>
                     <td style={style}>{tv}</td>
@@ -214,7 +212,7 @@ export default class BiconnectedComponentsSearchSideComponentsFactory extends Si
             }
 
             orderOfFinishItems.push(
-                <tr>
+                <tr key={k}>
                     <td style={style}>{of}</td>
                     <td style={style}>{k}</td>
                     <td style={style}>{tv}</td>

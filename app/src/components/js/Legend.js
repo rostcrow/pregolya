@@ -25,7 +25,7 @@ export default function Legend( {data} ) {
             const key = row["key"];
 
             rowsContent.push(
-                <tr>
+                <tr key={key}>
                     <td style={{color: color}} className="w-25">{symbol}</td>
                     <td className="w-75">{key}</td>
                 </tr>

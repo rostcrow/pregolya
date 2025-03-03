@@ -45,7 +45,7 @@ export default class DFSSideComponentsFactory extends SideComponentsFactory {
             const tv = node[NodeAttributes.TIME_OF_VISIT];
 
             stackItems.push(
-                <tr>
+                <tr key={k}>
                     <td style={style}>{k}</td>
                     <td style={style}>{vf}</td>
                     <td style={style}>{tv}</td>
@@ -158,7 +158,7 @@ export default class DFSSideComponentsFactory extends SideComponentsFactory {
             }
 
             orderOfVisitItems.push(
-                <tr>
+                <tr key={k}>
                     <td style={style}>{ov}</td>
                     <td style={style}>{k}</td>
                     <td style={style}>{tv}</td>
@@ -196,7 +196,7 @@ export default class DFSSideComponentsFactory extends SideComponentsFactory {
             const tf = node[NodeAttributes.TIME_OF_FINISH];
             
             orderOfFinishItems.push(
-                <tr>
+                <tr key={k}>
                     <td>{of}</td>
                     <td>{k}</td>
                     <td>{tv}</td>

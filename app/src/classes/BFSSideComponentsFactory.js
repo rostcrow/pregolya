@@ -65,7 +65,7 @@ export default class BFSSideComponentsFactory extends SideComponentsFactory {
 
             //Pushing item
             items.push(
-                <tr>
+                <tr key={node["key"]}>
                     <td style={style}>{node["key"]}</td>
                     <td style={style}>{vf}</td>
                     <td style={style}>{node["distance"]}</td>
@@ -180,7 +180,7 @@ export default class BFSSideComponentsFactory extends SideComponentsFactory {
             }
 
             orderItems.push(
-                <tr>
+                <tr key={node["key"]}>
                     <td style={style}>{node["order"]}</td>
                     <td style={style}>{node["key"]}</td>
                     <td style={style}>{vf}</td>
