@@ -34,6 +34,11 @@ import BiconnectedComponentsSearchNodeStyler from "../../classes/BiconnectedComp
 import BiconnectedComponentsSearchEdgeStyler from "../../classes/BiconnectedComponentsSearchEdgeStyler.js";
 import BiconnectedComponentsSearchAlgorithmOptionsForm from "../../classes/BiconnectedComponentsSearchAlgorithmOptionsForm.js";
 import BiconnectedComponentsSearchSideComponentsFactory from "../../classes/BiconnectedComponentsSearchSideComponentsFactory.js";
+import TarjanAlgorithm from '../../classes/TarjanAlgorithm.js';
+import TarjanNodeStyler from '../../classes/TarjanNodeStyler.js';
+import TarjanEdgeStyler from '../../classes/TarjanEdgeStyler.js';
+import TarjanSideComponentsFactory from '../../classes/TarjanSideComponentsFactory.js';
+import TarjanAlgorithmOptionsForm from '../../classes/TarjanAlgorithmOptionsForm.js';
 
 
 //Initializing graphs
@@ -64,7 +69,12 @@ const bcs = new AlgorithmTag(
     BiconnectedComponentsSearchAlgorithmOptionsForm
 )
 
-const algorithmTags = [bfs, dfs, bcs];
+const tarjan = new AlgorithmTag(
+    "Tarjan algorithm", [Globals.GraphTypes.DIRECTED], TarjanAlgorithm, TarjanNodeStyler, TarjanEdgeStyler, 
+    TarjanSideComponentsFactory, TarjanAlgorithmOptionsForm
+);
+
+const algorithmTags = [bfs, dfs, bcs, tarjan];
 const firstAlgorithmFacade = new AlgorithmFacade(firstAlgGraph, algorithmTags[0], "0");
 
 //Initializing options form

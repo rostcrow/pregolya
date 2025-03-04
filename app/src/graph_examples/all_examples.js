@@ -7,8 +7,9 @@ import flowNetwork from "./flow_network.json";
 import learn from "./learn_graph.json"
 import simple from "./simple.json"
 import components from "./components.json"
+import tarjan from "./tarjan_graph.json"
 
-const graphExamplesArray = [learn, algorithmTest, simple, components,
+const graphExamplesArray = [tarjan, learn, algorithmTest, simple, components,
     sevenBridges, machine, pragueCenterMetro, flowNetwork];
 
 export default graphExamplesArray;
