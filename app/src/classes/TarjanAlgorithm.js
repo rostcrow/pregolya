@@ -299,7 +299,13 @@ export default class TarjanAlgorithm extends Algorithm {
             dfsStackOut.push(getAttributes(node));
         }
 
-        return new AdditionalData({"dfsStack": dfsStackOut});
+        //Component stack
+        const componentStackOut = [];
+        for (const node of this.#componentStack) {
+            componentStackOut.push(getAttributes(node));
+        }
+
+        return new AdditionalData({"dfsStack": dfsStackOut, "componentStack": componentStackOut});
     }
 
 }

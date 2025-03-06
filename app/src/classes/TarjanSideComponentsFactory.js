@@ -65,7 +65,66 @@ export default class TarjanSideComponentsFactory extends SideComponentsFactory {
                 </Table>
             </div>
 
-        return [new SideComponent("DFS stack", dfsStackComponent)];
+        //Component stack
+        const componentStack = structuredClone(additionalData.get("componentStack"));
+        componentStack.reverse();
+
+        let componentStackItems = [];
+        for (const node of componentStack) {
+            
+            //Color
+            let style = {};
+            if (node[NodeAttributes.STATE] === NodeState.NEW_IN_DFS_STACK) {
+                style = {color: Globals.Colors.GREEN};
+            } else if (node[NodeAttributes.STATE] === NodeState.CURRENT) {
+                style = {color: Globals.Colors.RED};
+            }
+
+            const k = node["key"];
+            let tv = node[NodeAttributes.TIME_OF_VISIT];
+            if (tv === null) {
+                tv = "null";
+            }
+
+            let ll = node[NodeAttributes.LOWLINK];
+            if (ll === null) {
+                ll = "null";
+            }
+
+            componentStackItems.push(
+                <tr key={k}>
+                    <td style={style}>{k}</td>
+                    <td style={style}>{tv}</td>
+                    <td style={style}>{ll}</td>
+                </tr>
+            );
+        }
+
+        const componentStackComponent =
+            <div className="overflow-auto" style={{maxHeight: 500}}>
+                <Table>
+                    <thead>
+                        <tr>
+                            <th colSpan={3}>Top of stack</th>
+                        </tr>
+                        <tr>
+                            <td>Node</td>
+                            <td>Time of visit</td>
+                            <td>Lowlink</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {componentStackItems}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th colSpan={3}>Bottom of stack</th>
+                        </tr>
+                    </tfoot>
+                </Table>
+            </div>
+
+        return [new SideComponent("DFS stack", dfsStackComponent), new SideComponent("Component stack", componentStackComponent)];
     }
 
 }
