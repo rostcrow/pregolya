@@ -282,7 +282,24 @@ export default class TarjanAlgorithm extends Algorithm {
     }
 
     getAdditionalData() {
-        return new AdditionalData({});
+
+        let graph = this.getGraph();
+
+        function getAttributes(node) {
+            
+            let attributes = structuredClone(graph.getNodeAttributes(node));
+            attributes["key"] = node;
+
+            return attributes;
+        }
+
+        //DFS stack
+        const dfsStackOut = []
+        for (const node of this.#dfsStack) {
+            dfsStackOut.push(getAttributes(node));
+        }
+
+        return new AdditionalData({"dfsStack": dfsStackOut});
     }
 
 }
