@@ -4,6 +4,8 @@ import { NodeAttributes, NodeState } from "./TarjanAlgorithm";
 import Globals from "./Globals";
 import Table from "react-bootstrap/Table";
 import ComponentsList from "../components/js/ComponentsList";
+import GraphTag from "./GraphTag";
+import GraphCanvas from "../components/js/GraphCanvas";
 
 export default class TarjanSideComponentsFactory extends SideComponentsFactory {
 
@@ -229,10 +231,47 @@ export default class TarjanSideComponentsFactory extends SideComponentsFactory {
         const componentsComponent = <ComponentsList components={components}
             zeroComponentsMessage={"No components"}/>;
 
+        //Components graph
+        const componentsNodes = components["nodes"];
+
+        const componentsGraphNodes = [];
+        for (let i = 0; i < componentsNodes.length; i++) {
+            componentsGraphNodes.push(String(i + 1));
+        }
+        
+        const edgesBetweenComponents = additionalData.get("edgesBetweenComponents");
+
+        const componentsGraphEdges = [];
+        for (let s = 0; s < edgesBetweenComponents.length; s++) {
+            for (let t = 0; t < edgesBetweenComponents[s].length; t++) {
+                if (edgesBetweenComponents[s][t]) {
+                    componentsGraphEdges.push({"source": String(s + 1), "target": String(t + 1)});
+                }
+            }
+        }
+
+        const json = {
+            "directed": true,
+            "weighted": false,
+            "nodes": componentsGraphNodes,
+            "edges": componentsGraphEdges
+        };
+
+        const graph = new GraphTag(json).getDisplayGraph();
+
+        for (let componentIndex = 0; componentIndex < componentsNodes.length; componentIndex++) {
+            const component = componentsNodes[componentIndex];
+            const num = componentIndex + 1;
+            graph.setNodeAttribute(String(componentIndex + 1), "label", `${num}\nNodes: ${component}`);
+        }
+
+        const componentsGraphComponent = <GraphCanvas graph={graph} refreshState={false} graphPreview={false} />
+
         return [new SideComponent("DFS stack", dfsStackComponent), new SideComponent("Component stack", componentStackComponent),
             new SideComponent("Order of visit", orderOfVisitComponent), 
             new SideComponent("Order of finish", orderOfFinishComponent),
-            new SideComponent("Components", componentsComponent)
+            new SideComponent("Components", componentsComponent), 
+            new SideComponent("Components graph", componentsGraphComponent)
         ];
     }
 

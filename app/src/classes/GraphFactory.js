@@ -20,7 +20,7 @@ export default class GraphFactory {
 
         //Adding nodes
         for (const key in nodes) {
-            graph.addNode(key);
+            graph.addNode(nodes[key]["key"]);
         }
 
         //Adding edges

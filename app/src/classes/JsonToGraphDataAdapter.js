@@ -7,7 +7,7 @@ export default class JsonToGraphDataAdapter {
         //Nodes
         let nodes = {};
 
-        for (const key in json["nodes"]) {
+        for (const key of json["nodes"]) {
             nodes[key] = {"key": key};
         }
 

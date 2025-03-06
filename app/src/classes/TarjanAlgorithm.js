@@ -378,8 +378,37 @@ export default class TarjanAlgorithm extends Algorithm {
 
         const components = {"nodes": componentsNodes, "edges": componentsEdges};
 
+        //Edge between components
+        const edgesBetweenComponents = [];
+        const numComponents = componentsNodes.length;
+
+        for (let i = 0; i < numComponents; i++) {
+            const row = [];
+            for (let l = 0; l < numComponents; l++) {
+                row.push(false);
+            }
+
+            edgesBetweenComponents.push(row);
+        }
+        
+        graph.forEachEdge((edge, attributes) => {
+
+            if (attributes[EdgeAttributes.STATE] !== EdgeState.IN_COMPONENT) {
+
+                const sourceComponent = graph.getNodeAttribute(graph.source(edge), NodeAttributes.IN_COMPONENT);
+                const targetComponent = graph.getNodeAttribute(graph.target(edge), NodeAttributes.IN_COMPONENT);
+
+                if (sourceComponent !== null && targetComponent !== null) {
+                    //Edge between components
+                    edgesBetweenComponents[sourceComponent - 1][targetComponent - 1] = true;
+                }
+            }
+        });
+
+
         return new AdditionalData({"dfsStack": dfsStackOut, "componentStack": componentStackOut, 
-            "orderOfVisit": orderOfVisit, "orderOfFinish": orderOfFinish, "components": components});
+            "orderOfVisit": orderOfVisit, "orderOfFinish": orderOfFinish, "components": components, 
+            "edgesBetweenComponents": edgesBetweenComponents});
     }
 
 }

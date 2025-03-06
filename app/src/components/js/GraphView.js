@@ -32,7 +32,7 @@ function LoadGraph( {graph, layout} ) {
   return null;
 };
 
-const sigmaStyle = {height: "300px", width: "100%", margin: "0px", padding: "0px"};
+const sigmaStyle = {height: "500px", width: "100%", margin: "0px", padding: "0px"};
 const sigmaSettings = {allowInvalidContainer: true, renderEdgeLabels: true, defaultEdgeType: "line", 
   nodeProgramClasses: {
     circle: MyNodeProgram
