@@ -1,6 +1,7 @@
 // language=GLSL
 const SHADER_SOURCE = /*glsl*/ `
 attribute vec4 a_id;
+attribute float a_size;
 attribute vec4 a_color;
 attribute float a_outer;
 attribute float a_alpha_deg;
@@ -17,7 +18,7 @@ const float bias = 255.0 / 254.0;
 void main() {
 
   const float outer_radius = 0.1;
-  float inner_radius = outer_radius - 12.0 * u_correctionRatio / u_sizeRatio;
+  float inner_radius = outer_radius - (2.0 * a_size) * u_correctionRatio / u_sizeRatio;
   
   float sizeRatioInv = max(1.0 / u_sizeRatio, 1.0);
   float ratio = u_correctionRatio * sizeRatioInv;

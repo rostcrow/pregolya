@@ -32,6 +32,7 @@ export default class EdgeLoopProgram<
         { name: "a_alpha_deg", size: 1, type: FLOAT },
         { name: "a_outer", size: 1, type: FLOAT },
         { name: "a_color", size: 4, type: UNSIGNED_BYTE, normalized: true },
+        { name: "a_size", size: 1, type: FLOAT },
         { name: "a_id", size: 4, type: UNSIGNED_BYTE, normalized: true },
       ],
     };
@@ -49,6 +50,7 @@ export default class EdgeLoopProgram<
     const sourceX = sourceData.x;
     const sourceY = sourceData.y;
     const color = floatColor(data.color);
+    const size = data.size;
 
     const addPointToArray = (alphaDeg, outer) => {
       array[startIndex++] = sourceX;
@@ -56,6 +58,7 @@ export default class EdgeLoopProgram<
       array[startIndex++] = alphaDeg;
       array[startIndex++] = outer;
       array[startIndex++] = color;
+      array[startIndex++] = size;
       array[startIndex++] = edgeIndex;
     };
 

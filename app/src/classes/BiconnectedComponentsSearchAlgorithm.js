@@ -462,7 +462,7 @@ export default class BiconnectedComponentsSearchAlgorithm extends Algorithm {
         });
 
         //Components
-        let components = [];
+        let componentsNodes = [];
 
         graph.forEachNode((node, attributes) => {
 
@@ -472,19 +472,48 @@ export default class BiconnectedComponentsSearchAlgorithm extends Algorithm {
                 const nodecomponent = nodecomponents[index];
 
                 //Checking accessibility of array in components variable
-                if (components.length < nodecomponent) {
+                if (componentsNodes.length < nodecomponent) {
                     //Not accessible, need to make
-                    const d = nodecomponent - components.length;
+                    const d = nodecomponent - componentsNodes.length;
                     for (let i = 0; i < d; i++) {
-                        components.push([]);
+                        componentsNodes.push([]);
                     }
                 }
 
                 //Pushing node to component
-                components[nodecomponent - 1].push(node);
+                componentsNodes[nodecomponent - 1].push(node);
             }
 
         });
+
+        let componentsEdges = [];
+
+        graph.forEachEdge((edge) => {
+
+            const componentsSource = graph.getNodeAttribute(graph.source(edge), NodeAttributes.BICONNECTED_COMPONENTS);
+            const componentsTarget = graph.getNodeAttribute(graph.target(edge), NodeAttributes.BICONNECTED_COMPONENTS);
+
+            if (componentsSource !== null && componentsTarget !== null) {
+
+                const intersection = componentsSource.filter(component => componentsTarget.includes(component));
+
+                for (const inComponent of intersection) {
+                    
+                    //Checking accessibility of array in components variable
+                    if (componentsEdges.length < inComponent) {
+                        //Not accessible, need to make
+                        const d = inComponent - componentsEdges.length;
+                        for (let i = 0; i < d; i++) {
+                            componentsEdges.push([]);
+                        }
+                    }
+    
+                    componentsEdges[inComponent - 1].push(edge);
+                }
+            }
+        });
+
+        const components = {"nodes": componentsNodes, "edges": componentsEdges};
 
         return new AdditionalData({"stack": stack, "orderOfVisit": orderOfVisit, "orderOfFinish": orderOfFinish,
             "components": components});

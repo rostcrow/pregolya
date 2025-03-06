@@ -13,7 +13,9 @@ export default function ComponentsList( {components, zeroComponentsMessage} ) {
     const setState = graphContextValue["setState"];
 
     //Checking empty
-    if (components.length === 0) {
+    const componentsNodes = components["nodes"];
+
+    if (componentsNodes.length === 0) {
         return (
             <p>{zeroComponentsMessage}</p>
         );
@@ -22,12 +24,19 @@ export default function ComponentsList( {components, zeroComponentsMessage} ) {
     //Handle funcs
     function handleOnMouseEnter(e) {
 
-        //Setting different size attribute for node inside wanted component
         const componentNumber = e.target.id;
-        const nodes = components[componentNumber - 1];
+
+        //Setting different size attribute for node inside wanted component
+        const nodes = components["nodes"][componentNumber - 1];
 
         for (const index in nodes) {
             graph.setNodeAttribute(nodes[index], "size", 2 * Globals.Sizes.DEFAULT_NODE_SIZE);
+        }
+
+        //Setting different size attribute for node inside wanted component
+        const edges = components["edges"][componentNumber - 1];
+        for (const index in edges) {
+            graph.setEdgeAttribute(edges[index], "size", 2 * Globals.Sizes.DEFAULT_EDGE_SIZE);
         }
 
         //Refreshing
@@ -42,6 +51,11 @@ export default function ComponentsList( {components, zeroComponentsMessage} ) {
             graph.setNodeAttribute(node, "size", Globals.Sizes.DEFAULT_NODE_SIZE);
         });
 
+        //Resetting size attribute for all edges
+        graph.forEachEdge((edge) => {
+            graph.setEdgeAttribute(edge, "size", Globals.Sizes.DEFAULT_EDGE_SIZE);
+        });
+
         //Refreshing
         const nextState = !state;
         setState(nextState);
@@ -50,12 +64,13 @@ export default function ComponentsList( {components, zeroComponentsMessage} ) {
 
     //Generating list
     let componentsListItems = [];
-    for (const index in components) {
+    
+    for (const index in componentsNodes) {
 
         const number = Number(index) + 1;
         
         const title = `Component ${number}`;
-        const text = `Nodes: ${components[index]}`;
+        const text = `Nodes: ${componentsNodes[index]}`;
 
         componentsListItems.push(
             <ListGroup.Item key={number} id={number} className="list-group-item-action" 

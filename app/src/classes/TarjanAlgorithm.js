@@ -330,7 +330,7 @@ export default class TarjanAlgorithm extends Algorithm {
         });
 
         //Components
-        let components = [];
+        let componentsNodes = [];
 
         graph.forEachNode((node, attributes) => {
 
@@ -339,18 +339,44 @@ export default class TarjanAlgorithm extends Algorithm {
             if (inComponent !== null) {
 
                 //Checking accessibility of array in components variable
-                if (components.length < inComponent) {
+                if (componentsNodes.length < inComponent) {
                     //Not accessible, need to make
-                    const d = inComponent - components.length;
+                    const d = inComponent - componentsNodes.length;
                     for (let i = 0; i < d; i++) {
-                        components.push([]);
+                        componentsNodes.push([]);
                     }
                 }
 
                 //Pushing node to component
-                components[inComponent - 1].push(node);
+                componentsNodes[inComponent - 1].push(node);
             }
         });
+
+        let componentsEdges = [];
+
+        graph.forEachEdge((edge) => {
+
+            const componentSource = graph.getNodeAttribute(graph.source(edge), NodeAttributes.IN_COMPONENT);
+            const componentTarget = graph.getNodeAttribute(graph.target(edge), NodeAttributes.IN_COMPONENT);
+
+            if (componentSource === componentTarget && componentSource !== null) {
+                //Edge inside component
+                const inComponent = componentSource;
+
+                //Checking accessibility of array in components variable
+                if (componentsEdges.length < inComponent) {
+                    //Not accessible, need to make
+                    const d = inComponent - componentsEdges.length;
+                    for (let i = 0; i < d; i++) {
+                        componentsEdges.push([]);
+                    }
+                }
+
+                componentsEdges[inComponent - 1].push(edge);
+            }
+        });
+
+        const components = {"nodes": componentsNodes, "edges": componentsEdges};
 
         return new AdditionalData({"dfsStack": dfsStackOut, "componentStack": componentStackOut, 
             "orderOfVisit": orderOfVisit, "orderOfFinish": orderOfFinish, "components": components});
