@@ -180,8 +180,52 @@ export default class TarjanSideComponentsFactory extends SideComponentsFactory {
                 </Table>
             </div>;
 
+        //Order of finish
+        const orderOfFinish = additionalData.get("orderOfFinish");
+
+        let orderOfFinishItems = [];
+        for (const node of orderOfFinish) {
+
+            let style = {};
+            if (node[NodeAttributes.STATE] === NodeState.IN_COMPONENT) {
+                style["color"] = Globals.Colors.TEAL;
+            }
+
+            const k = node["key"];
+            const of = node[NodeAttributes.ORDER_OF_FINISH];
+            const tv = node[NodeAttributes.TIME_OF_VISIT];
+            const tf = node[NodeAttributes.TIME_OF_FINISH];
+            
+            orderOfFinishItems.push(
+                <tr key={k}>
+                    <td style={style}>{of}</td>
+                    <td style={style}>{k}</td>
+                    <td style={style}>{tv}</td>
+                    <td style={style}>{tf}</td>
+                </tr>
+            );
+        }
+
+        const orderOfFinishComponent = 
+            <div className="overflow-auto" style={{maxHeight: 500}}>
+                <Table hover={true}>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Node</th>
+                            <th>Time of visit</th>
+                            <th>Time of finish</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {orderOfFinishItems}
+                    </tbody>
+                </Table>
+            </div>;
+
         return [new SideComponent("DFS stack", dfsStackComponent), new SideComponent("Component stack", componentStackComponent),
-            new SideComponent("Order of visit", orderOfVisitComponent)
+            new SideComponent("Order of visit", orderOfVisitComponent), 
+            new SideComponent("Order of finish", orderOfFinishComponent)
         ];
     }
 
