@@ -124,7 +124,65 @@ export default class TarjanSideComponentsFactory extends SideComponentsFactory {
                 </Table>
             </div>
 
-        return [new SideComponent("DFS stack", dfsStackComponent), new SideComponent("Component stack", componentStackComponent)];
+        //Order of visit
+        const orderOfVisit = additionalData.get("orderOfVisit");
+
+        let orderOfVisitItems = [];
+        for (const node of orderOfVisit) {
+
+            const k = node["key"];
+            const ov = node[NodeAttributes.ORDER_OF_VISIT];
+            const tv = node[NodeAttributes.TIME_OF_VISIT];
+            let vf = node[NodeAttributes.VISITED_FROM];
+            if (vf === null) {
+                vf = "null";
+            }
+
+            //Style
+            let style = {};
+            switch (node[NodeAttributes.STATE]) {
+                case NodeState.NEW_IN_DFS_STACK:
+                    style["color"] = Globals.Colors.GREEN;
+                    break;
+                case NodeState.CURRENT:
+                    style["color"] = Globals.Colors.RED;
+                    break;
+                case NodeState.IN_COMPONENT:
+                    style["color"] = Globals.Colors.TEAL;
+                    break;
+                default:
+            }
+
+            orderOfVisitItems.push(
+                <tr key={k}>
+                    <td style={style}>{ov}</td>
+                    <td style={style}>{k}</td>
+                    <td style={style}>{tv}</td>
+                    <td style={style}>{vf}</td>
+                </tr>
+            );
+        }
+
+        const orderOfVisitComponent = 
+            <div className="overflow-auto" style={{maxHeight: 500}}>
+                <Table hover={true}>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Node</th>
+                            <th>Time of visit</th>
+                            <th>Visited from</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {orderOfVisitItems}
+                    </tbody>
+                </Table>
+            </div>;
+
+        return [new SideComponent("DFS stack", dfsStackComponent), new SideComponent("Component stack", componentStackComponent),
+            new SideComponent("Order of visit", orderOfVisitComponent)
+        ];
     }
 
 }

@@ -305,7 +305,19 @@ export default class TarjanAlgorithm extends Algorithm {
             componentStackOut.push(getAttributes(node));
         }
 
-        return new AdditionalData({"dfsStack": dfsStackOut, "componentStack": componentStackOut});
+        //Order of visit
+        let orderOfVisit = [];
+        graph.forEachNode((node, attributes) => {
+            if (attributes[NodeAttributes.TIME_OF_VISIT] !== null) {
+                orderOfVisit.push(getAttributes(node));
+            }
+        });
+
+        orderOfVisit.sort((a, b) => {
+            return a[NodeAttributes.ORDER_OF_VISIT] - b[NodeAttributes.ORDER_OF_VISIT];
+        });
+
+        return new AdditionalData({"dfsStack": dfsStackOut, "componentStack": componentStackOut, "orderOfVisit": orderOfVisit});
     }
 
 }
