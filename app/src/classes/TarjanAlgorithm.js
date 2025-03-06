@@ -329,8 +329,31 @@ export default class TarjanAlgorithm extends Algorithm {
             return a[NodeAttributes.ORDER_OF_FINISH] - b[NodeAttributes.ORDER_OF_FINISH];
         });
 
+        //Components
+        let components = [];
+
+        graph.forEachNode((node, attributes) => {
+
+            const inComponent = attributes[NodeAttributes.IN_COMPONENT];
+
+            if (inComponent !== null) {
+
+                //Checking accessibility of array in components variable
+                if (components.length < inComponent) {
+                    //Not accessible, need to make
+                    const d = inComponent - components.length;
+                    for (let i = 0; i < d; i++) {
+                        components.push([]);
+                    }
+                }
+
+                //Pushing node to component
+                components[inComponent - 1].push(node);
+            }
+        });
+
         return new AdditionalData({"dfsStack": dfsStackOut, "componentStack": componentStackOut, 
-            "orderOfVisit": orderOfVisit, "orderOfFinish": orderOfFinish});
+            "orderOfVisit": orderOfVisit, "orderOfFinish": orderOfFinish, "components": components});
     }
 
 }

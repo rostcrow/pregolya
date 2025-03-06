@@ -240,7 +240,8 @@ export default class BiconnectedComponentsSearchSideComponentsFactory extends Si
 
         //Components
         const components = additionalData.get("components");
-        const componentsComponent = <ComponentsList components={components} />;
+        const componentsComponent = <ComponentsList components={components} 
+            zeroComponentsMessage={"Components are counted as the last step of algorithm"} />;
         
         //Legend
         const legendData = [

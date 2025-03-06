@@ -3,6 +3,7 @@ import SideComponent from "./SideComponent";
 import { NodeAttributes, NodeState } from "./TarjanAlgorithm";
 import Globals from "./Globals";
 import Table from "react-bootstrap/Table";
+import ComponentsList from "../components/js/ComponentsList";
 
 export default class TarjanSideComponentsFactory extends SideComponentsFactory {
 
@@ -223,9 +224,15 @@ export default class TarjanSideComponentsFactory extends SideComponentsFactory {
                 </Table>
             </div>;
 
+        //Components
+        const components = additionalData.get("components");
+        const componentsComponent = <ComponentsList components={components}
+            zeroComponentsMessage={"No components"}/>;
+
         return [new SideComponent("DFS stack", dfsStackComponent), new SideComponent("Component stack", componentStackComponent),
             new SideComponent("Order of visit", orderOfVisitComponent), 
-            new SideComponent("Order of finish", orderOfFinishComponent)
+            new SideComponent("Order of finish", orderOfFinishComponent),
+            new SideComponent("Components", componentsComponent)
         ];
     }
 

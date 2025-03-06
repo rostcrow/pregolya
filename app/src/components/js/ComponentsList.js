@@ -4,7 +4,7 @@ import ListGroup from "react-bootstrap/ListGroup"
 import { GraphContext } from "./AppControl";
 import Globals from "../../classes/Globals";
 
-export default function ComponentsList( {components} ) {
+export default function ComponentsList( {components, zeroComponentsMessage} ) {
 
     //Using context
     const graphContextValue = useContext(GraphContext);
@@ -15,7 +15,7 @@ export default function ComponentsList( {components} ) {
     //Checking empty
     if (components.length === 0) {
         return (
-            <p>Components are counted as the last step of algorithm</p>
+            <p>{zeroComponentsMessage}</p>
         );
     }
 
