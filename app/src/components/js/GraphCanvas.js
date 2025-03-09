@@ -24,11 +24,13 @@ import MyNodeProgram from "../../programs/MyNodeProgram/MyNodeProgram.ts";
 
 //Importing css
 import "../css/GraphCanvas.css";
+import TopologicalSortGraphLayout from "../../classes/TopologicalSortGraphLayout.js";
 
 //Layouts
 const layouts = {
   "Circlepack": new GraphologyGraphLayout(circlepack), "Circular": new GraphologyGraphLayout(circular), 
-  "No overlap": new NoOverlapGraphLayout(), "Random": new GraphologyGraphLayout(random)};
+  "No overlap": new NoOverlapGraphLayout(), "Random": new GraphologyGraphLayout(random), 
+  "Topological sort": new TopologicalSortGraphLayout()};
 
 const layoutKeys = Object.keys(layouts);
 const layoutKeysLength = layoutKeys.length;

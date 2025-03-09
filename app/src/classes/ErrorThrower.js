@@ -20,4 +20,8 @@ export default class ErrorThrower {
     static notExpectedState() {
         this.#throw("Not expected state");
     }
+
+    static graphHasCycle() {
+        this.#throw("Graph has cycle");
+    }
 }
