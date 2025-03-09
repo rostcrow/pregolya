@@ -1,6 +1,6 @@
 import SideComponentsFactory from "./SideComponentsFactory";
 import SideComponent from "./SideComponent";
-import { NodeAttributes, NodeState } from "./TarjanAlgorithm";
+import { EdgeAttributes, EdgeState, NodeAttributes, NodeState } from "./TarjanAlgorithm";
 import Globals from "./Globals";
 import Table from "react-bootstrap/Table";
 import ComponentsList from "../components/js/ComponentsList";
@@ -10,11 +10,21 @@ import GraphologyGraphLayout from "./GraphologyGraphLayout";
 import circlepack from "graphology-layout/circlepack";
 import circular from "graphology-layout/circular";
 import TopologicalSortGraphLayout from "./TopologicalSortGraphLayout";
+import GraphData from "./GraphData";
+import GraphFactory from "./GraphFactory";
+import GraphDataExtractor from "./GraphDataExtractor";
+import GraphDataStyler from "./GraphDataStyler";
+import TarjanNodeStyler from "./TarjanNodeStyler";
+import TarjanEdgeStyler from "./TarjanEdgeStyler";
+import GraphDataApplier from "./GraphDataApplier";
+import GraphView from "../components/js/GraphView";
+import TarjanTreeGraphLayout from "./TarjanTreeGraphLayout";
 
 export default class TarjanSideComponentsFactory extends SideComponentsFactory {
 
     createSideComponents(algorithmState) {
 
+        const graphData = algorithmState.getGraphData();
         const additionalData = algorithmState.getAdditionalData();
 
         //DFS stack
@@ -71,6 +81,51 @@ export default class TarjanSideComponentsFactory extends SideComponentsFactory {
                     </tfoot>
                 </Table>
             </div>
+
+        //DFS tree
+        const nodes = graphData.getNodes();
+        const edges = graphData.getEdges();
+
+        const outputNodes = {};
+        const outputEdges = {};
+
+        //Adding nodes
+        for (const key in nodes) {
+            if (nodes[key][NodeAttributes.STATE] !== NodeState.NOT_VISITED) {
+                outputNodes[key] = nodes[key];
+            }
+        }
+
+        //Adding edges
+        for (const key in edges) {
+            if (edges[key][EdgeAttributes.STATE] !== EdgeState.NOT_VISITED) {
+
+                const edge = edges[key];
+
+                const sourceNode = edge["source"];
+                const sourceTimeVisit = nodes[sourceNode][NodeAttributes.TIME_OF_VISIT];
+
+                const targetNode = edge["target"];
+                const targetTimeVisit = nodes[targetNode][NodeAttributes.TIME_OF_VISIT];
+
+                if (sourceTimeVisit < targetTimeVisit) {
+                    outputEdges[key] = edge;
+                }
+            }
+        }
+
+        //Making graph
+        let treeGraphData = new GraphData(true, false, outputNodes, outputEdges);
+        const treeGraph = GraphFactory.createDisplayGraph(treeGraphData);
+        treeGraphData = GraphDataExtractor.extractData(treeGraph);
+
+        //Styling graph
+        const graphDataStyler = new GraphDataStyler(new TarjanNodeStyler(), new TarjanEdgeStyler());
+        const styledData = graphDataStyler.style(treeGraphData);
+        GraphDataApplier.applyNodesEdges(treeGraph, styledData);
+
+        //Making component
+        const treeComponent = <GraphView graph={treeGraph} layout={new TarjanTreeGraphLayout()} />;
 
         //Component stack
         const componentStack = structuredClone(additionalData.get("componentStack"));
@@ -278,7 +333,9 @@ export default class TarjanSideComponentsFactory extends SideComponentsFactory {
 
         const componentsGraphComponent = <GraphCanvas graph={graph} refreshState={false} layouts={layouts} graphPreview={false} />
 
-        return [new SideComponent("DFS stack", dfsStackComponent), new SideComponent("Component stack", componentStackComponent),
+        return [new SideComponent("DFS stack", dfsStackComponent),
+            new SideComponent("DFS Tree", treeComponent),
+            new SideComponent("Component stack", componentStackComponent),
             new SideComponent("Order of visit", orderOfVisitComponent), 
             new SideComponent("Order of finish", orderOfFinishComponent),
             new SideComponent("Components", componentsComponent), 
