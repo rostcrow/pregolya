@@ -237,10 +237,11 @@ export default class TarjanSideComponentsFactory extends SideComponentsFactory {
 
         //Components graph
         const componentsNodes = components["nodes"];
+        const componentNamePrefix = "Comp. ";
 
         const componentsGraphNodes = [];
         for (let i = 0; i < componentsNodes.length; i++) {
-            componentsGraphNodes.push(String(i + 1));
+            componentsGraphNodes.push(componentNamePrefix + String(i + 1));
         }
         
         const edgesBetweenComponents = additionalData.get("edgesBetweenComponents");
@@ -249,7 +250,8 @@ export default class TarjanSideComponentsFactory extends SideComponentsFactory {
         for (let s = 0; s < edgesBetweenComponents.length; s++) {
             for (let t = 0; t < edgesBetweenComponents[s].length; t++) {
                 if (edgesBetweenComponents[s][t]) {
-                    componentsGraphEdges.push({"source": String(s + 1), "target": String(t + 1)});
+                    componentsGraphEdges.push(
+                        {"source": componentNamePrefix + String(s + 1), "target": componentNamePrefix + String(t + 1)});
                 }
             }
         }
@@ -266,7 +268,8 @@ export default class TarjanSideComponentsFactory extends SideComponentsFactory {
         for (let componentIndex = 0; componentIndex < componentsNodes.length; componentIndex++) {
             const component = componentsNodes[componentIndex];
             const num = componentIndex + 1;
-            graph.setNodeAttribute(String(componentIndex + 1), "label", `${num}\nNodes: ${component}`);
+            const name = componentNamePrefix + String(num);
+            graph.setNodeAttribute(name, "label", `${name}\nNodes: ${component}`);
         }
 
         const layouts = {
