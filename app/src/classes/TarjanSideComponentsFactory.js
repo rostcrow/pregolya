@@ -19,6 +19,7 @@ import TarjanEdgeStyler from "./TarjanEdgeStyler";
 import GraphDataApplier from "./GraphDataApplier";
 import GraphView from "../components/js/GraphView";
 import TarjanTreeGraphLayout from "./TarjanTreeGraphLayout";
+import Legend from "../components/js/Legend";
 
 export default class TarjanSideComponentsFactory extends SideComponentsFactory {
 
@@ -333,13 +334,34 @@ export default class TarjanSideComponentsFactory extends SideComponentsFactory {
 
         const componentsGraphComponent = <GraphCanvas graph={graph} refreshState={false} layouts={layouts} graphPreview={false} />
 
+        //Legend
+        const legendData = [
+            {"title": "Nodes", "type": "circle", "rows": [
+                {"color": Globals.Colors.DEFAULT_NODE_COLOR, "key": NodeState.NOT_VISITED},
+                {"color": Globals.Colors.GREEN, "key": NodeState.NEW_IN_DFS_STACK},
+                {"color": Globals.Colors.GRAY, "key": NodeState.IN_DFS_STACK},
+                {"color": Globals.Colors.RED, "key": NodeState.CURRENT},
+                {"color": Globals.Colors.BLACK, "key": NodeState.NOT_IN_COMPONENT},
+                {"color": Globals.Colors.TEAL, "key": NodeState.IN_COMPONENT},
+            ]},
+            {"title": "Edges", "type": "rectangle", "rows": [
+                {"color": Globals.Colors.DEFAULT_EDGE_COLOR , "key": EdgeState.NOT_VISITED},
+                {"color": Globals.Colors.RED , "key": EdgeState.HIGHLIGHTED},
+                {"color": Globals.Colors.DARK_GRAY , "key": EdgeState.NOT_IN_COMPONENT},
+                {"color": Globals.Colors.PINK , "key": EdgeState.IN_COMPONENT}
+            ]}
+        ]
+
+        const legendComponent = <Legend data={legendData} />;
+
         return [new SideComponent("DFS stack", dfsStackComponent),
             new SideComponent("DFS Tree", treeComponent),
             new SideComponent("Component stack", componentStackComponent),
             new SideComponent("Order of visit", orderOfVisitComponent), 
             new SideComponent("Order of finish", orderOfFinishComponent),
             new SideComponent("Components", componentsComponent), 
-            new SideComponent("Components graph", componentsGraphComponent)
+            new SideComponent("Components graph", componentsGraphComponent),
+            new SideComponent("Legend", legendComponent)
         ];
     }
 

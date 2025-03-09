@@ -37,7 +37,7 @@ export const EdgeAttributes = {
 export const EdgeState = {
     NOT_VISITED: "Not visited",
     HIGHLIGHTED: "Highlighted",
-    NOT_IN_COMPONENT: "Visited - Not part of component",
+    NOT_IN_COMPONENT: "Visited",
     IN_COMPONENT: "Part of component"
 }
 
