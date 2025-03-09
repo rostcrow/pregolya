@@ -7,37 +7,20 @@ import EdgeCurveProgram, { EdgeCurvedArrowProgram } from "@sigma/edge-curve";
 import {EdgeRectangleProgram, EdgeArrowProgram} from "sigma/rendering";
 import { MultiGraph } from "graphology";
 
-//Importing layouts
-import circlepack from "graphology-layout/circlepack";
-import circular from "graphology-layout/circular";
-import random from "graphology-layout/random";
-
 //Importing my classes
 import EdgeLoopProgram from "../../programs/EdgeLoopProgram/EdgeLoopProgram.ts";
 import EdgeLoopArrowProgram from "../../programs/EdgeLoopArrowProgram/EdgeLoopArrowProgram.ts";
 import LayoutControl from "./LayoutControl.js";
-import GraphologyGraphLayout from "../../classes/GraphologyGraphLayout.js";
-import NoOverlapGraphLayout from "../../classes/NoOverlapGraphLayout.js";
 import RescaleControl from "./RescaleControl.js";
 import ZoomControl from "./ZoomControl.js";
 import MyNodeProgram from "../../programs/MyNodeProgram/MyNodeProgram.ts";
 
 //Importing css
 import "../css/GraphCanvas.css";
-import TopologicalSortGraphLayout from "../../classes/TopologicalSortGraphLayout.js";
-
-//Layouts
-const layouts = {
-  "Circlepack": new GraphologyGraphLayout(circlepack), "Circular": new GraphologyGraphLayout(circular), 
-  "No overlap": new NoOverlapGraphLayout(), "Random": new GraphologyGraphLayout(random), 
-  "Topological sort": new TopologicalSortGraphLayout()};
-
-const layoutKeys = Object.keys(layouts);
-const layoutKeysLength = layoutKeys.length;
-let currentLayoutKeyIndex = 0;
+import EdgeResetGraphLayout from "../../classes/EdgeResetGraphLayout.js";
 
 // Component that loads the graph
-function LoadGraph( {graph, layoutKey} ) {
+function LoadGraph( {graph, layout} ) {
   const loadGraph = useLoadGraph();
   const sigma = useSigma();
 
@@ -47,12 +30,12 @@ function LoadGraph( {graph, layoutKey} ) {
     sigma.setCustomBBox(null);
 
     //Assigning layout
-    layouts[layoutKey].assign(graph);
+    layout.assign(graph);
 
     //Loading graph
     loadGraph(graph);
 
-  }, [loadGraph, sigma, graph, layoutKey]);
+  }, [loadGraph, sigma, graph, layout]);
 
   return null;
 };
@@ -126,14 +109,26 @@ const sigmaSettings = {allowInvalidContainer: true, renderEdgeLabels: true, defa
 }};
 
 // Component that displays the graph
-export default function GraphCanvas( {graph, refreshState, graphPreview} ) {
+export default function GraphCanvas( {graph, refreshState, layouts, graphPreview} ) {
 
-  const [currentLayoutKey, setCurrentLayoutKey] = useState(layoutKeys[currentLayoutKeyIndex]);
+  const [currentLayoutKeyIndex, setCurrentLayoutKeyIndex] = useState(0);
+
+  const layoutKeys = Object.keys(layouts);
+  const layoutKeysLen = layoutKeys.length;
+
+  const currentLayoutKey = layoutKeys[currentLayoutKeyIndex];
+  const currentLayout = layouts[currentLayoutKey];
+
+  console.log(currentLayout);
 
   //Handling layout key change
   function changeLayoutKey() {
-    currentLayoutKeyIndex = (currentLayoutKeyIndex + 1) % layoutKeysLength;
-    setCurrentLayoutKey(layoutKeys[currentLayoutKeyIndex]);
+    
+    //Resetting graphs edges
+    new EdgeResetGraphLayout().assign(graph);
+
+    //Changing layout
+    setCurrentLayoutKeyIndex(currentLayoutKeyIndex => (currentLayoutKeyIndex + 1) % layoutKeysLen);
   }
 
   //Determining card style based on graph preview boolean
@@ -148,7 +143,7 @@ export default function GraphCanvas( {graph, refreshState, graphPreview} ) {
         <Card.Body className="m-0 p-1">
           <SigmaContainer style={sigmaStyle} settings={sigmaSettings} graph={MultiGraph}>
             <GraphEvents />
-            <LoadGraph graph={graph} layoutKey={currentLayoutKey}/>
+            <LoadGraph graph={graph} layout={currentLayout}/>
             <Refresher state={refreshState} />
             <ControlsContainer position="bottom-right">
               <ZoomControl />

@@ -6,6 +6,10 @@ import Table from "react-bootstrap/Table";
 import ComponentsList from "../components/js/ComponentsList";
 import GraphTag from "./GraphTag";
 import GraphCanvas from "../components/js/GraphCanvas";
+import GraphologyGraphLayout from "./GraphologyGraphLayout";
+import circlepack from "graphology-layout/circlepack";
+import circular from "graphology-layout/circular";
+import TopologicalSortGraphLayout from "./TopologicalSortGraphLayout";
 
 export default class TarjanSideComponentsFactory extends SideComponentsFactory {
 
@@ -265,7 +269,11 @@ export default class TarjanSideComponentsFactory extends SideComponentsFactory {
             graph.setNodeAttribute(String(componentIndex + 1), "label", `${num}\nNodes: ${component}`);
         }
 
-        const componentsGraphComponent = <GraphCanvas graph={graph} refreshState={false} graphPreview={false} />
+        const layouts = {
+            "Topological sort": new TopologicalSortGraphLayout(), "Circlepack": new GraphologyGraphLayout(circlepack), 
+            "Circular": new GraphologyGraphLayout(circular)};
+
+        const componentsGraphComponent = <GraphCanvas graph={graph} refreshState={false} layouts={layouts} graphPreview={false} />
 
         return [new SideComponent("DFS stack", dfsStackComponent), new SideComponent("Component stack", componentStackComponent),
             new SideComponent("Order of visit", orderOfVisitComponent), 

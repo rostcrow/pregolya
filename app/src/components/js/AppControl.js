@@ -39,7 +39,11 @@ import TarjanNodeStyler from '../../classes/TarjanNodeStyler.js';
 import TarjanEdgeStyler from '../../classes/TarjanEdgeStyler.js';
 import TarjanSideComponentsFactory from '../../classes/TarjanSideComponentsFactory.js';
 import TarjanAlgorithmOptionsForm from '../../classes/TarjanAlgorithmOptionsForm.js';
-
+import circlepack from "graphology-layout/circlepack";
+import circular from "graphology-layout/circular";
+import random from "graphology-layout/random";
+import GraphologyGraphLayout from "../../classes/GraphologyGraphLayout.js";
+import NoOverlapGraphLayout from "../../classes/NoOverlapGraphLayout.js";
 
 //Initializing graphs
 const graphsJSON = graphExamplesArray;
@@ -60,14 +64,14 @@ const bfs = new AlgorithmTag(
 const dfs = new AlgorithmTag(
     "Depth-first search (DFS)", [Globals.GraphTypes.NORMAL, Globals.GraphTypes.DIRECTED],
     DFSAlgorithm, DFSNodeStyler, DFSEdgeStyler, DFSSideComponentsFactory, DFSAlgorithmOptionsForm
-  );
+);
 
 const bcs = new AlgorithmTag(
     "Biconnected components search", [Globals.GraphTypes.NORMAL],
     BiconnectedComponentsSearchAlgorithm, BiconnectedComponentsSearchNodeStyler,
     BiconnectedComponentsSearchEdgeStyler, BiconnectedComponentsSearchSideComponentsFactory,
     BiconnectedComponentsSearchAlgorithmOptionsForm
-)
+);
 
 const tarjan = new AlgorithmTag(
     "Tarjan algorithm", [Globals.GraphTypes.DIRECTED], TarjanAlgorithm, TarjanNodeStyler, TarjanEdgeStyler, 
@@ -79,6 +83,11 @@ const firstAlgorithmFacade = new AlgorithmFacade(firstAlgGraph, algorithmTags[0]
 
 //Initializing options form
 const firstOptionsForm = new NullAlgorithmOptionsForm();
+
+//Initializing layouts
+const layouts = {
+    "Circlepack": new GraphologyGraphLayout(circlepack), "Circular": new GraphologyGraphLayout(circular), 
+    "No overlap": new NoOverlapGraphLayout(), "Random": new GraphologyGraphLayout(random)};
 
 //Creating graph context
 export const GraphContext = createContext(null);
@@ -255,7 +264,8 @@ export default function AppControl() {
             <Container className='px-5 mb-5' fluid={true}>
                 <Row className='p-0 m-0'>
                     <Col className="col-12 col-lg-8 p-0 pe-lg-2 m-0">
-                        <GraphCanvas graph={visibleGraph} refreshState={graphRefreshState} graphPreview={graphPreview}/>
+                        <GraphCanvas graph={visibleGraph} refreshState={graphRefreshState} layouts={layouts} 
+                            graphPreview={graphPreview}/>
                         <AlgorithmControlPanel running={running} controlState={algorithmControlState} 
                             setControlStateFunc={setAlgorithmControlState} 
                             algorithmFacade={algorithmFacade} updateFunc={update} graphPreview={graphPreview} />
