@@ -10,7 +10,7 @@ import Button from "react-bootstrap/Button";
 const DEFAULT_RUN_BUTTON_STYLE = "btn-primary";
 const DEFAULT_OTHER_BUTTON_STYLE = "btn-secondary";
 
-export default function AlgorithmControlPanel( {running, controlState, setControlStateFunc, algorithmFacade, updateFunc, graphPreview} ) {
+export default function AlgorithmControlPanel( {running, controlState, setControlStateFunc, algorithmFacade, updateFunc} ) {
 
     //States
     const [runSpeed, setRunSpeed] = useState(6);
@@ -157,14 +157,8 @@ export default function AlgorithmControlPanel( {running, controlState, setContro
         setRunSpeed(value);
     }
 
-    //Setting style based on graph preview boolean
-    let style = {};
-    if (graphPreview) {
-        style = {visibility: "hidden"};
-    }
-
     return (
-        <div style={style}>
+        <>
             <Container className="container-sm mt-3">
                 <ButtonGroup>
                     <Button title="Jump to start" onClick={handleJumpToStart} className={startButtonStyle}><BsChevronBarLeft /></Button>
@@ -177,7 +171,7 @@ export default function AlgorithmControlPanel( {running, controlState, setContro
             <Container className="container-sm mt-3">
                 <Row>
                     <Col></Col>
-                    <Col className="col-8 col-md-6 col-lg-4">
+                    <Col className="mb-2 col-8 col-md-6 col-lg-4">
                         <Form.Label>Run speed: {runSpeed}</Form.Label>
                         <Form.Range onChange={e => handleRange(e.target.value)} min={1} max={10} 
                             disabled={controlState === "running"}/>
@@ -185,7 +179,7 @@ export default function AlgorithmControlPanel( {running, controlState, setContro
                     <Col></Col>
                 </Row>
             </Container>
-        </div>
+        </>
 
     );
 

@@ -9,6 +9,9 @@ import Col from 'react-bootstrap/Col';
 import GraphCanvas from './GraphCanvas.js';
 import AlgorithmControlPanel from './AlgorithmControlPanel.js';
 import SidePanel from './SidePanel.js';
+import GraphForm from './GraphForm.js';
+import AlgorithmForm from "./AlgorithmForm.js";
+import Card from 'react-bootstrap/Card';
 
 //Classes
 import graphExamplesArray from "../../graph_examples/all_examples.js";
@@ -19,9 +22,7 @@ import BFSNodeStyler from "../../classes/BFSNodeStyler.js";
 import BFSEdgeStyler from "../../classes/BFSEdgeStyler.js";
 import BFSSideComponentsFactory from '../../classes/BFSSideComponentsFactory.js';
 import AlgorithmFacade from '../../classes/AlgorithmFacade.js';
-import GraphAlgorithmForm from './GraphAlgorithmForm.js';
 import BFSAlgorithmOptionsForm from '../../classes/BFSAlgorithmOptionsForm.js';
-import NullAlgorithmOptionsForm from '../../classes/NullAlgorithmOptionsForm.js';
 import DFSAlgorithm from '../../classes/DFSAlgorithm.js';
 import DFSSideComponentsFactory from '../../classes/DFSSideComponentsFactory.js';
 import DFSNodeStyler from "../../classes/DFSNodeStyler.js";
@@ -45,6 +46,7 @@ import GraphologyGraphLayout from "../../classes/GraphologyGraphLayout.js";
 import NoOverlapGraphLayout from "../../classes/NoOverlapGraphLayout.js";
 import CompatibilityTable from '../../classes/CompatibilityTable.js';
 import GraphTagFactory from '../../classes/GraphTagFactory.js';
+import { clearFileInput } from './GraphForm.js';
 
 //Initializing graphs
 const graphsJSON = graphExamplesArray;
@@ -107,9 +109,6 @@ const tarjan = new AlgorithmTag(
 const algorithmTags = [bfs, dfs, bcs, tarjan];
 const firstAlgorithmFacade = new AlgorithmFacade(firstAlgGraph, algorithmTags[0], "0");
 
-//Initializing options form
-const firstOptionsForm = new NullAlgorithmOptionsForm();
-
 //Initializing layouts
 const layouts = {
     "Circlepack": new GraphologyGraphLayout(circlepack), "Circular": new GraphologyGraphLayout(circular), 
@@ -118,19 +117,30 @@ const layouts = {
 //Creating graph context
 export const GraphContext = createContext(null);
 
+//App states
+const AppStates = {
+    GRAPH_PREVIEW: 0,
+    GRAPH_CHOSEN: 1,
+    ALGORITHM: 2
+}
+
 export default function AppControl() {
 
     //States and refs
+    const [previousAppState, setPreviousAppState] = useState(AppStates.ALGORITHM);
+    const [appState, setAppState] = useState(AppStates.ALGORITHM);
+
+    const [previousGraphTag, setPreviousGraphTag] = useState(graphTags[0]);
+    const [chosenGraphTagIndex, setChosenGraphTagIndex] = useState(-1);
+    const [chosenGraphTag, setChosenGraphTag] = useState(graphTags[0]);
+
+    const [previousAlgorithmTagIndex, setPreviousAlgorithmTagIndex] = useState(0);
+    const [chosenAlgorithmTagIndex, setChosenAlgorithmTagIndex] = useState(0);
+    const [options, setOptions] = useState(null);
+    const [optionsForm, setOptionsForm] = useState(null);
+
     const [visibleGraph, setVisibleGraph] = useState(firstGraph);
     const [workingGraph, setWorkingGraph] = useState(firstGraph);
-
-    const [chosenGraph, setChosenGraph] = useState(null);
-    const [graphPreview, setGraphPreview] = useState(false);
-    const [selectedGraphIndex, setSelectedGraphIndex] = useState(-1);
-    const [selectedAlgorithmIndex, setSelectedAlgorithmIndex] = useState(-1);
-
-    const [options, setOptions] = useState(firstOptionsForm.getDefaultOptions());
-    const [optionsForm, setOptionsForm] = useState(firstOptionsForm);
 
     const [graphRefreshState, setGraphRefreshState] = useState(true);
     const [sideComponents, setSideComponents] = useState(firstAlgorithmFacade.getCurrentSideComponents());
@@ -138,118 +148,129 @@ export default function AppControl() {
     const [algorithmFacade, setAlgorithmFacade] = useState(firstAlgorithmFacade);
     const [algorithmControlState, setAlgorithmControlState] = useState("start");
     const running = useRef(false);
-  
-    //Handles change of graph in select
-    function handleChangeSelectedGraphIndex(index) {
+    
+    //Initializing opitons form
+    if (options === null && optionsForm === null) {
+        handleAlgorithmTagChooseChange(0);
+    }
+    
+    //Handles graph choose change
+    function handleGraphTagChooseChange (graphTagIndex) {
 
-        setSelectedGraphIndex(index);
+        setChosenGraphTagIndex(graphTagIndex);
 
-        clearFileInput();
-
-        let localChosenGraph;
-            
-        if (index === -1) {
-            localChosenGraph = null;
+        if (graphTagIndex === -1) {
+            //Cleared
+            setChosenGraphTag(previousGraphTag);
             setVisibleGraph(workingGraph);
-            setGraphPreview(false);
-        } else {
-            localChosenGraph = graphTags[index]; 
-            setVisibleGraph(graphTags[index].getDisplayGraph());
-            setGraphPreview(true);
-        }
+            setAppState(previousAppState);
 
-        setChosenGraph(localChosenGraph);
-        changeOptionsForm(localChosenGraph, algorithmTags[selectedAlgorithmIndex]);
+        } else {
+            //Showing graph preview
+            clearFileInput();
+            setChosenGraphTag(graphTags[graphTagIndex]);
+            setVisibleGraph(graphTags[graphTagIndex].getDisplayGraph());
+            setAppState(AppStates.GRAPH_PREVIEW);
+
+        }
     }
 
-    //Handles importing graph from file
-    function handleChangeImportedGraph(graphTag) {
+    //Handles graph input
+    function handleGraphInputChange ( graphTag ) {
 
         if (graphTag === null) {
-            //Unsuccessful import
+            //Input failure
 
-            if (selectedGraphIndex === -1) {
-                //Clearing preview of previously imported
-                setChosenGraph(null);
+            if (chosenGraphTagIndex === -1) {
+                //Clearing preview of previously inputted
+                setChosenGraphTag(previousGraphTag);
                 setVisibleGraph(workingGraph);
-                setGraphPreview(false);
-    
-                changeOptionsForm(null, algorithmTags[selectedAlgorithmIndex]);
+                setAppState(previousAppState);
             }
 
             return;
-        } 
-
-        //Successful import
-        setChosenGraph(graphTag);
-        setVisibleGraph(graphTag.getDisplayGraph());
-        setGraphPreview(true);
-        setSelectedGraphIndex(-1);
-
-        changeOptionsForm(graphTag, algorithmTags[selectedAlgorithmIndex]);
-    }
-
-    //Handles change of algorithm in select
-    function handleChangeSelectedAlgorithmIndex(index) {
-        
-        setSelectedAlgorithmIndex(index);
-        changeOptionsForm(chosenGraph, algorithmTags[index]);
-    }
-
-    //Changes options form based on chosen graph and algorithm
-    function changeOptionsForm (graphTag, algorithmTag) {
-
-        let newOptionsForm = new NullAlgorithmOptionsForm();
-
-        if (graphTag !== null && algorithmTag !== undefined) {
-            //Options form shown
-            const optionsFormClass = algorithmTag.getOptionsFormClass();
-            newOptionsForm = new optionsFormClass(options, setOptions, graphTag.getAlgorithmGraph());
         }
 
-        //Setting default options
+        //Successful input
+        setChosenGraphTagIndex(-1);
+        setChosenGraphTag(graphTag);
+        setVisibleGraph(graphTag.getDisplayGraph());
+        setAppState(AppStates.GRAPH_PREVIEW);
+
+    }
+
+    //Handles graph form submit
+    function handleGraphFormSubmit () {
+
+        setPreviousAppState(AppStates.GRAPH_CHOSEN);
+        setAppState(AppStates.GRAPH_CHOSEN);
+        setPreviousGraphTag(chosenGraphTag);
+        setChosenGraphTagIndex(-1);
+        clearFileInput();
+        setVisibleGraph(chosenGraphTag.getDisplayGraph());
+        setWorkingGraph(chosenGraphTag.getDisplayGraph());
+        handleAlgorithmTagChooseChange(0);
+
+    }
+
+    //Handles graph form clear changes
+    function handleGraphFormClearChanges() {
+        
+        setAppState(previousAppState);
+        setChosenGraphTagIndex(-1);
+        setChosenGraphTag(previousGraphTag);
+        clearFileInput();
+        setVisibleGraph(workingGraph);
+
+    }
+
+    //Handles algorithm choose change
+    function handleAlgorithmTagChooseChange(algorithmTagIndex) {
+
+        setChosenAlgorithmTagIndex(algorithmTagIndex);
+
+        //Setting options
+        const optionsFormClass = algorithmTags[algorithmTagIndex].getOptionsFormClass()
+        const newOptionsForm = new optionsFormClass(options, setOptions, chosenGraphTag.getAlgorithmGraph());
+
         const defaultOptions = newOptionsForm.getDefaultOptions();
         newOptionsForm.setOptions(defaultOptions);
         setOptions(defaultOptions);
-
-        //Setting options form
         setOptionsForm(newOptionsForm);
+
     }
 
-    //Handles change of controlled graph and algorithm
-    function handleChangeWorkspace() {
+    //Handles algortihm form submit
+    function handleAlgorithmFormSubmit() {
 
-        let graph = chosenGraph;
+        let graphTag = chosenGraphTag;
 
         //Checking convertibility
-        const algorithmTag = algorithmTags[selectedAlgorithmIndex];
+        const algorithmTag = algorithmTags[chosenAlgorithmTagIndex];
         const compatibilityTable = algorithmTag.getCompatibilityTable();
-        const graphType = graph.getType();
+        const graphType = graphTag.getType();
 
         if (compatibilityTable.isConvertible(graphType)) {
             //Graph should be converted
-            const graphCopy = graph.clone();
+            const graphTagCopy = graphTag.clone();
             const convertibleTo = compatibilityTable.getConvertibleTo(graphType);
-            graphCopy.convertTo(convertibleTo);
+            graphTagCopy.convertTo(convertibleTo);
 
-            graph = graphCopy;
+            graphTag = graphTagCopy;
+            setChosenGraphTag(graphTag);
+            setPreviousGraphTag(graphTag);
         }
 
-        const displayGraph = graph.getDisplayGraph();
-        const algorithmGraph = graph.getAlgorithmGraph();
-        const localAlgorithmFacade = new AlgorithmFacade(algorithmGraph, algorithmTags[selectedAlgorithmIndex], ...options);
+        const displayGraph = graphTag.getDisplayGraph();
+        const algorithmGraph = graphTag.getAlgorithmGraph();
+        const localAlgorithmFacade = new AlgorithmFacade(algorithmGraph, algorithmTags[chosenAlgorithmTagIndex], ...options);
 
         setVisibleGraph(displayGraph);
         setWorkingGraph(displayGraph);
-        setChosenGraph(null);
-        setGraphPreview(false);
-        setSelectedGraphIndex(-1);
-        clearFileInput();
-        setSelectedAlgorithmIndex(-1);
-            
-        const nullOptionsForm = new NullAlgorithmOptionsForm();
-        setOptions(nullOptionsForm.getDefaultOptions());
-        setOptionsForm(nullOptionsForm);
+        setAppState(AppStates.ALGORITHM);
+        setPreviousAppState(AppStates.ALGORITHM);
+        handleAlgorithmTagChooseChange(chosenAlgorithmTagIndex);
+        setPreviousAlgorithmTagIndex(chosenAlgorithmTagIndex);
 
         setAlgorithmFacade(localAlgorithmFacade);
         setSideComponents(localAlgorithmFacade.getCurrentSideComponents());
@@ -258,21 +279,11 @@ export default function AppControl() {
 
     }
 
-    //Handles form clear
-    function handleClearForm() {
+    //Handles algorithm form clear changes
+    function handleAlgorithmFormClearChanges() {
 
-        setSelectedGraphIndex(-1);
-        clearFileInput();
-        setChosenGraph(null);
-        setSelectedAlgorithmIndex(-1);
-        setVisibleGraph(workingGraph);
-        setGraphPreview(false);
+        handleAlgorithmTagChooseChange(previousAlgorithmTagIndex);
 
-    }
-
-    //Clears file input located in GraphAlgorithmForm
-    function clearFileInput() {
-        document.getElementById("file-input").value='';
     }
 
     //Updates graph and side panel
@@ -295,25 +306,54 @@ export default function AppControl() {
         "setState": setGraphRefreshState
     }
 
+    //Determining displayed components based on app state
+    let algorithmFormDisplay = 'block';
+    let algorithmControlPanelDisplay = 'block';
+    let sidePanelDisplay = 'block';
+    let graphCardClassName = 'p-0 bg-light';
+
+    if (appState === AppStates.GRAPH_PREVIEW) {
+        algorithmFormDisplay = 'none';
+        algorithmControlPanelDisplay = 'none';
+        sidePanelDisplay = 'none';
+        graphCardClassName += ' border border-5 border-primary-subtle'; 
+    } else if (appState === AppStates.GRAPH_CHOSEN) {
+        algorithmControlPanelDisplay = 'none';
+        sidePanelDisplay = 'none';
+    }
+
     return (
         <>
-            <GraphAlgorithmForm graphTags={graphTags} selectedGraphIndex={selectedGraphIndex} 
-                changeSelectedGraphIndexFunc={handleChangeSelectedGraphIndex} changeImportedGraphFunc={handleChangeImportedGraph}
-                chosenGraph={chosenGraph} algorithmTags={algorithmTags} selectedAlgorithmIndex={selectedAlgorithmIndex}
-                changeSelectedAlgorithmIndexFunc={handleChangeSelectedAlgorithmIndex}
-                optionsForm={optionsForm} submitFunc={handleChangeWorkspace} clearFunc={handleClearForm} />
+            <GraphForm graphTags={graphTags} graphTagIndex={chosenGraphTagIndex} 
+                handleGraphChooseChange={handleGraphTagChooseChange} handleGraphInputChange={handleGraphInputChange} 
+                handleSubmit={handleGraphFormSubmit} handleClear={handleGraphFormClearChanges}/>
+            <div className='m-0 p-0' style={{display: algorithmFormDisplay}}>
+                <AlgorithmForm algorithmTags={algorithmTags} algortihmTagIndex={chosenAlgorithmTagIndex} 
+                    handleAlgorithmChooseChange={handleAlgorithmTagChooseChange} optionsForm={optionsForm}
+                    handleSubmit={handleAlgorithmFormSubmit} handleClear={handleAlgorithmFormClearChanges} 
+                    graphTag={chosenGraphTag}/>
+            </div>
+
             <Container className='px-5 mb-5' fluid={true}>
                 <Row className='p-0 m-0'>
-                    <Col className="col-12 col-lg-8 p-0 pe-lg-2 m-0">
-                        <GraphCanvas graph={visibleGraph} refreshState={graphRefreshState} layouts={layouts} 
-                            graphPreview={graphPreview}/>
-                        <AlgorithmControlPanel running={running} controlState={algorithmControlState} 
-                            setControlStateFunc={setAlgorithmControlState} 
-                            algorithmFacade={algorithmFacade} updateFunc={update} graphPreview={graphPreview} />
+                    <Col className="col-12 col-xl-8 p-0 pe-xl-2 mt-0">
+                        <Card className={graphCardClassName}>
+                            <Card.Body className='m-0 p-0'>
+                                <GraphCanvas graph={visibleGraph} refreshState={graphRefreshState} layouts={layouts} />
+                                
+                                <div className='p-0 m-0' style={{display: algorithmControlPanelDisplay}}>
+                                    <AlgorithmControlPanel running={running} controlState={algorithmControlState} 
+                                        setControlStateFunc={setAlgorithmControlState} 
+                                        algorithmFacade={algorithmFacade} updateFunc={update} />
+                                </div>
+                            </Card.Body>
+                        </Card>
                     </Col>
-                    <Col className="col-12 col-lg-4 pt-2 pb-0 ps-0 pe-0 pt-lg-0 pb-lg-0 ps-lg-2 pe-lg-0 m-0">
+                    <Col className="col-12 col-xl-4 pt-3 pb-0 ps-0 pe-0 pt-xl-0 pb-xl-0 ps-xl-2 pe-xl-0 m-xl-0">
                         <GraphContext.Provider value={graphContextValue}>
-                            <SidePanel sideComponents={sideComponents} graphPreview={graphPreview}/>
+                            <div className='p-0 m-0' style={{display: sidePanelDisplay}}>
+                                <SidePanel sideComponents={sideComponents} />
+                            </div>
                         </GraphContext.Provider>
                     </Col>
                 </Row>

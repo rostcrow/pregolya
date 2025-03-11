@@ -29,12 +29,12 @@ export default class BFSAlgorithmOptionsForm extends AlgorithmOptionsForm {
         });
 
         return (
-            <>
+            <Form className="text-start">
                 <Form.Label>Starting node</Form.Label>
                 <Form.Select value={options[0]} onChange={e => this.#startingNodeChange(e)}>
                     {optionsHtml}
                 </Form.Select>           
-            </>
+            </Form>
         );
 
     }

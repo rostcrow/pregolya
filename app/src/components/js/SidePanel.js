@@ -3,7 +3,7 @@ import { useState } from 'react';
 import Container from 'react-bootstrap/Container';
 import Card from 'react-bootstrap/Card';
 
-export default function SidePanel ( {sideComponents, graphPreview} ) {
+export default function SidePanel ( {sideComponents} ) {
 
     //Setting states
     const [componentIndex, setComponentIndex] = useState(0);
@@ -38,14 +38,8 @@ export default function SidePanel ( {sideComponents, graphPreview} ) {
         setComponentIndex(index);
     }
 
-    //Setting style based on graph preview boolean
-    let style = {};
-    if (graphPreview) {
-        style = {visibility: "hidden"};
-    }
-
     return (
-        <Card className="m-0 p-0 bg-light" style={style}>
+        <Card className="m-0 p-0 bg-light h-100">
             <Card.Body>
                 <Nav className="mt-1" variant="pills" defaultActiveKey="0">
                     {navItems}

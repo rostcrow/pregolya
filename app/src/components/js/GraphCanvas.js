@@ -109,7 +109,7 @@ const sigmaSettings = {allowInvalidContainer: true, renderEdgeLabels: true, defa
 }};
 
 // Component that displays the graph
-export default function GraphCanvas( {graph, refreshState, layouts, graphPreview} ) {
+export default function GraphCanvas( {graph, refreshState, layouts} ) {
 
   const [currentLayoutKeyIndex, setCurrentLayoutKeyIndex] = useState(0);
 
@@ -118,8 +118,6 @@ export default function GraphCanvas( {graph, refreshState, layouts, graphPreview
 
   const currentLayoutKey = layoutKeys[currentLayoutKeyIndex];
   const currentLayout = layouts[currentLayoutKey];
-
-  console.log(currentLayout);
 
   //Handling layout key change
   function changeLayoutKey() {
@@ -131,15 +129,9 @@ export default function GraphCanvas( {graph, refreshState, layouts, graphPreview
     setCurrentLayoutKeyIndex(currentLayoutKeyIndex => (currentLayoutKeyIndex + 1) % layoutKeysLen);
   }
 
-  //Determining card style based on graph preview boolean
-  let cardClass = "p-0";
-  if (graphPreview) {
-    cardClass += " border border-5 border-primary-subtle";
-  }
-
   return (
     <>
-      <Card className={cardClass}>
+      <Card className="p-0">
         <Card.Body className="m-0 p-1">
           <SigmaContainer style={sigmaStyle} settings={sigmaSettings} graph={MultiGraph}>
             <GraphEvents />
