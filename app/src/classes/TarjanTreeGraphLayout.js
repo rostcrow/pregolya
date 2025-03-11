@@ -1,5 +1,5 @@
 import GraphLayout from "./GraphLayout";
-import { NodeAttributes, EdgeAttributes, EdgeState } from "./TarjanAlgorithm";
+import { NodeAttributes, } from "./TarjanAlgorithm";
 
 const HORIZONTAL_SPACE = 10;
 const VERTICAL_SPACE = 30;

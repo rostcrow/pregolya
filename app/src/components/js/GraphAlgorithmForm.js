@@ -9,6 +9,23 @@ import Button from 'react-bootstrap/Button';
 import CompatibilityAlert from './CompatibilityAlert';
 import FileInput from './FileInput';
 
+//Helpful func to convert array to string
+function arrayToString(array) {
+    
+    let ret = "";
+
+    const len = array.length;
+    for (let i = 0; i < len; i++) {
+        ret += array[i];
+
+        if (i !== len - 1) {
+            ret += ", ";
+        }
+    }
+
+    return ret;
+}
+
 export default function GraphAlgorithmForm ( {graphTags, selectedGraphIndex, changeSelectedGraphIndexFunc, changeImportedGraphFunc, 
     chosenGraph, algorithmTags, selectedAlgorithmIndex, changeSelectedAlgorithmIndexFunc, optionsForm, submitFunc, clearFunc} ) {
     
@@ -47,20 +64,24 @@ export default function GraphAlgorithmForm ( {graphTags, selectedGraphIndex, cha
 
             //Generating message
             const algorithmName = algorithmTag.getName();
-            const compatible = compatibilityTable.getCompatible();
-            const convertibleKeys = compatibilityTable.getConvertibleKeys();
 
-            let messageLines = [
-                `${algorithmName} is not compatible with graph type ${graphType}.`,
-                `${algorithmName} is compatible with these graph types: ${compatible}.`
+            const compatible = compatibilityTable.getCompatible();
+            const compatibleStr = arrayToString(compatible);
+
+            const convertibleKeys = compatibilityTable.getConvertibleKeys();
+            const convertibleKeysStr = arrayToString(convertibleKeys);
+
+            let content = [
+                <p><b>{algorithmName}</b> is not compatible with graph type <b>{graphType}</b>.</p>,
+                <p><b>{algorithmName}</b> is compatible with these graph types: <b>{compatibleStr}</b>.</p>
             ];
 
             if (convertibleKeys.length !== 0) {
-                messageLines.push(`These graph types can be converted to be compatible: ${convertibleKeys}.`);
+                content.push(<p>These graph types can be converted to be compatible: <b>{convertibleKeysStr}</b>.</p>);
             }
             
             //Making component
-            compatibilityComponent = <CompatibilityAlert variant={"error"} messageLines={messageLines}/>;
+            compatibilityComponent = <CompatibilityAlert variant={"error"} content={content}/>;
 
         } else if (compatibilityTable.isConvertible(graphType)) {
             //Not compatible, but can be converted
@@ -71,16 +92,19 @@ export default function GraphAlgorithmForm ( {graphTags, selectedGraphIndex, cha
 
             //Generating message
             const algorithmName = algorithmTag.getName();
+
             const compatible = compatibilityTable.getCompatible();
+            const compatibleStr = arrayToString(compatible);
+
             const convertibleTo = compatibilityTable.getConvertibleTo(graphType);
         
-            const messageLines = [
-                `Graph will be converted from type ${graphType} to type ${convertibleTo}.`,
-                `${algorithmName} is compatible with these graph types: ${compatible}.`
+            const content = [
+                <p>Graph will be converted from type <b>{graphType}</b> to type <b>{convertibleTo}</b>.</p>,
+                <p><b>{algorithmName}</b> is compatible with these graph types: <b>{compatibleStr}</b>.</p>
             ];
 
             //Making component
-            compatibilityComponent = <CompatibilityAlert variant={"warning"} messageLines={messageLines}/>;
+            compatibilityComponent = <CompatibilityAlert variant={"warning"} content={content}/>;
 
         }
     }

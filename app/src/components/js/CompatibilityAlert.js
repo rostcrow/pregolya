@@ -1,7 +1,7 @@
 
 import Alert from "react-bootstrap/Alert";
 
-export default function CompatibilityAlert ( {variant, messageLines} ) {
+export default function CompatibilityAlert ( {variant, content} ) {
 
     let alertVariant = "";
     let heading = "";
@@ -12,11 +12,6 @@ export default function CompatibilityAlert ( {variant, messageLines} ) {
     } else if (variant === "warning") {
         alertVariant = "warning";
         heading = "Graph will be converted to be compatible with algorithm";
-    }
-
-    let content = [];
-    for (const message of messageLines) {
-        content.push(<p>{message}</p>);
     }
 
     return (
