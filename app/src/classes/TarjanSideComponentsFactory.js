@@ -100,18 +100,7 @@ export default class TarjanSideComponentsFactory extends SideComponentsFactory {
         //Adding edges
         for (const key in edges) {
             if (edges[key][EdgeAttributes.STATE] !== EdgeState.NOT_VISITED) {
-
-                const edge = edges[key];
-
-                const sourceNode = edge["source"];
-                const sourceTimeVisit = nodes[sourceNode][NodeAttributes.TIME_OF_VISIT];
-
-                const targetNode = edge["target"];
-                const targetTimeVisit = nodes[targetNode][NodeAttributes.TIME_OF_VISIT];
-
-                if (sourceTimeVisit < targetTimeVisit) {
-                    outputEdges[key] = edge;
-                }
+                outputEdges[key] = edges[key];
             }
         }
 

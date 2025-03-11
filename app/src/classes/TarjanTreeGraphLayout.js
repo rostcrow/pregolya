@@ -3,6 +3,7 @@ import { NodeAttributes, EdgeAttributes, EdgeState } from "./TarjanAlgorithm";
 
 const HORIZONTAL_SPACE = 10;
 const VERTICAL_SPACE = 30;
+const CURVATURE = 1;
 
 export default class TarjanTreeGraphLayout extends GraphLayout {
 
@@ -65,8 +66,16 @@ export default class TarjanTreeGraphLayout extends GraphLayout {
             const outEdges = structuredClone(graph.outboundEdges(node));
             let children = [];
             for (const edge of outEdges) {
-                if (graph.getEdgeAttribute(edge, EdgeAttributes.STATE) !== EdgeState.NOT_VISITED) {
-                    children.push(graph.opposite(node, edge));
+
+                const child = graph.opposite(node, edge);
+                if (graph.getNodeAttribute(child, NodeAttributes.VISITED_FROM) === node) {
+                    //Is child
+                    children.push(child);
+
+                } else {
+                    //Not a child, forward or back edge
+                    graph.setEdgeAttribute(edge, "curvature", CURVATURE);
+                    graph.setEdgeAttribute(edge, "type", "curvedArrow");
                 }
             }
 
