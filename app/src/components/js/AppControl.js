@@ -21,7 +21,6 @@ import BFSSideComponentsFactory from '../../classes/BFSSideComponentsFactory.js'
 import AlgorithmFacade from '../../classes/AlgorithmFacade.js';
 import GraphAlgorithmForm from './GraphAlgorithmForm.js';
 import BFSAlgorithmOptionsForm from '../../classes/BFSAlgorithmOptionsForm.js';
-import GraphTag from '../../classes/GraphTag.js';
 import NullAlgorithmOptionsForm from '../../classes/NullAlgorithmOptionsForm.js';
 import DFSAlgorithm from '../../classes/DFSAlgorithm.js';
 import DFSSideComponentsFactory from '../../classes/DFSSideComponentsFactory.js';
@@ -44,12 +43,14 @@ import circular from "graphology-layout/circular";
 import random from "graphology-layout/random";
 import GraphologyGraphLayout from "../../classes/GraphologyGraphLayout.js";
 import NoOverlapGraphLayout from "../../classes/NoOverlapGraphLayout.js";
+import CompatibilityTable from '../../classes/CompatibilityTable.js';
+import GraphTagFactory from '../../classes/GraphTagFactory.js';
 
 //Initializing graphs
 const graphsJSON = graphExamplesArray;
 const graphTags = [];
 for (const graphJSON of graphsJSON) {
-    graphTags.push(new GraphTag(graphJSON));
+    graphTags.push(GraphTagFactory.createFromJson(graphJSON));
 }
 
 const firstGraph = graphTags[0].getDisplayGraph();
@@ -57,24 +58,49 @@ const firstAlgGraph = graphTags[0].getAlgorithmGraph();
 
 //Initializing algorithms
 const bfs = new AlgorithmTag(
-  "Breadth-first search (BFS)", [Globals.GraphTypes.NORMAL, Globals.GraphTypes.DIRECTED],
+  "Breadth-first search (BFS)", 
+  new CompatibilityTable(
+    [Globals.GraphTypes.NORMAL, Globals.GraphTypes.DIRECTED],
+    {[Globals.GraphTypes.WEIGHTED]: Globals.GraphTypes.NORMAL, 
+     [Globals.GraphTypes.DIRECTED_WEIGHTED]: Globals.GraphTypes.DIRECTED   
+    }, []
+  ),
   BFSAlgorithm, BFSNodeStyler, BFSEdgeStyler, BFSSideComponentsFactory, BFSAlgorithmOptionsForm
 );
 
 const dfs = new AlgorithmTag(
-    "Depth-first search (DFS)", [Globals.GraphTypes.NORMAL, Globals.GraphTypes.DIRECTED],
+    "Depth-first search (DFS)", 
+    new CompatibilityTable(
+        [Globals.GraphTypes.NORMAL, Globals.GraphTypes.DIRECTED],
+        {[Globals.GraphTypes.WEIGHTED]: Globals.GraphTypes.NORMAL, 
+         [Globals.GraphTypes.DIRECTED_WEIGHTED]: Globals.GraphTypes.DIRECTED   
+        }, []
+    ),
     DFSAlgorithm, DFSNodeStyler, DFSEdgeStyler, DFSSideComponentsFactory, DFSAlgorithmOptionsForm
 );
 
 const bcs = new AlgorithmTag(
-    "Biconnected components search", [Globals.GraphTypes.NORMAL],
+    "Biconnected components search", 
+    new CompatibilityTable(
+        [Globals.GraphTypes.NORMAL],
+        {[Globals.GraphTypes.DIRECTED]: Globals.GraphTypes.NORMAL,
+         [Globals.GraphTypes.WEIGHTED]: Globals.GraphTypes.NORMAL, 
+         [Globals.GraphTypes.DIRECTED_WEIGHTED]: Globals.GraphTypes.NORMAL   
+        }, []
+    ),
     BiconnectedComponentsSearchAlgorithm, BiconnectedComponentsSearchNodeStyler,
     BiconnectedComponentsSearchEdgeStyler, BiconnectedComponentsSearchSideComponentsFactory,
     BiconnectedComponentsSearchAlgorithmOptionsForm
 );
 
 const tarjan = new AlgorithmTag(
-    "Tarjan algorithm", [Globals.GraphTypes.DIRECTED], TarjanAlgorithm, TarjanNodeStyler, TarjanEdgeStyler, 
+    "Tarjan algorithm",
+    new CompatibilityTable(
+        [Globals.GraphTypes.DIRECTED],
+        {[Globals.GraphTypes.DIRECTED_WEIGHTED]: Globals.GraphTypes.DIRECTED},
+        [Globals.GraphTypes.NORMAL, Globals.GraphTypes.WEIGHTED]
+    ), 
+    TarjanAlgorithm, TarjanNodeStyler, TarjanEdgeStyler, 
     TarjanSideComponentsFactory, TarjanAlgorithmOptionsForm
 );
 
@@ -193,8 +219,24 @@ export default function AppControl() {
     //Handles change of controlled graph and algorithm
     function handleChangeWorkspace() {
 
-        const displayGraph = chosenGraph.getDisplayGraph();
-        const algorithmGraph = chosenGraph.getAlgorithmGraph();
+        let graph = chosenGraph;
+
+        //Checking convertibility
+        const algorithmTag = algorithmTags[selectedAlgorithmIndex];
+        const compatibilityTable = algorithmTag.getCompatibilityTable();
+        const graphType = graph.getType();
+
+        if (compatibilityTable.isConvertible(graphType)) {
+            //Graph should be converted
+            const graphCopy = graph.clone();
+            const convertibleTo = compatibilityTable.getConvertibleTo(graphType);
+            graphCopy.convertTo(convertibleTo);
+
+            graph = graphCopy;
+        }
+
+        const displayGraph = graph.getDisplayGraph();
+        const algorithmGraph = graph.getAlgorithmGraph();
         const localAlgorithmFacade = new AlgorithmFacade(algorithmGraph, algorithmTags[selectedAlgorithmIndex], ...options);
 
         setVisibleGraph(displayGraph);
@@ -214,7 +256,6 @@ export default function AppControl() {
         running.current = false;
         setAlgorithmControlState("start");
 
-        
     }
 
     //Handles form clear

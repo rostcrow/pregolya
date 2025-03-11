@@ -4,7 +4,6 @@ import { EdgeAttributes, EdgeState, NodeAttributes, NodeState } from "./TarjanAl
 import Globals from "./Globals";
 import Table from "react-bootstrap/Table";
 import ComponentsList from "../components/js/ComponentsList";
-import GraphTag from "./GraphTag";
 import GraphCanvas from "../components/js/GraphCanvas";
 import GraphologyGraphLayout from "./GraphologyGraphLayout";
 import circlepack from "graphology-layout/circlepack";
@@ -20,6 +19,7 @@ import GraphDataApplier from "./GraphDataApplier";
 import GraphView from "../components/js/GraphView";
 import TarjanTreeGraphLayout from "./TarjanTreeGraphLayout";
 import Legend from "../components/js/Legend";
+import GraphTagFactory from "./GraphTagFactory";
 
 export default class TarjanSideComponentsFactory extends SideComponentsFactory {
 
@@ -319,7 +319,8 @@ export default class TarjanSideComponentsFactory extends SideComponentsFactory {
             "edges": componentsGraphEdges
         };
 
-        const graph = new GraphTag(json).getDisplayGraph();
+        const componentsGraphTag = GraphTagFactory.createFromJson(json);
+        const graph = componentsGraphTag.getDisplayGraph();
 
         for (let componentIndex = 0; componentIndex < componentsNodes.length; componentIndex++) {
             const component = componentsNodes[componentIndex];

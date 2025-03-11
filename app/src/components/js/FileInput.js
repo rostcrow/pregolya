@@ -1,9 +1,9 @@
 
-import GraphTag from '../../classes/GraphTag';
 import { useState } from 'react';
 import FileAlert from './FileAlert';
 import JSONValidator from '../../classes/JSONValidator';
 import Form from 'react-bootstrap/Form';
+import GraphTagFactory from '../../classes/GraphTagFactory';
 
 const MAX_FILE_SIZE_KB = 500;
 
@@ -90,7 +90,7 @@ export default function FileInput( {changeImportedGraphFunc} ) {
             //Creating graph tag
             let graphTag;
             try {
-                graphTag = new GraphTag(json);
+                graphTag = GraphTagFactory.createFromJson(json);
             } catch (e) {
                 //Error met
                 invokeFileAlert("Graph is illogical", [e.message]);

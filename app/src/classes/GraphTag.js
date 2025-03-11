@@ -1,6 +1,5 @@
 
 import GraphFactory from "./GraphFactory";
-import JsonToGraphDataAdapter from "./JsonToGraphDataAdapter";
 import Globals from "./Globals";
 
 export default class GraphTag {
@@ -8,9 +7,45 @@ export default class GraphTag {
     #name;
     #graphData;
 
-    constructor(json) {
-        this.#name = json["name"];
-        this.#graphData = JsonToGraphDataAdapter.adapt(json);
+    constructor(name, graphData) {
+        this.#name = name;
+        this.#graphData = graphData;
+    }
+
+    convertTo(graphType) {
+        
+        switch (graphType) {
+            case Globals.GraphTypes.NORMAL:
+                this.setDirected(false);
+                this.setWeighted(false);
+                break;
+            case Globals.GraphTypes.DIRECTED:
+                this.setDirected(true);
+                this.setWeighted(false);
+                break;
+            case Globals.GraphTypes.WEIGHTED:
+                this.setDirected(false);
+                this.setWeighted(true);
+                break;
+            case Globals.GraphTypes.DIRECTED_WEIGHTED:
+                this.setDirected(true);
+                this.setWeighted(true);
+                break;
+            default:
+                
+        }
+    }
+
+    clone() {
+        return new GraphTag(this.#name, this.#graphData.clone());
+    }
+
+    setDirected(directed) {
+        this.#graphData.setDirected(directed);
+    }
+
+    setWeighted(weighted) {
+        this.#graphData.setWeighted(weighted);
     }
 
     getName() {
@@ -19,10 +54,9 @@ export default class GraphTag {
 
     getNameWithType() {
 
-        const type = this.getType();
-        const typeStrings = ["", " (directed)", " (weighted)", " (directed and weighted)"];
+        const type = this.getType();;
 
-        return this.#name + typeStrings[type];
+        return `${this.#name} (${type})`;
     }
 
     isDirected() {

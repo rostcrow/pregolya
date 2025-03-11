@@ -6,7 +6,6 @@ import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import AlgorithmSelect from './AlgorithmSelect';
 import Button from 'react-bootstrap/Button';
-import GraphAlgorithmCompatibilityChecker from '../../classes/GraphAlgorithmCompatibilityChecker';
 import CompatibilityAlert from './CompatibilityAlert';
 import FileInput from './FileInput';
 
@@ -29,17 +28,60 @@ export default function GraphAlgorithmForm ( {graphTags, selectedGraphIndex, cha
     let submitButtonDisabled = true;
 
     if (chosenGraph !== null && selectedAlgorithmIndex !== -1) {
-        const compatibilityMessage = 
-            GraphAlgorithmCompatibilityChecker.check(chosenGraph, algorithmTags[selectedAlgorithmIndex]);
 
-        if (compatibilityMessage.isCompatible()) {
+        const graphTag = chosenGraph;
+        const graphType = graphTag.getType();
+
+        const algorithmTag = algorithmTags[selectedAlgorithmIndex];
+        const compatibilityTable = algorithmTag.getCompatibilityTable();
+
+        if (compatibilityTable.isCompatible(graphType)) {
             //Compatible, showing options, submit allowed
+
             optionsHeading = <h3 className='mt-3'>Options</h3>;
             optionsComponents = optionsForm.getComponents();
             submitButtonDisabled = false;
-        } else {
-            //Not compatible, showing message
-            compatibilityComponent = <CompatibilityAlert message={compatibilityMessage.getMessage()}/>;
+
+        } else if (compatibilityTable.isInCompatible(graphType)) {
+            //Not compatible, showing error message
+
+            //Generating message
+            const algorithmName = algorithmTag.getName();
+            const compatible = compatibilityTable.getCompatible();
+            const convertibleKeys = compatibilityTable.getConvertibleKeys();
+
+            let messageLines = [
+                `${algorithmName} is not compatible with graph type ${graphType}.`,
+                `${algorithmName} is compatible with these graph types: ${compatible}.`
+            ];
+
+            if (convertibleKeys.length !== 0) {
+                messageLines.push(`These graph types can be converted to be compatible: ${convertibleKeys}.`);
+            }
+            
+            //Making component
+            compatibilityComponent = <CompatibilityAlert variant={"error"} messageLines={messageLines}/>;
+
+        } else if (compatibilityTable.isConvertible(graphType)) {
+            //Not compatible, but can be converted
+
+            optionsHeading = <h3 className='mt-3'>Options</h3>;
+            optionsComponents = optionsForm.getComponents();
+            submitButtonDisabled = false;
+
+            //Generating message
+            const algorithmName = algorithmTag.getName();
+            const compatible = compatibilityTable.getCompatible();
+            const convertibleTo = compatibilityTable.getConvertibleTo(graphType);
+        
+            const messageLines = [
+                `Graph will be converted from type ${graphType} to type ${convertibleTo}.`,
+                `${algorithmName} is compatible with these graph types: ${compatible}.`
+            ];
+
+            //Making component
+            compatibilityComponent = <CompatibilityAlert variant={"warning"} messageLines={messageLines}/>;
+
         }
     }
 

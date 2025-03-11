@@ -22,9 +22,9 @@ export default class Globals {
     }
 
     static GraphTypes = {
-        NORMAL: 0,
-        DIRECTED: 1,
-        WEIGHTED: 2,
-        DIRECTED_WEIGHTED: 3
+        NORMAL: "normal",
+        DIRECTED: "directed",
+        WEIGHTED: "weighted",
+        DIRECTED_WEIGHTED: "directed and weighted"
     }
 }
