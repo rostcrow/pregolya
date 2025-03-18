@@ -62,7 +62,7 @@ export default class TarjanSideComponentsFactory extends SideComponentsFactory {
         const dfsStackComponent =
             <div className="overflow-auto" style={{maxHeight: 500}}>
                 <Table>
-                    <thead>
+                    <thead className='border'>
                         <tr>
                             <th colSpan={3}>Top of stack</th>
                         </tr>
@@ -72,10 +72,10 @@ export default class TarjanSideComponentsFactory extends SideComponentsFactory {
                             <td>Time of visit</td>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody className='border'>
                         {dfsStackItems}
                     </tbody>
-                    <tfoot>
+                    <tfoot className='border'>
                         <tr>
                             <th colSpan={3}>Bottom of stack</th>
                         </tr>
@@ -155,7 +155,7 @@ export default class TarjanSideComponentsFactory extends SideComponentsFactory {
         const componentStackComponent =
             <div className="overflow-auto" style={{maxHeight: 500}}>
                 <Table>
-                    <thead>
+                    <thead className='border'>
                         <tr>
                             <th colSpan={3}>Top of stack</th>
                         </tr>
@@ -165,10 +165,10 @@ export default class TarjanSideComponentsFactory extends SideComponentsFactory {
                             <td>Lowlink</td>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody className='border'>
                         {componentStackItems}
                     </tbody>
-                    <tfoot>
+                    <tfoot className='border'>
                         <tr>
                             <th colSpan={3}>Bottom of stack</th>
                         </tr>
@@ -218,7 +218,7 @@ export default class TarjanSideComponentsFactory extends SideComponentsFactory {
         const orderOfVisitComponent = 
             <div className="overflow-auto" style={{maxHeight: 500}}>
                 <Table hover={true}>
-                    <thead>
+                    <thead className='border'>
                         <tr>
                             <th>#</th>
                             <th>Node</th>
@@ -226,7 +226,7 @@ export default class TarjanSideComponentsFactory extends SideComponentsFactory {
                             <th>Visited from</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody className='border'>
                         {orderOfVisitItems}
                     </tbody>
                 </Table>
@@ -261,7 +261,7 @@ export default class TarjanSideComponentsFactory extends SideComponentsFactory {
         const orderOfFinishComponent = 
             <div className="overflow-auto" style={{maxHeight: 500}}>
                 <Table hover={true}>
-                    <thead>
+                    <thead className='border'>
                         <tr>
                             <th>#</th>
                             <th>Node</th>
@@ -269,7 +269,7 @@ export default class TarjanSideComponentsFactory extends SideComponentsFactory {
                             <th>Time of finish</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody className='border'>
                         {orderOfFinishItems}
                     </tbody>
                 </Table>

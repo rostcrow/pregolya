@@ -36,13 +36,13 @@ export default function Legend( {data} ) {
             <div key={title}>
                 <h4>{title}</h4>
                 <Table>
-                    <thead>
+                    <thead className='border'>
                         <tr>
                             <th>Color</th>
                             <th>State</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody className='border'>
                         {rowsContent}
                     </tbody>
                 </Table>

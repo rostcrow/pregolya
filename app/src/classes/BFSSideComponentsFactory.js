@@ -77,7 +77,7 @@ export default class BFSSideComponentsFactory extends SideComponentsFactory {
             <>
                 <div className="overflow-auto" style={{maxHeight: 500}}>
                     <Table hover={true}>
-                        <thead>
+                        <thead className='border'>
                             <tr>
                                 <th colSpan={3}>Current node</th>
                             </tr>
@@ -87,14 +87,14 @@ export default class BFSSideComponentsFactory extends SideComponentsFactory {
                                 <td>Distance from start</td>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody className='border'>
                             {currentNodeItem}
                         </tbody>
                     </Table>
                 </div>
                 <div className="overflow-auto" style={{maxHeight: 500}}>
                     <Table hover={true}>
-                        <thead>
+                        <thead className='border'>
                             <tr>
                                 <th colSpan={3}>Front of queue</th>
                             </tr>
@@ -104,10 +104,10 @@ export default class BFSSideComponentsFactory extends SideComponentsFactory {
                                 <td>Distance from start</td>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody className='border'>
                             {items}
                         </tbody>
-                        <tfoot>
+                        <tfoot className='border'>
                             <tr>
                                 <th colSpan={3}>Back of queue</th>
                             </tr>
@@ -192,7 +192,7 @@ export default class BFSSideComponentsFactory extends SideComponentsFactory {
         const orderComponent = 
             <div className="overflow-auto" style={{maxHeight: 500}}>
                 <Table hover={true}>
-                    <thead>
+                    <thead className='border'>
                         <tr>
                             <th>#</th>
                             <th>Node</th>
@@ -200,7 +200,7 @@ export default class BFSSideComponentsFactory extends SideComponentsFactory {
                             <th>Distance from start</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody className='border'>
                         {orderItems}
                     </tbody>
                 </Table>

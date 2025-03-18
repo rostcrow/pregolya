@@ -22,7 +22,7 @@ export default function SidePanel ( {sideComponents} ) {
             style = {};
         } else {
             //Hidden
-            style = {height: 0, marginBottom: 0, padding: 0, visibility: "hidden"};
+            style = {height: 0, maxHeight: 0, marginBottom: 0, padding: 0, visibility: "hidden"};
         }
 
         //Pushing
@@ -44,6 +44,7 @@ export default function SidePanel ( {sideComponents} ) {
                 <Nav className="mt-1" variant="pills" defaultActiveKey="0">
                     {navItems}
                 </Nav>
+                <hr/>
                 <Container className="pt-2">
                     {tabComponents}
                 </Container>
