@@ -1,0 +1,21 @@
+{
+    "name": "Dasgupta, Papadimitriou, Vazirani: Algorithms - Figure 3.6",
+    "directed": false,
+    "weighted": false,
+    "nodes": ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"],
+    "edges": [
+        {"source": "A", "target": "B"},
+        {"source": "A", "target": "E"},
+        {"source": "C", "target": "D"},
+        {"source": "C", "target": "G"},
+        {"source": "C", "target": "H"},
+        {"source": "D", "target": "H"},
+        {"source": "E", "target": "I"},
+        {"source": "E", "target": "J"},
+        {"source": "G", "target": "H"},
+        {"source": "G", "target": "K"},
+        {"source": "H", "target": "K"},
+        {"source": "H", "target": "L"},
+        {"source": "I", "target": "J"}
+    ]
+}

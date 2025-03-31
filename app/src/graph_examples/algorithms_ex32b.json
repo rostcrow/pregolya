@@ -1,0 +1,21 @@
+{
+    "name": "Dasgupta, Papadimitriou, Vazirani: Algorithms - Exercise 3.2b",
+    "directed": true,
+    "weighted": false,
+    "nodes": ["A", "B", "C", "D", "E", "F", "G", "H"],
+    "edges": [
+        {"source": "A", "target": "B"},
+        {"source": "A", "target": "H"},
+        {"source": "B", "target": "F"},
+        {"source": "C", "target": "B"},
+        {"source": "D", "target": "C"},
+        {"source": "D", "target": "E"},
+        {"source": "F", "target": "C"},
+        {"source": "F", "target": "D"},
+        {"source": "F", "target": "E"},
+        {"source": "G", "target": "A"},
+        {"source": "G", "target": "B"},
+        {"source": "G", "target": "F"},
+        {"source": "H", "target": "G"}
+    ]
+}

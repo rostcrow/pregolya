@@ -1,0 +1,15 @@
+{
+    "name": "Dasgupta, Papadimitriou, Vazirani: Algorithms - Figure 4.1",
+    "directed": false,
+    "weighted": false,
+    "nodes": ["S", "A", "B", "C", "D", "E"],
+    "edges": [
+        {"source": "S", "target": "A"},
+        {"source": "S", "target": "C"},
+        {"source": "S", "target": "D"},
+        {"source": "S", "target": "E"},
+        {"source": "A", "target": "B"},
+        {"source": "B", "target": "C"},
+        {"source": "D", "target": "E"}
+    ]
+}

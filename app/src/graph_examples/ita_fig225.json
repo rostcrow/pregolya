@@ -1,0 +1,20 @@
+{
+    "name": "Cormen, Leiserson, Rivest, Stein: Introduction to algorithms - Figure 22.5",
+    "directed": true,
+    "weighted": false,
+    "nodes": ["s", "t", "u", "v", "w", "x", "y", "z"],
+    "edges": [
+        {"source": "s", "target": "w"},
+        {"source": "s", "target": "z"},
+        {"source": "t", "target": "u"},
+        {"source": "t", "target": "v"},
+        {"source": "u", "target": "t"},
+        {"source": "u", "target": "v"},
+        {"source": "v", "target": "w"},
+        {"source": "w", "target": "x"},
+        {"source": "x", "target": "z"},
+        {"source": "y", "target": "x"},
+        {"source": "z", "target": "w"},
+        {"source": "z", "target": "y"}
+    ]
+}

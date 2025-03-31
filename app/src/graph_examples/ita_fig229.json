@@ -1,0 +1,22 @@
+{
+    "name": "Cormen, Leiserson, Rivest, Stein: Introduction to algorithms - Figure 22.9",
+    "directed": true,
+    "weighted": false,
+    "nodes": ["a", "b", "c", "d", "e", "f", "g", "h"],
+    "edges": [
+        {"source": "a", "target": "b"},
+        {"source": "b", "target": "c"},
+        {"source": "b", "target": "e"},
+        {"source": "b", "target": "f"},
+        {"source": "c", "target": "d"},
+        {"source": "c", "target": "g"},
+        {"source": "d", "target": "c"},
+        {"source": "d", "target": "h"},
+        {"source": "e", "target": "a"},
+        {"source": "e", "target": "f"},
+        {"source": "f", "target": "g"},
+        {"source": "g", "target": "f"},
+        {"source": "g", "target": "h"},
+        {"source": "h", "target": "h"}
+    ]
+}

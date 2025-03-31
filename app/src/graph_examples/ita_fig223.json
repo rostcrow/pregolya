@@ -1,0 +1,18 @@
+{
+    "name": "Cormen, Leiserson, Rivest, Stein: Introduction to algorithms - Figure 22.3",
+    "directed": false,
+    "weighted": false,
+    "nodes": ["r", "s", "t", "u", "v", "w", "x", "y"],
+    "edges": [
+        {"source": "r", "target": "s"},
+        {"source": "r", "target": "v"},
+        {"source": "s", "target": "w"},
+        {"source": "t", "target": "u"},
+        {"source": "t", "target": "w"},
+        {"source": "t", "target": "x"},
+        {"source": "u", "target": "x"},
+        {"source": "u", "target": "y"},
+        {"source": "w", "target": "x"},
+        {"source": "x", "target": "y"}
+    ]
+}

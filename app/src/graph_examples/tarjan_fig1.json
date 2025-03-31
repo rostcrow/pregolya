@@ -1,0 +1,20 @@
+{
+    "name": "Tarjan: Depth-first search and linear graph algorithms - Figure 1",
+    "directed": false,
+    "weighted": false,
+    "nodes": ["A", "B", "C", "D", "E", "F", "G", "H"],
+    "edges": [
+        {"source": "A", "target": "B"},
+        {"source": "A", "target": "F"},
+        {"source": "A", "target": "H"},
+        {"source": "B", "target": "C"},
+        {"source": "B", "target": "G"},
+        {"source": "C", "target": "D"},
+        {"source": "C", "target": "H"},
+        {"source": "D", "target": "E"},
+        {"source": "D", "target": "G"},
+        {"source": "E", "target": "F"},
+        {"source": "E", "target": "H"},
+        {"source": "F", "target": "G"}
+    ]
+}

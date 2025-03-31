@@ -1,0 +1,28 @@
+{
+    "name": "Dasgupta, Papadimitriou, Vazirani: Algorithms - Exercise 3.31",
+    "directed": false,
+    "weighted": false,
+    "nodes": ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O"],
+    "edges": [
+        {"source": "A", "target": "B"},
+        {"source": "A", "target": "O"},
+        {"source": "B", "target": "D"},
+        {"source": "B", "target": "N"},
+        {"source": "C", "target": "D"},
+        {"source": "D", "target": "E"},
+        {"source": "D", "target": "L"},
+        {"source": "D", "target": "M"},
+        {"source": "E", "target": "L"},
+        {"source": "F", "target": "G"},
+        {"source": "F", "target": "H"},
+        {"source": "F", "target": "I"},
+        {"source": "G", "target": "H"},
+        {"source": "H", "target": "I"},
+        {"source": "H", "target": "K"},
+        {"source": "I", "target": "J"},
+        {"source": "J", "target": "K"},
+        {"source": "J", "target": "L"},
+        {"source": "K", "target": "L"},
+        {"source": "N", "target": "O"}
+    ]
+}

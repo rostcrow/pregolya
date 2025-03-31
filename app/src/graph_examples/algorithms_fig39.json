@@ -1,0 +1,25 @@
+{
+    "name": "Dasgupta, Papadimitriou, Vazirani: Algorithms - Figure 3.9",
+    "directed": true,
+    "weighted": false,
+    "nodes": ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"],
+    "edges": [
+        {"source": "A", "target": "B"},
+        {"source": "B", "target": "C"},
+        {"source": "B", "target": "D"},
+        {"source": "B", "target": "E"},
+        {"source": "C", "target": "F"},
+        {"source": "E", "target": "B"},
+        {"source": "E", "target": "F"},
+        {"source": "E", "target": "G"},
+        {"source": "F", "target": "C"},
+        {"source": "F", "target": "H"},
+        {"source": "G", "target": "H"},
+        {"source": "G", "target": "J"},
+        {"source": "H", "target": "K"},
+        {"source": "I", "target": "G"},
+        {"source": "J", "target": "I"},
+        {"source": "K", "target": "L"},
+        {"source": "L", "target": "J"}
+    ]
+}

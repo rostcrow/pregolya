@@ -1,0 +1,22 @@
+{
+    "name": "Dasgupta, Papadimitriou, Vazirani: Algorithms - Exercise 3.4i",
+    "directed": true,
+    "weighted": false,
+    "nodes": ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"],
+    "edges": [
+        {"source": "A", "target": "C"},
+        {"source": "A", "target": "H"},
+        {"source": "B", "target": "A"},
+        {"source": "B", "target": "G"},
+        {"source": "C", "target": "D"},
+        {"source": "D", "target": "F"},
+        {"source": "E", "target": "A"},
+        {"source": "E", "target": "I"},
+        {"source": "F", "target": "J"},
+        {"source": "G", "target": "I"},
+        {"source": "H", "target": "F"},
+        {"source": "H", "target": "G"},
+        {"source": "I", "target": "H"},
+        {"source": "J", "target": "C"}
+    ]
+}
