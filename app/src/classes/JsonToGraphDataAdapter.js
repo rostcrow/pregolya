@@ -1,6 +1,6 @@
 import GraphData from "./GraphData";
 
-export default class JsonToGraphDataAdapter {
+export default class JSONToGraphDataAdapter {
 
     static adapt(json) {
 

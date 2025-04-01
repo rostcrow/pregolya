@@ -1,7 +1,7 @@
-import EdgeStyler from "./EdgeStyler";
-import Globals from "./Globals";
+import EdgeStyler from "../../EdgeStyler";
+import Globals from "../../Globals";
 import { EdgeAttributes, EdgeState } from "./BiconnectedComponentsSearchAlgorithm";
-import ErrorThrower from "./ErrorThrower";
+import ErrorThrower from "../../ErrorThrower";
 
 const DEFAULT_CURVATURE = 1;
 

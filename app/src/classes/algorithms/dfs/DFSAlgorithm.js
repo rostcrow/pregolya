@@ -1,7 +1,7 @@
 
-import AdditionalData from "./AdditionalData";
-import Algorithm from "./Algorithm";
-import ErrorThrower from "./ErrorThrower";
+import AdditionalData from "../../AdditionalData";
+import Algorithm from "../../Algorithm";
+import ErrorThrower from "../../ErrorThrower";
 
 const State = {
     STARTING_NODE_TO_STACK: 0,

@@ -1,10 +1,9 @@
-import EdgeStyler from "./EdgeStyler";
-import { EdgeState } from "./DFSAlgorithm";
-import { EdgeAttributes } from "./DFSAlgorithm";
-import Globals from "./Globals";
-import ErrorThrower from "./ErrorThrower";
+import EdgeStyler from "../../EdgeStyler";
+import { EdgeState, EdgeAttributes } from "./BiconnectedComponentsSearchAlgorithm";
+import Globals from "../../Globals";
+import ErrorThrower from "../../ErrorThrower";
 
-export default class DFSEdgeStyler extends EdgeStyler {
+export default class BiconnectedComponentsSearchEdgeStyler extends EdgeStyler {
 
     style(attributes) {
 
@@ -17,14 +16,11 @@ export default class DFSEdgeStyler extends EdgeStyler {
             case EdgeState.TREE:
                 ret["color"] = Globals.Colors.DARK_GRAY;
                 break;
+            case EdgeState.BRIDGE:
+                ret["color"] = Globals.Colors.PINK;
+                break;
             case EdgeState.BACK:
                 ret["color"] = Globals.Colors.LIGHT_ORANGE;
-                break;
-            case EdgeState.FORWARD:
-                ret["color"] = Globals.Colors.LIGHT_PURPLE;
-                break;
-            case EdgeState.CROSS:
-                ret["color"] = Globals.Colors.LIGHT_CYAN;
                 break;
             default:
                 ErrorThrower.notExpectedState();

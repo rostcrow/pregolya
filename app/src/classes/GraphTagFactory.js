@@ -1,11 +1,11 @@
 import GraphTag from "./GraphTag";
-import JsonToGraphDataAdapter from "./JsonToGraphDataAdapter";
+import JSONToGraphDataAdapter from "./JSONToGraphDataAdapter";
 
 export default class GraphTagFactory {
 
     static createFromJson(json) {
         const name = json["name"];
-        const graphData = JsonToGraphDataAdapter.adapt(json);
+        const graphData = JSONToGraphDataAdapter.adapt(json);
 
         return new GraphTag(name, graphData);
     }

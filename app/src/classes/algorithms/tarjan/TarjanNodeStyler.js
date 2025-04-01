@@ -1,6 +1,6 @@
-import ErrorThrower from "./ErrorThrower";
-import Globals from "./Globals";
-import NodeStyler from "./NodeStyler";
+import ErrorThrower from "../../ErrorThrower";
+import Globals from "../../Globals";
+import NodeStyler from "../../NodeStyler";
 import { NodeAttributes, NodeState } from "./TarjanAlgorithm";
 
 export default class TarjanNodeStyler extends NodeStyler {

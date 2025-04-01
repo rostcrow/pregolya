@@ -1,5 +1,5 @@
 
-import AlgorithmOptionsForm from "./AlgorithmOptionsForm";
+import AlgorithmOptionsForm from "../../AlgorithmOptionsForm";
 import Form from 'react-bootstrap/Form';
 
 export default class BFSAlgorithmOptionsForm extends AlgorithmOptionsForm {

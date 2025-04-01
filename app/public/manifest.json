@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Pregolya",
+  "name": "Pregolya - Visualizer of graph algortihms",
   "icons": [
     {
       "src": "favicon.ico",

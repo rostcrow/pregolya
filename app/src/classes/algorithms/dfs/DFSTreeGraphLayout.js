@@ -1,11 +1,10 @@
-
-import { NodeAttributes,  } from "./BiconnectedComponentsSearchAlgorithm";
-import GraphLayout from "./GraphLayout";
+import { EdgeAttributes, EdgeState, NodeAttributes,  } from "./DFSAlgorithm";
+import GraphLayout from "../../GraphLayout";
 
 const HORIZONTAL_SPACE = 10;
 const VERTICAL_SPACE = 30;
 
-export default class BiconnectedComponentsSearchTreeGraphLayout extends GraphLayout {
+export default class DFSTreeGraphLayout extends GraphLayout {
 
     assign(graph) {
 
@@ -66,9 +65,7 @@ export default class BiconnectedComponentsSearchTreeGraphLayout extends GraphLay
             const outEdges = structuredClone(graph.outboundEdges(node));
             let children = [];
             for (const edge of outEdges) {
-
-                const neighbor = graph.opposite(node, edge);
-                if (graph.getNodeAttribute(neighbor, NodeAttributes.VISITED_FROM) === node) {
+                if (graph.getEdgeAttribute(edge, EdgeAttributes.STATE) === EdgeState.TREE) {
                     children.push(graph.opposite(node, edge));
                 }
             }

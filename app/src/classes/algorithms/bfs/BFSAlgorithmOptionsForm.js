@@ -1,8 +1,8 @@
 
-import AlgorithmOptionsForm from "./AlgorithmOptionsForm";
-import Form from "react-bootstrap/Form";
+import AlgorithmOptionsForm from "../../AlgorithmOptionsForm";
+import Form from 'react-bootstrap/Form';
 
-export default class BiconnectedComponentsSearchAlgorithmOptionsForm extends AlgorithmOptionsForm {
+export default class BFSAlgorithmOptionsForm extends AlgorithmOptionsForm {
     
     getDefaultOptions() {
         return ["0"];
@@ -38,5 +38,4 @@ export default class BiconnectedComponentsSearchAlgorithmOptionsForm extends Alg
         );
 
     }
-
 }

@@ -1,25 +1,25 @@
-import SideComponentsFactory from "./SideComponentsFactory";
-import SideComponent from "./SideComponent";
+import SideComponentsFactory from "../../SideComponentsFactory";
+import SideComponent from "../../SideComponent";
 import { EdgeAttributes, EdgeState, NodeAttributes, NodeState } from "./TarjanAlgorithm";
-import Globals from "./Globals";
+import Globals from "../../Globals";
 import Table from "react-bootstrap/Table";
-import ComponentsList from "../components/js/ComponentsList";
-import GraphCanvas from "../components/js/GraphCanvas";
-import GraphologyGraphLayout from "./GraphologyGraphLayout";
+import ComponentsList from "../../../components/js/ComponentsList";
+import GraphCanvas from "../../../components/js/GraphCanvas";
+import GraphologyGraphLayout from "../../GraphologyGraphLayout";
 import circlepack from "graphology-layout/circlepack";
 import circular from "graphology-layout/circular";
 import TopologicalSortGraphLayout from "./TopologicalSortGraphLayout";
-import GraphData from "./GraphData";
-import GraphFactory from "./GraphFactory";
-import GraphDataExtractor from "./GraphDataExtractor";
-import GraphDataStyler from "./GraphDataStyler";
+import GraphData from "../../GraphData";
+import GraphFactory from "../../GraphFactory";
+import GraphDataExtractor from "../../GraphDataExtractor";
+import GraphDataStyler from "../../GraphDataStyler";
 import TarjanNodeStyler from "./TarjanNodeStyler";
 import TarjanEdgeStyler from "./TarjanEdgeStyler";
-import GraphDataApplier from "./GraphDataApplier";
-import GraphView from "../components/js/GraphView";
+import GraphDataApplier from "../../GraphDataApplier";
+import GraphView from "../../../components/js/GraphView";
 import TarjanTreeGraphLayout from "./TarjanTreeGraphLayout";
-import Legend from "../components/js/Legend";
-import GraphTagFactory from "./GraphTagFactory";
+import Legend from "../../../components/js/Legend";
+import GraphTagFactory from "../../GraphTagFactory";
 
 export default class TarjanSideComponentsFactory extends SideComponentsFactory {
 

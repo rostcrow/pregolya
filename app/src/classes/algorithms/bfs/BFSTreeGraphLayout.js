@@ -1,11 +1,10 @@
-import GraphLayout from "./GraphLayout";
-import { NodeAttributes, } from "./TarjanAlgorithm";
+import { NodeAttributes } from "./BFSAlgorithm";
+import GraphLayout from "../../GraphLayout";
 
 const HORIZONTAL_SPACE = 10;
 const VERTICAL_SPACE = 30;
-const CURVATURE = 1;
 
-export default class TarjanTreeGraphLayout extends GraphLayout {
+export default class BFSTreeGraphLayout extends GraphLayout {
 
     assign(graph) {
 
@@ -20,13 +19,13 @@ export default class TarjanTreeGraphLayout extends GraphLayout {
             }
 
             nodeList.sort(compareOrderOfVisit);
-        }
+        }   
         
         //Finding root nodes
         let nodesQueue = [];
 
         graph.forEachNode((node) => {
-            if (graph.getNodeAttribute(node, NodeAttributes.VISITED_FROM) === null) {
+            if (graph.inNeighbors(node).length === 0) {
                 graph.setNodeAttribute(node, "level", 0);
                 nodesQueue.push(node);
             }
@@ -63,34 +62,14 @@ export default class TarjanTreeGraphLayout extends GraphLayout {
             graph.setNodeAttribute(node, "y", -1 * VERTICAL_SPACE * level);
 
             //Getting children in order
-            const outEdges = structuredClone(graph.outboundEdges(node));
-            let children = [];
-            for (const edge of outEdges) {
-
-                const child = graph.opposite(node, edge);
-                if (graph.getNodeAttribute(child, NodeAttributes.VISITED_FROM) === node) {
-                    //Is child
-                    children.push(child);
-
-                } else {
-                    //Not a child, forward or back edge
-                    graph.setEdgeAttribute(edge, "curvature", CURVATURE);
-                    graph.setEdgeAttribute(edge, "type", "curvedArrow");
-                }
-            }
-
+            let children = structuredClone(graph.outNeighbors(node));
             sortByOrderOfVisit(children);
             
             //Setting level to children and pushing to queue
             for (const child of children) {
-                if (graph.hasNodeAttribute(child, "level") === false) {
-                    graph.setNodeAttribute(child, "level", level + 1);
-                    nodesQueue.push(child);
-                }
+                graph.setNodeAttribute(child, "level", level + 1);
+                nodesQueue.push(child);
             }
         }
-
     }
-
-
 }

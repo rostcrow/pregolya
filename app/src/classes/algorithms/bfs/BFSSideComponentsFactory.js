@@ -1,18 +1,18 @@
 
-import SideComponent from './SideComponent';
-import SideComponentsFactory from "./SideComponentsFactory";
-import Globals from './Globals';
+import SideComponent from '../../SideComponent';
+import SideComponentsFactory from "../../SideComponentsFactory";
+import Globals from '../../Globals';
 import { EdgeAttributes, EdgeState, NodeAttributes, NodeState } from './BFSAlgorithm';
-import GraphDataStyler from './GraphDataStyler';
+import GraphDataStyler from '../../GraphDataStyler';
 import BFSNodeStyler from './BFSNodeStyler';
 import BFSEdgeStyler from './BFSEdgeStyler';
-import GraphData from './GraphData';
-import GraphFactory from './GraphFactory';
-import GraphView from '../components/js/GraphView';
+import GraphData from '../../GraphData';
+import GraphFactory from '../../GraphFactory';
+import GraphView from '../../../components/js/GraphView';
 import BFSTreeGraphLayout from './BFSTreeGraphLayout';
-import GraphDataApplier from './GraphDataApplier';
+import GraphDataApplier from '../../GraphDataApplier';
 import Table from "react-bootstrap/Table";
-import Legend from '../components/js/Legend';
+import Legend from '../../../components/js/Legend';
 
 export default class BFSSideComponentsFactory extends SideComponentsFactory {
 

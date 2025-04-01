@@ -1,21 +1,21 @@
-import SideComponentsFactory from "./SideComponentsFactory";
-import SideComponent from "./SideComponent";
-import { EdgeAttributes, EdgeState, NodeAttributes, NodeState } from "./BiconnectedComponentsSearchAlgorithm";
-import Globals from "./Globals";
-import GraphData from "./GraphData";
-import GraphFactory from "./GraphFactory";
-import GraphDataStyler from "./GraphDataStyler";
-import BiconnectedComponentsSearchNodeStyler from "./BiconnectedComponentsSearchNodeStyler";
-import BiconnectedComponentsSearchTreeEdgeStyler from "./BiconnectedComponentsSearchTreeEdgeStyler";
-import GraphDataApplier from "./GraphDataApplier";
-import GraphView from "../components/js/GraphView";
-import GraphDataExtractor from "./GraphDataExtractor";
-import Table from "react-bootstrap/Table";
-import BiconnectedComponentsSearchTreeGraphLayout from "./BiconnectedComponentsSearchTreeGraphLayout";
-import Legend from "../components/js/Legend";
-import ComponentsList from "../components/js/ComponentsList";
 
-export default class BiconnectedComponentsSearchSideComponentsFactory extends SideComponentsFactory{
+import SideComponentsFactory from "../../SideComponentsFactory";
+import SideComponent from "../../SideComponent";
+import { EdgeAttributes, EdgeState, NodeAttributes, NodeState } from "./DFSAlgorithm";
+import Globals from "../../Globals";
+import GraphData from "../../GraphData";
+import GraphFactory from "../../GraphFactory";
+import GraphDataStyler from "../../GraphDataStyler";
+import DFSNodeStyler from "./DFSNodeStyler";
+import DFSTreeEdgeStyler from "./DFSTreeEdgeStyler";
+import GraphDataApplier from "../../GraphDataApplier";
+import GraphView from "../../../components/js/GraphView";
+import DFSTreeGraphLayout from "./DFSTreeGraphLayout";
+import GraphDataExtractor from "../../GraphDataExtractor";
+import Table from "react-bootstrap/Table";
+import Legend from "../../../components/js/Legend";
+
+export default class DFSSideComponentsFactory extends SideComponentsFactory {
 
     createSideComponents(algorithmState) {
 
@@ -102,15 +102,13 @@ export default class BiconnectedComponentsSearchSideComponentsFactory extends Si
                 const sourceNode = edge["source"];
                 const targetNode = edge["target"];
 
-                if (edges[key][EdgeAttributes.STATE] === EdgeState.TREE || 
-                    edges[key][EdgeAttributes.STATE] === EdgeState.BRIDGE) {
-                    //Tree edge (including bridges)
+                if (edges[key][EdgeAttributes.STATE] === EdgeState.TREE) {
+                    //Tree edge
 
                     if (nodes[sourceNode][NodeAttributes.VISITED_FROM] === targetNode) {
                         edge["source"] = targetNode;
                         edge["target"] = sourceNode;
                     }
-
                 } else if (edges[key][EdgeAttributes.STATE] === EdgeState.BACK) {
                     //Back edge
 
@@ -130,13 +128,12 @@ export default class BiconnectedComponentsSearchSideComponentsFactory extends Si
         treeGraphData = GraphDataExtractor.extractData(treeGraph);
 
         //Styling graph
-        const graphDataStyler = new GraphDataStyler 
-            (new BiconnectedComponentsSearchNodeStyler(), new BiconnectedComponentsSearchTreeEdgeStyler());
+        const graphDataStyler = new GraphDataStyler (new DFSNodeStyler(), new DFSTreeEdgeStyler());
         let styledData = graphDataStyler.style(treeGraphData);
         GraphDataApplier.applyNodesEdges(treeGraph, styledData);
 
         //Making component
-        const treeComponent = <GraphView graph={treeGraph} layout={new BiconnectedComponentsSearchTreeGraphLayout()}></GraphView>;
+        const treeComponent = <GraphView graph={treeGraph} layout={new DFSTreeGraphLayout()}></GraphView>;
 
         //Order of visit
         const orderOfVisit = additionalData.get("orderOfVisit");
@@ -154,18 +151,10 @@ export default class BiconnectedComponentsSearchSideComponentsFactory extends Si
 
             //Style
             let style = {};
-            switch (node[NodeAttributes.STATE]) {
-                case NodeState.NEW_IN_STACK:
-                    style = {color: Globals.Colors.GREEN};
-                    break;
-                case NodeState.CURRENT:
-                    style = {color: Globals.Colors.RED};
-                    break;
-                case NodeState.ARTICULATION:
-                    style = {color: Globals.Colors.TEAL};
-                    break;
-                default:
-                    //Empty
+            if (node[NodeAttributes.STATE] === NodeState.NEW_IN_STACK) {
+                style = {color: Globals.Colors.GREEN};
+            } else if (node[NodeAttributes.STATE] === NodeState.CURRENT) {
+                style = {color: Globals.Colors.RED};
             }
 
             orderOfVisitItems.push(
@@ -206,17 +195,12 @@ export default class BiconnectedComponentsSearchSideComponentsFactory extends Si
             const tv = node[NodeAttributes.TIME_OF_VISIT];
             const tf = node[NodeAttributes.TIME_OF_FINISH];
             
-            let style = {}
-            if (node[NodeAttributes.STATE] === NodeState.ARTICULATION) {
-                style = {color: Globals.Colors.TEAL}
-            }
-
             orderOfFinishItems.push(
                 <tr key={k}>
-                    <td style={style}>{of}</td>
-                    <td style={style}>{k}</td>
-                    <td style={style}>{tv}</td>
-                    <td style={style}>{tf}</td>
+                    <td>{of}</td>
+                    <td>{k}</td>
+                    <td>{tv}</td>
+                    <td>{tf}</td>
                 </tr>
             );
         }
@@ -238,39 +222,40 @@ export default class BiconnectedComponentsSearchSideComponentsFactory extends Si
                 </Table>
             </div>;
 
-        //Components
-        const components = additionalData.get("components");
-        const componentsComponent = <ComponentsList components={components} 
-            zeroComponentsMessage={"Components are counted as the last step of algorithm"} />;
-        
         //Legend
+        let edgesRows = [
+            {"color": Globals.Colors.DEFAULT_EDGE_COLOR, "key": EdgeState.NORMAL},
+            {"color": Globals.Colors.DARK_GRAY, "key": EdgeState.TREE},
+            {"color": Globals.Colors.LIGHT_ORANGE, "key": EdgeState.BACK}
+        ];
+
+        if (graphData.isDirected()) {
+            edgesRows = [
+                {"color": Globals.Colors.DEFAULT_EDGE_COLOR, "key": EdgeState.NORMAL},
+                {"color": Globals.Colors.DARK_GRAY, "key": EdgeState.TREE},
+                {"color": Globals.Colors.LIGHT_ORANGE, "key": EdgeState.BACK},
+                {"color": Globals.Colors.LIGHT_PURPLE, "key": EdgeState.FORWARD},
+                {"color": Globals.Colors.LIGHT_CYAN, "key": EdgeState.CROSS}
+            ];
+        }
+
         const legendData = [
             {"title": "Nodes", "type": "circle", "rows": [
                 {"color": Globals.Colors.DEFAULT_NODE_COLOR, "key": NodeState.NOT_VISITED},
                 {"color": Globals.Colors.GREEN, "key": NodeState.NEW_IN_STACK},
                 {"color": Globals.Colors.GRAY, "key": NodeState.IN_STACK},
                 {"color": Globals.Colors.RED, "key": NodeState.CURRENT},
-                {"color": Globals.Colors.BLACK, "key": NodeState.NOT_ARTICULATION},
-                {"color": Globals.Colors.TEAL, "key": NodeState.ARTICULATION},
+                {"color": Globals.Colors.BLACK, "key": NodeState.FINISHED},
             ]},
-            {"title": "Edges", "type": "rectangle", "rows": [
-                {"color": Globals.Colors.DEFAULT_EDGE_COLOR, "key": EdgeState.NORMAL},
-                {"color": Globals.Colors.DARK_GRAY, "key": EdgeState.TREE},
-                {"color": Globals.Colors.PINK, "key": EdgeState.BRIDGE},
-                {"color": Globals.Colors.LIGHT_ORANGE, "key": EdgeState.BACK},
-            ]},
+            {"title": "Edges", "type": "rectangle", "rows": edgesRows},
         ]
 
         const legendComponent = <Legend data={legendData} />
 
-
-        return [new SideComponent("Stack", stackComponent), new SideComponent("DFS tree", treeComponent), 
+        return [new SideComponent("Stack", stackComponent), new SideComponent("Tree", treeComponent), 
             new SideComponent("Order of visit", orderOfVisitComponent), 
-            new SideComponent("Order of finish", orderOfFinishComponent),
-            new SideComponent("Components", componentsComponent),
-            new SideComponent("Legend", legendComponent)
-        ];
-
+            new SideComponent("Order of finish", orderOfFinishComponent), 
+            new SideComponent("Legend", legendComponent)];
     }
 
 }

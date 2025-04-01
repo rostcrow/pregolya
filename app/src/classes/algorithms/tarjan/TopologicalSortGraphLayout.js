@@ -1,5 +1,5 @@
-import ErrorThrower from "./ErrorThrower";
-import GraphLayout from "./GraphLayout";
+import ErrorThrower from "../../ErrorThrower";
+import GraphLayout from "../../GraphLayout";
 
 const DISTANCE_BETWEEN_NODES = 10;
 const BASE_CURVATURE = 1;

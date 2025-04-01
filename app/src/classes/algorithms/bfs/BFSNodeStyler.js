@@ -1,7 +1,6 @@
-import NodeStyler from "./NodeStyler";
-import { NodeState } from "./BFSAlgorithm";
-import { NodeAttributes } from "./BFSAlgorithm";
-import Globals from "./Globals";
+import NodeStyler from "../../NodeStyler";
+import { NodeState, NodeAttributes } from "./BFSAlgorithm";
+import Globals from "../../Globals";
 
 export default class BFSNodeStyler extends NodeStyler {
 

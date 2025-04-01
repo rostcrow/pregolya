@@ -1,10 +1,9 @@
-import NodeStyler from "./NodeStyler";
-import { NodeState } from "./DFSAlgorithm";
-import { NodeAttributes } from "./DFSAlgorithm";
-import Globals from "./Globals";
-import ErrorThrower from "./ErrorThrower";
+import NodeStyler from "../../NodeStyler";
+import { NodeAttributes, NodeState } from "./BiconnectedComponentsSearchAlgorithm";
+import Globals from "../../Globals";
+import ErrorThrower from "../../ErrorThrower";
 
-export default class DFSNodeStyler extends NodeStyler {
+export default class BiconnectedComponentsSearchNodeStyler extends NodeStyler {
 
     style(attributes) {
 
@@ -24,8 +23,11 @@ export default class DFSNodeStyler extends NodeStyler {
             case NodeState.CURRENT:
                 ret["color"] = Globals.Colors.RED;
                 break;
-            case NodeState.FINISHED:
+            case NodeState.NOT_ARTICULATION:
                 ret["color"] = Globals.Colors.BLACK;
+                break;
+            case NodeState.ARTICULATION:
+                ret["color"] = Globals.Colors.TEAL;
                 break;
             default:
                 ErrorThrower.notExpectedState();
@@ -52,6 +54,24 @@ export default class DFSNodeStyler extends NodeStyler {
 
         const tf = attributes[NodeAttributes.TIME_OF_FINISH];
 
+        const d = attributes[NodeAttributes.DEPTH];
+        let dStr = "null";
+        if (d !== null) {
+            dStr = `${d}`;
+        }
+
+        const lp = attributes[NodeAttributes.LOWPOINT];
+        let lpStr = "null";
+        if (lp !== null) {
+            lpStr = `${lp}`;
+        }
+
+        const poc = attributes[NodeAttributes.BICONNECTED_COMPONENTS];
+        let pocStr = "null";
+        if (poc !== null) {
+            pocStr = `${poc}`;
+        }
+
         const label = 
 `${k}
 State: ${s}
@@ -59,7 +79,10 @@ Visited from: ${vf}
 Order of visit: ${ovStr}
 Time of visit: ${tv}
 Order of finish: ${ofStr}
-Time of finish: ${tf}`;
+Time of finish: ${tf}
+Depth: ${dStr}
+Lowpoint: ${lpStr}
+Biconnected components: ${pocStr}`;
 
         ret["label"] = label;
 

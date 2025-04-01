@@ -1,8 +1,8 @@
-import EdgeStyler from "./EdgeStyler";
+import EdgeStyler from "../../EdgeStyler";
 import { EdgeState } from "./DFSAlgorithm";
 import { EdgeAttributes } from "./DFSAlgorithm";
-import Globals from "./Globals";
-import ErrorThrower from "./ErrorThrower";
+import Globals from "../../Globals";
+import ErrorThrower from "../../ErrorThrower";
 
 const DEFAULT_CURVATURE = 1;
 

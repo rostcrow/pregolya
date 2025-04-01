@@ -1,7 +1,7 @@
 
-import EdgeStyler from "./EdgeStyler";
-import ErrorThrower from "./ErrorThrower";
-import Globals from "./Globals";
+import EdgeStyler from "../../EdgeStyler";
+import ErrorThrower from "../../ErrorThrower";
+import Globals from "../../Globals";
 import { EdgeAttributes, EdgeState } from "./TarjanAlgorithm";
 
 export default class TarjanEdgeStyler extends EdgeStyler {

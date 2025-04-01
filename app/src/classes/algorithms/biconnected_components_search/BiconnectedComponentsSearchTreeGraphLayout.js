@@ -1,10 +1,11 @@
-import { NodeAttributes } from "./BFSAlgorithm";
-import GraphLayout from "./GraphLayout";
+
+import { NodeAttributes,  } from "./BiconnectedComponentsSearchAlgorithm";
+import GraphLayout from "../../GraphLayout";
 
 const HORIZONTAL_SPACE = 10;
 const VERTICAL_SPACE = 30;
 
-export default class BFSTreeGraphLayout extends GraphLayout {
+export default class BiconnectedComponentsSearchTreeGraphLayout extends GraphLayout {
 
     assign(graph) {
 
@@ -19,13 +20,13 @@ export default class BFSTreeGraphLayout extends GraphLayout {
             }
 
             nodeList.sort(compareOrderOfVisit);
-        }   
+        }
         
         //Finding root nodes
         let nodesQueue = [];
 
         graph.forEachNode((node) => {
-            if (graph.inNeighbors(node).length === 0) {
+            if (graph.getNodeAttribute(node, NodeAttributes.VISITED_FROM) === null) {
                 graph.setNodeAttribute(node, "level", 0);
                 nodesQueue.push(node);
             }
@@ -62,13 +63,24 @@ export default class BFSTreeGraphLayout extends GraphLayout {
             graph.setNodeAttribute(node, "y", -1 * VERTICAL_SPACE * level);
 
             //Getting children in order
-            let children = structuredClone(graph.outNeighbors(node));
+            const outEdges = structuredClone(graph.outboundEdges(node));
+            let children = [];
+            for (const edge of outEdges) {
+
+                const neighbor = graph.opposite(node, edge);
+                if (graph.getNodeAttribute(neighbor, NodeAttributes.VISITED_FROM) === node) {
+                    children.push(graph.opposite(node, edge));
+                }
+            }
+
             sortByOrderOfVisit(children);
             
             //Setting level to children and pushing to queue
             for (const child of children) {
-                graph.setNodeAttribute(child, "level", level + 1);
-                nodesQueue.push(child);
+                if (graph.hasNodeAttribute(child, "level") === false) {
+                    graph.setNodeAttribute(child, "level", level + 1);
+                    nodesQueue.push(child);
+                }
             }
         }
     }

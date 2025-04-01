@@ -1,7 +1,6 @@
-import EdgeStyler from "./EdgeStyler";
-import { EdgeState } from "./BFSAlgorithm";
-import { EdgeAttributes } from "./BFSAlgorithm";
-import Globals from "./Globals";
+import EdgeStyler from "../../EdgeStyler";
+import { EdgeState, EdgeAttributes } from "./BFSAlgorithm";
+import Globals from "../../Globals";
 
 export default class BFSEdgeStyler extends EdgeStyler {
 
