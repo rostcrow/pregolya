@@ -107,10 +107,18 @@ export default function GraphForm ( {graphTags, graphTagIndex, handleGraphChoose
             let graphTag;
             try {
                 graphTag = GraphTagFactory.createFromJson(json);
+                let graph = graphTag.getAlgorithmGraph();
+
+                //Checkign number of nodes
+                if (graph.nodes().length === 0) {
+                    //No nodes
+                    invokeFileAlert("Graph has no nodes", ["Graph needs to have at least one node"])
+                    return;
+                }
+
             } catch (e) {
                 //Error met
                 invokeFileAlert("Graph is illogical", [e.message]);
-
                 return;
             }
 
