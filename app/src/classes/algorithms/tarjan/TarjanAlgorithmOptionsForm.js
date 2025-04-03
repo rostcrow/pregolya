@@ -4,7 +4,8 @@ import Form from "react-bootstrap/Form";
 export default class TarjanAlgorithmOptionsForm extends AlgorithmOptionsForm {
 
     getDefaultOptions() {
-        return ["0"];
+        let firstNode = this.getGraph().nodes()[0]
+        return [firstNode];
     }
 
     #startingNodeChange(e) {

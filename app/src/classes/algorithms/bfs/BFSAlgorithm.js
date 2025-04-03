@@ -218,7 +218,7 @@ export default class BFSAlgorithm extends Algorithm {
         graph.setNodeAttribute(neighbor, NodeAttributes.DISTANCE_FROM_START, distance);
 
         //Highlighting edge
-        this.#highlightedEdge = graph.edges(this.#currentNode, neighbor)[0];
+        this.#highlightedEdge = graph.outboundEdges(this.#currentNode, neighbor)[0];
         graph.setEdgeAttribute(this.#highlightedEdge, EdgeAttributes.STATE, EdgeState.HIGHLIGHTED);
 
 
