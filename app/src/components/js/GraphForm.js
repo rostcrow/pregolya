@@ -9,7 +9,7 @@ import GraphTagFactory from "../../classes/GraphTagFactory";
 import { useState } from "react";
 import FileAlert from "./FileAlert";
 
-const MAX_FILE_SIZE_KB = 500;
+const MAX_FILE_SIZE_KB = 100;
 
 export function clearFileInput() {
     document.getElementById("file-input").value = "";
