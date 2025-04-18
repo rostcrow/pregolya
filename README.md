@@ -1,3 +1,9 @@
+# Pregolya - Visualizer of Graph Algorithms
+This program is a web app for visualizing graph algorithms (BFS, DFS, biconnected components search, Tarjan algorithm) on chosen or uploaded graphs.
+
+This program was developed for purposes of bachelor's thesis called 'Visualisation of Graph Algorithms' at VSB-TUO, Ostrava, Czech republic.
+Author: Rostislav Vrána
+
 # Setup guide
 
 ## Installing prerequisities
