@@ -1,11 +1,22 @@
-import { Attributes } from "graphology-types";
 
+// IMPORT
+// Sigma.js
 import { EdgeDisplayData, NodeDisplayData, RenderParams } from "sigma/types";
 import { floatColor } from "sigma/utils";
 import { EdgeProgram } from "sigma/rendering";
 import { ProgramInfo } from "sigma/rendering";
+
+// Graphology
+import { Attributes } from "graphology-types";
+
+// My classes
 import FRAGMENT_SHADER_SOURCE from "./frag.glsl.ts";
 import VERTEX_SHADER_SOURCE from "./vert.glsl.ts";
+
+// CODE
+/* 
+  Code taken from Sigma.js GitHub and modified to fulfill my needs.
+*/
 
 const { UNSIGNED_BYTE, FLOAT } = WebGLRenderingContext;
 
@@ -62,15 +73,16 @@ export default class EdgeLoopProgram<
       array[startIndex++] = edgeIndex;
     };
 
+    // Making ring
     let alphaDegInc = 1;
     for (let alphaDeg = 0; alphaDeg < 360; alphaDeg += alphaDegInc) {
 
-      //First triangle
+      // First triangle
       addPointToArray(alphaDeg, 1);
       addPointToArray(alphaDeg + alphaDegInc, 1);
       addPointToArray(alphaDeg + alphaDegInc, 0);
 
-      //Second triangle
+      // Second triangle
       addPointToArray(alphaDeg, 0);
       addPointToArray(alphaDeg, 1);
       addPointToArray(alphaDeg + alphaDegInc, 0);

@@ -1,11 +1,17 @@
+
+// IMPORT
+// My classes
 import EdgeStyler from "../../EdgeStyler";
 import { EdgeState } from "./DFSAlgorithm";
 import { EdgeAttributes } from "./DFSAlgorithm";
 import Globals from "../../Globals";
 import ErrorThrower from "../../ErrorThrower";
 
+// CODE
+// Globals
 const DEFAULT_CURVATURE = 1;
 
+// This class represents edge styler for search tree of depth-first search
 export default class DFSEdgeStyler extends EdgeStyler {
 
     style(attributes) {
@@ -14,6 +20,7 @@ export default class DFSEdgeStyler extends EdgeStyler {
 
         let curve = false;
 
+        // Returns if edge of given attributes shou
         function shouldBeCurved(attributes) {
             return attributes["type"] !== "loopArrow" && attributes["type"] !== "curvedArrow";
         }
@@ -41,7 +48,7 @@ export default class DFSEdgeStyler extends EdgeStyler {
                 ErrorThrower.notExpectedState();
         }
 
-        //Curving edge
+        // Curving edge
         if (curve) {
             ret["curvature"] = DEFAULT_CURVATURE;
             ret["type"] = "curvedArrow";

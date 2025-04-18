@@ -1,3 +1,14 @@
+
+// IMPORT
+// React Bootstrap
+import Table from "react-bootstrap/Table";
+
+// My components
+import Legend from "../../../components/js/Legend";
+import ComponentsList from "../../../components/js/ComponentsList";
+import GraphView from "../../../components/js/GraphView";
+
+// My classes
 import SideComponentsFactory from "../../SideComponentsFactory";
 import SideComponent from "../../SideComponent";
 import { EdgeAttributes, EdgeState, NodeAttributes, NodeState } from "./BiconnectedComponentsSearchAlgorithm";
@@ -8,13 +19,11 @@ import GraphDataStyler from "../../GraphDataStyler";
 import BiconnectedComponentsSearchNodeStyler from "./BiconnectedComponentsSearchNodeStyler";
 import BiconnectedComponentsSearchTreeEdgeStyler from "./BiconnectedComponentsSearchTreeEdgeStyler";
 import GraphDataApplier from "../../GraphDataApplier";
-import GraphView from "../../../components/js/GraphView";
 import GraphDataExtractor from "../../GraphDataExtractor";
-import Table from "react-bootstrap/Table";
 import BiconnectedComponentsSearchTreeGraphLayout from "./BiconnectedComponentsSearchTreeGraphLayout";
-import Legend from "../../../components/js/Legend";
-import ComponentsList from "../../../components/js/ComponentsList";
 
+// CODE
+// This class represents side components factory for biconnected components search
 export default class BiconnectedComponentsSearchSideComponentsFactory extends SideComponentsFactory{
 
     createSideComponents(algorithmState) {
@@ -22,14 +31,14 @@ export default class BiconnectedComponentsSearchSideComponentsFactory extends Si
         const graphData = algorithmState.getGraphData();
         const additionalData = algorithmState.getAdditionalData();
 
-        //Stack
+        // Stack
         const stack = structuredClone(additionalData.get("stack"));
         stack.reverse();
 
         let stackItems = [];
         for (const node of stack) {
             
-            //Color
+            // Color
             let style = {};
             if (node[NodeAttributes.STATE] === NodeState.NEW_IN_STACK) {
                 style = {color: Globals.Colors.GREEN};
@@ -77,34 +86,34 @@ export default class BiconnectedComponentsSearchSideComponentsFactory extends Si
                 </Table>
             </div>
 
-        //Tree
+        // Tree
         const nodes = graphData.getNodes();
         const edges = graphData.getEdges();
 
         const outputNodes = {};
         const outputEdges = {};
 
-        //Adding nodes
+        // Adding nodes
         for (const key in nodes) {
             if (nodes[key][NodeAttributes.STATE] !== NodeState.NOT_VISITED) {
                 outputNodes[key] = nodes[key];
             }
         }
 
-        //Adding edges
+        // Adding edges
         for (const key in edges) {
             if (edges[key][EdgeAttributes.STATE] !== EdgeState.NORMAL) {
-                //Visited edge
+                // Visited edge
 
                 let edge = edges[key];
 
-                //Changing direction of edge if needed
+                // Changing direction of edge if needed
                 const sourceNode = edge["source"];
                 const targetNode = edge["target"];
 
                 if (edges[key][EdgeAttributes.STATE] === EdgeState.TREE || 
                     edges[key][EdgeAttributes.STATE] === EdgeState.BRIDGE) {
-                    //Tree edge (including bridges)
+                    // Tree edge (including bridges)
 
                     if (nodes[sourceNode][NodeAttributes.VISITED_FROM] === targetNode) {
                         edge["source"] = targetNode;
@@ -112,7 +121,7 @@ export default class BiconnectedComponentsSearchSideComponentsFactory extends Si
                     }
 
                 } else if (edges[key][EdgeAttributes.STATE] === EdgeState.BACK) {
-                    //Back edge
+                    // Back edge
 
                     if (nodes[sourceNode][NodeAttributes.TIME_OF_VISIT] < nodes[targetNode][NodeAttributes.TIME_OF_VISIT]) {
                         edge["source"] = targetNode;
@@ -124,21 +133,21 @@ export default class BiconnectedComponentsSearchSideComponentsFactory extends Si
             }
         }
 
-        //Making graph
+        // Making graph
         let treeGraphData = new GraphData(true, false, outputNodes, outputEdges);
         const treeGraph = GraphFactory.createDisplayGraph(treeGraphData);
         treeGraphData = GraphDataExtractor.extractData(treeGraph);
 
-        //Styling graph
+        // Styling graph
         const graphDataStyler = new GraphDataStyler 
             (new BiconnectedComponentsSearchNodeStyler(), new BiconnectedComponentsSearchTreeEdgeStyler());
         let styledData = graphDataStyler.style(treeGraphData);
         GraphDataApplier.applyNodesEdges(treeGraph, styledData);
 
-        //Making component
+        // Making component
         const treeComponent = <GraphView graph={treeGraph} layout={new BiconnectedComponentsSearchTreeGraphLayout()}></GraphView>;
 
-        //Order of visit
+        // Order of visit
         const orderOfVisit = additionalData.get("orderOfVisit");
 
         let orderOfVisitItems = [];
@@ -152,7 +161,7 @@ export default class BiconnectedComponentsSearchSideComponentsFactory extends Si
                 vf = "null";
             }
 
-            //Style
+            // Style
             let style = {};
             switch (node[NodeAttributes.STATE]) {
                 case NodeState.NEW_IN_STACK:
@@ -165,7 +174,7 @@ export default class BiconnectedComponentsSearchSideComponentsFactory extends Si
                     style = {color: Globals.Colors.TEAL};
                     break;
                 default:
-                    //Empty
+                    // Empty
             }
 
             orderOfVisitItems.push(
@@ -195,7 +204,7 @@ export default class BiconnectedComponentsSearchSideComponentsFactory extends Si
                 </Table>
             </div>;
 
-        //Order of finish
+        // Order of finish
         const orderOfFinish = additionalData.get("orderOfFinish");
 
         let orderOfFinishItems = [];
@@ -206,6 +215,7 @@ export default class BiconnectedComponentsSearchSideComponentsFactory extends Si
             const tv = node[NodeAttributes.TIME_OF_VISIT];
             const tf = node[NodeAttributes.TIME_OF_FINISH];
             
+            // Style
             let style = {}
             if (node[NodeAttributes.STATE] === NodeState.ARTICULATION) {
                 style = {color: Globals.Colors.TEAL}
@@ -238,12 +248,12 @@ export default class BiconnectedComponentsSearchSideComponentsFactory extends Si
                 </Table>
             </div>;
 
-        //Components
+        // Components
         const components = additionalData.get("components");
         const componentsComponent = <ComponentsList components={components} 
             zeroComponentsMessage={"Components are counted as the last step of algorithm"} />;
         
-        //Legend
+        // Legend
         const legendData = [
             {"title": "Nodes", "type": "circle", "rows": [
                 {"color": Globals.Colors.DEFAULT_NODE_COLOR, "key": NodeState.NOT_VISITED},
@@ -262,7 +272,6 @@ export default class BiconnectedComponentsSearchSideComponentsFactory extends Si
         ]
 
         const legendComponent = <Legend data={legendData} />
-
 
         return [new SideComponent("Stack", stackComponent), new SideComponent("DFS tree", treeComponent), 
             new SideComponent("Order of visit", orderOfVisitComponent), 

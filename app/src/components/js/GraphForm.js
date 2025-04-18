@@ -1,38 +1,52 @@
 
+// IMPORT
+// React
+import { useState } from "react";
+
+// React Bootstrap
 import Card from "react-bootstrap/Card";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
-import JSONValidator from '../../classes/JSONValidator';
-import GraphTagFactory from "../../classes/GraphTagFactory";
-import { useState } from "react";
+
+// My components
 import FileAlert from "./FileAlert";
 
+// My classes
+import JSONValidator from '../../classes/JSONValidator';
+import GraphTagFactory from "../../classes/GraphTagFactory";
+
+// CODE
+// Globals
 const MAX_FILE_SIZE_KB = 100;
 
+// Clears file input
 export function clearFileInput() {
     document.getElementById("file-input").value = "";
 }
 
+// This components represents form for choosing or uploading graph
 export default function GraphForm ( {graphTags, graphTagIndex, handleGraphChooseChange, handleGraphInputChange, handleSubmit, handleClear} ) {
 
-    //States
+    // States
     const [showFileAlert, setShowFileAlert] = useState(false);
     const [fileAlertHeading, setFileAlertHeading] = useState("");
     const [fileAlertErrorStack, setFileAlertErrorStack] = useState([]);
 
-    //Initiliazing options in select
+    // Initiliazing options in select
     let options = [];
     for (const [index, graphTag] of graphTags.entries()) {
         const graphName = graphTag.getNameWithType();
         options.push(<option key={index} value={index}>{graphName}</option>);
     }
 
+    // Handles graph select change
     function handleSelectOnChange(e) {
         handleGraphChooseChange(Number(e.target.value));
     }
 
+    // Invokes file alert
     function invokeFileAlert(heading, errorStack) {
         clearFileInput();
         handleGraphInputChange(null);
@@ -41,22 +55,23 @@ export default function GraphForm ( {graphTags, graphTagIndex, handleGraphChoose
         setShowFileAlert(true);
     }
 
+    // Handles input control change
     function handleControlOnChange(e) {
 
-        //Closing previous file alert
+        // Closing previous file alert
         setShowFileAlert(false);
 
-        //Getting file
+        // Getting file
         let file = e.target.files[0];
 
-        //Checking file undefined
+        // Checking file undefined
         if (file === undefined) {
             return;
         }
 
-        //Checking file size
+        // Checking file size
         if (file.size > MAX_FILE_SIZE_KB * 1024) {
-            //Too big
+            // Too big
 
             const message = `Maximum size of chosen file can be ${MAX_FILE_SIZE_KB} kB`;
             invokeFileAlert("File too large", [message]);
@@ -65,7 +80,7 @@ export default function GraphForm ( {graphTags, graphTagIndex, handleGraphChoose
         }
 
         if (file.size === 0) {
-            //Empty
+            // Empty
 
             const message = "Chosen file is empty";
             invokeFileAlert("Empty file", [message]);
@@ -73,7 +88,7 @@ export default function GraphForm ( {graphTags, graphTagIndex, handleGraphChoose
             return;
         }
 
-        //Reading
+        // Reading
         var reader = new FileReader();
 
         reader.onload = function(e) {
@@ -81,11 +96,11 @@ export default function GraphForm ( {graphTags, graphTagIndex, handleGraphChoose
             let content = e.target.result;
             let json;    
         
-            //Parsing json
+            // Parsing json
             try {
                 json = JSON.parse(content);
             } catch (e) {
-                //Parsing error
+                // Parsing error
 
                 const message = "Content of chosen file is not JSON format";
                 invokeFileAlert("Content not JSON", [message]);
@@ -93,36 +108,36 @@ export default function GraphForm ( {graphTags, graphTagIndex, handleGraphChoose
                 return;
             }
 
-            //Validating json schema
+            // Validating json schema
             const errorsArray = JSONValidator.validate(json);
 
             if (errorsArray.length !== 0) {
-                //Some erros found in schema
+                // Some errors found in schema
                 invokeFileAlert("Schema of JSON not valid", errorsArray);
 
                 return;
             }
 
-            //Creating graph tag
+            // Creating graph tag
             let graphTag;
             try {
                 graphTag = GraphTagFactory.createFromJson(json);
                 let graph = graphTag.getAlgorithmGraph();
 
-                //Checkign number of nodes
+                // Checking number of nodes
                 if (graph.nodes().length === 0) {
-                    //No nodes
+                    // No nodes
                     invokeFileAlert("Graph has no nodes", ["Graph needs to have at least one node"])
                     return;
                 }
 
             } catch (e) {
-                //Error met
+                // Error met
                 invokeFileAlert("Graph is illogical", [e.message]);
                 return;
             }
 
-            //Successful
+            // Successful
             handleGraphInputChange(graphTag);
         };
 
@@ -130,7 +145,7 @@ export default function GraphForm ( {graphTags, graphTagIndex, handleGraphChoose
 
     }
 
-    //Counting if submit is disabled
+    // Counting if submit is disabled
     let submitDisabled = false;
     if (graphTagIndex === -1) {
 
@@ -143,7 +158,7 @@ export default function GraphForm ( {graphTags, graphTagIndex, handleGraphChoose
         }
     }
 
-    //Style of file input
+    // Style of file input
     let fileInputClassName = "";
     if (showFileAlert) {
         fileInputClassName = "border border-5 border-danger-subtle"

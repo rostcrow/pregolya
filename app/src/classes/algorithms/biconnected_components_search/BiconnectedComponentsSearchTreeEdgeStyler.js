@@ -1,10 +1,16 @@
+
+// IMPORT
+// My classes
 import EdgeStyler from "../../EdgeStyler";
 import Globals from "../../Globals";
 import { EdgeAttributes, EdgeState } from "./BiconnectedComponentsSearchAlgorithm";
 import ErrorThrower from "../../ErrorThrower";
 
+// CODE
+// Globals
 const DEFAULT_CURVATURE = 1;
 
+// This class represents edge styler for search tree of biconnected components search
 export default class BiconnectedComponentsSearchTreeEdgeStyler extends EdgeStyler {
 
     style(attributes) {
@@ -13,10 +19,12 @@ export default class BiconnectedComponentsSearchTreeEdgeStyler extends EdgeStyle
 
         let curve = false;
 
+        // Returns if edge of given attributes should be curved
         function shouldBeCurved(attributes) {
             return attributes["type"] !== "loopArrow" && attributes["type"] !== "curvedArrow";
         }
 
+        // Setting color
         switch (attributes[EdgeAttributes.STATE]) {
             case EdgeState.NORMAL:
                 ret["color"] = Globals.Colors.DEFAULT_EDGE_COLOR;
@@ -35,6 +43,7 @@ export default class BiconnectedComponentsSearchTreeEdgeStyler extends EdgeStyle
                 ErrorThrower.notExpectedState();
         }
 
+        // Setting curve
         if (curve) {
             ret["curvature"] = DEFAULT_CURVATURE;
             ret["type"] = "curvedArrow";

@@ -1,19 +1,28 @@
 
-//Libraries
+// IMPORT
+// React
 import { useState, useRef, createContext, } from 'react';
+
+// React Bootstrap
 import Container from 'react-bootstrap/esm/Container.js';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import Card from 'react-bootstrap/Card';
 
-//Components
+// Graphology
+import circlepack from "graphology-layout/circlepack";
+import circular from "graphology-layout/circular";
+import random from "graphology-layout/random";
+
+// My components
 import GraphCanvas from './GraphCanvas.js';
 import AlgorithmControlPanel from './AlgorithmControlPanel.js';
 import SidePanel from './SidePanel.js';
 import GraphForm from './GraphForm.js';
 import AlgorithmForm from "./AlgorithmForm.js";
-import Card from 'react-bootstrap/Card';
+import { clearFileInput } from './GraphForm.js';
 
-//Classes
+// My classes
 import graphExamplesArray from "../../graph_examples/all_examples.js";
 import GraphDataApplier from '../../classes/GraphDataApplier.js';
 import AlgorithmTag from '../../classes/AlgorithmTag.js';
@@ -39,16 +48,13 @@ import TarjanNodeStyler from '../../classes/algorithms/tarjan/TarjanNodeStyler.j
 import TarjanEdgeStyler from '../../classes/algorithms/tarjan/TarjanEdgeStyler.js';
 import TarjanSideComponentsFactory from '../../classes/algorithms/tarjan/TarjanSideComponentsFactory.js';
 import TarjanAlgorithmOptionsForm from '../../classes/algorithms/tarjan/TarjanAlgorithmOptionsForm.js';
-import circlepack from "graphology-layout/circlepack";
-import circular from "graphology-layout/circular";
-import random from "graphology-layout/random";
 import GraphologyGraphLayout from "../../classes/GraphologyGraphLayout.js";
 import NoOverlapGraphLayout from "../../classes/NoOverlapGraphLayout.js";
 import CompatibilityTable from '../../classes/CompatibilityTable.js';
 import GraphTagFactory from '../../classes/GraphTagFactory.js';
-import { clearFileInput } from './GraphForm.js';
 
-//Initializing graphs
+// CODE
+// Initializing graphs
 const graphsJSON = graphExamplesArray;
 const graphTags = [];
 for (const graphJSON of graphsJSON) {
@@ -58,7 +64,7 @@ for (const graphJSON of graphsJSON) {
 const firstGraph = graphTags[0].getDisplayGraph();
 const firstAlgGraph = graphTags[0].getAlgorithmGraph();
 
-//Initializing algorithms
+// Initializing algorithms
 const bfs = new AlgorithmTag(
   "Breadth-first search (BFS)", 
   new CompatibilityTable(
@@ -109,24 +115,25 @@ const tarjan = new AlgorithmTag(
 const algorithmTags = [bfs, dfs, bcs, tarjan];
 const firstAlgorithmFacade = new AlgorithmFacade(firstAlgGraph, algorithmTags[0], "0");
 
-//Initializing layouts
+// Initializing layouts
 const layouts = {
     "Circlepack": new GraphologyGraphLayout(circlepack), "Circular": new GraphologyGraphLayout(circular), 
     "No overlap": new NoOverlapGraphLayout(), "Random": new GraphologyGraphLayout(random)};
 
-//Creating graph context
+// Creating graph context
 export const GraphContext = createContext(null);
 
-//App states
+// App states
 const AppStates = {
     GRAPH_PREVIEW: 0,
     GRAPH_CHOSEN: 1,
     ALGORITHM: 2
 }
 
+// Main active component of program
 export default function AppControl() {
 
-    //States and refs
+    // States and refs
     const [previousAppState, setPreviousAppState] = useState(AppStates.ALGORITHM);
     const [appState, setAppState] = useState(AppStates.ALGORITHM);
 
@@ -149,24 +156,24 @@ export default function AppControl() {
     const [algorithmControlState, setAlgorithmControlState] = useState("start");
     const running = useRef(false);
     
-    //Initializing opitons form
+    // Initializing opitons form
     if (options === null && optionsForm === null) {
         handleAlgorithmTagChooseChange(0);
     }
     
-    //Handles graph choose change
+    // Handles graph choose change
     function handleGraphTagChooseChange (graphTagIndex) {
 
         setChosenGraphTagIndex(graphTagIndex);
 
         if (graphTagIndex === -1) {
-            //Cleared
+            // Cleared
             setChosenGraphTag(previousGraphTag);
             setVisibleGraph(workingGraph);
             setAppState(previousAppState);
 
         } else {
-            //Showing graph preview
+            // Showing graph preview
             clearFileInput();
             setChosenGraphTag(graphTags[graphTagIndex]);
             setVisibleGraph(graphTags[graphTagIndex].getDisplayGraph());
@@ -175,14 +182,14 @@ export default function AppControl() {
         }
     }
 
-    //Handles graph input
+    // Handles graph input
     function handleGraphInputChange ( graphTag ) {
 
         if (graphTag === null) {
-            //Input failure
+            // Input failure
 
             if (chosenGraphTagIndex === -1) {
-                //Clearing preview of previously inputted
+                // Clearing preview of previously inputted
                 setChosenGraphTag(previousGraphTag);
                 setVisibleGraph(workingGraph);
                 setAppState(previousAppState);
@@ -191,7 +198,7 @@ export default function AppControl() {
             return;
         }
 
-        //Successful input
+        // Successful input
         setChosenGraphTagIndex(-1);
         setChosenGraphTag(graphTag);
         setVisibleGraph(graphTag.getDisplayGraph());
@@ -199,7 +206,7 @@ export default function AppControl() {
 
     }
 
-    //Handles graph form submit
+    // Handles graph form submit
     function handleGraphFormSubmit () {
 
         setPreviousAppState(AppStates.GRAPH_CHOSEN);
@@ -213,7 +220,7 @@ export default function AppControl() {
 
     }
 
-    //Handles graph form clear changes
+    // Handles graph form clear changes
     function handleGraphFormClearChanges() {
         
         setAppState(previousAppState);
@@ -224,12 +231,12 @@ export default function AppControl() {
 
     }
 
-    //Handles algorithm choose change
+    // Handles algorithm choose change
     function handleAlgorithmTagChooseChange(algorithmTagIndex) {
 
         setChosenAlgorithmTagIndex(algorithmTagIndex);
 
-        //Setting options
+        // Setting options
         const optionsFormClass = algorithmTags[algorithmTagIndex].getOptionsFormClass()
         const newOptionsForm = new optionsFormClass(options, setOptions, chosenGraphTag.getAlgorithmGraph());
 
@@ -240,18 +247,18 @@ export default function AppControl() {
 
     }
 
-    //Handles algortihm form submit
+    // Handles algortihm form submit
     function handleAlgorithmFormSubmit() {
 
         let graphTag = chosenGraphTag;
 
-        //Checking convertibility
+        // Checking convertibility
         const algorithmTag = algorithmTags[chosenAlgorithmTagIndex];
         const compatibilityTable = algorithmTag.getCompatibilityTable();
         const graphType = graphTag.getType();
 
         if (compatibilityTable.isConvertible(graphType)) {
-            //Graph should be converted
+            // Graph should be converted
             const graphTagCopy = graphTag.clone();
             const convertibleTo = compatibilityTable.getConvertibleTo(graphType);
             graphTagCopy.convertTo(convertibleTo);
@@ -279,34 +286,32 @@ export default function AppControl() {
 
     }
 
-    //Handles algorithm form clear changes
+    // Handles algorithm form clear changes
     function handleAlgorithmFormClearChanges() {
-
         handleAlgorithmTagChooseChange(previousAlgorithmTagIndex);
-
     }
 
-    //Updates graph and side panel
+    // Updates graph and side panel
     function update() {
   
-      //Updating GraphCanvas
+      // Updating GraphCanvas
       const graphData = algorithmFacade.getCurrentGraphData();
       GraphDataApplier.applyNodesEdges(workingGraph, graphData);
       setGraphRefreshState(graphRefreshState => !graphRefreshState);
   
-      //Updating SidePanel
+      // Updating SidePanel
       const sideComp = algorithmFacade.getCurrentSideComponents();
       setSideComponents(sideComp);
     }
 
-    //Creating graph context value used for potential side panel interactivity
+    // Creating graph context value used for potential side panel interactivity
     const graphContextValue = {
         "graph": visibleGraph, 
         "state": graphRefreshState,
         "setState": setGraphRefreshState
     }
 
-    //Determining displayed components based on app state
+    // Determining displayed components based on app state
     let algorithmFormDisplay = 'block';
     let algorithmControlPanelDisplay = 'block';
     let sidePanelDisplay = 'block';

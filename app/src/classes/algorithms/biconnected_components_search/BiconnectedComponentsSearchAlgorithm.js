@@ -1,7 +1,12 @@
+
+// IMPORT
+// My classes
 import Algorithm from "../../Algorithm";
 import ErrorThrower from "../../ErrorThrower";
 import AdditionalData from "../../AdditionalData";
 
+// CODE
+// Globals
 const State = {
     STARTING_NODE_TO_STACK: 0,
     NODE_FROM_STACK: 1,
@@ -42,6 +47,7 @@ export const EdgeState = {
     BACK: "Back"
 }
 
+// This class represents biconnected components search algorithm
 export default class BiconnectedComponentsSearchAlgorithm extends Algorithm {
 
     #startingNode;
@@ -51,12 +57,12 @@ export default class BiconnectedComponentsSearchAlgorithm extends Algorithm {
     #orderOfVisit;
     #orderOfFinish;
     #time;
-    #newRoot;
+    #newRoot; // Node, which will become next root node for algorithm to continue
 
     constructor(graph, startingNode) {
         super(graph);
 
-        //Initializing attributes
+        // Initializing attributes
         this.#startingNode = startingNode;
         this.#state = State.STARTING_NODE_TO_STACK;
         this.#stack = [];
@@ -66,7 +72,7 @@ export default class BiconnectedComponentsSearchAlgorithm extends Algorithm {
         this.#time = 1;
         this.#newRoot = null;
 
-        //Setting up nodes
+        // Setting up nodes
         graph.forEachNode((node) => {
             graph.setNodeAttribute(node, NodeAttributes.STATE, NodeState.NOT_VISITED);
             graph.setNodeAttribute(node, NodeAttributes.VISITED_FROM, null);
@@ -79,7 +85,7 @@ export default class BiconnectedComponentsSearchAlgorithm extends Algorithm {
             graph.setNodeAttribute(node, NodeAttributes.BICONNECTED_COMPONENTS, null);
         });
 
-        //Setting up edges
+        // Setting up edges
         graph.forEachEdge((edge) => {
             graph.setEdgeAttribute(edge, EdgeAttributes.STATE, EdgeState.NORMAL);
         });
@@ -112,19 +118,21 @@ export default class BiconnectedComponentsSearchAlgorithm extends Algorithm {
 
     }
 
+    // Sets starting node and pushes it to stack
     #stateStartingNodeToStack(graph) {
 
-        //Pushing starting node to stack
+        // Pushing starting node to stack
         this.#stack.push(this.#startingNode);
         graph.setNodeAttribute(this.#startingNode, NodeAttributes.STATE, NodeState.NEW_IN_STACK);
         graph.setNodeAttribute(this.#startingNode, NodeAttributes.ORDER_OF_VISIT, this.#orderOfVisit++);
         graph.setNodeAttribute(this.#startingNode, NodeAttributes.TIME_OF_VISIT, this.#time++);
         graph.setNodeAttribute(this.#startingNode, NodeAttributes.DEPTH, 0);
 
-        //Switching state
+        // Switching state
         this.#state = State.NODE_FROM_STACK;
     }
 
+    // Gets node from stack and sets it as current
     #stateNodeFromStack(graph) {
 
         //Last current change
@@ -141,9 +149,21 @@ export default class BiconnectedComponentsSearchAlgorithm extends Algorithm {
 
     }
 
+    /*
+        Handles current node.
+
+        Tries to finds unused edge from current node and use it.
+        If this edge leads to unvisited node, this node is pushed to stack to be set as current in the next step.
+
+        If no unused edge is found, determines if the current is articulation or not.
+        Bridges are counted aswell.
+        It also counts lowpoint for current.
+        Then it pops current from stack and checks if stack is not empty.
+        If stack is empty, tries to find new root.
+    */
     #stateHandleCurrent(graph) {
 
-        //Finding next appropriate edge
+        // Finding next appropriate edge
         const edges = graph.outboundEdges(this.#currentNode);
         let nextEdge = null;
 
@@ -155,9 +175,9 @@ export default class BiconnectedComponentsSearchAlgorithm extends Algorithm {
         }
 
         if (nextEdge !== null) {
-            //Next edge found
+            // Next edge found
 
-            //Determining edge state
+            // Determining edge state
             let edgeState = null;
             const opposite = graph.opposite(this.#currentNode, nextEdge);
             const oppositeState = graph.getNodeAttribute(opposite, NodeAttributes.STATE);
@@ -166,7 +186,7 @@ export default class BiconnectedComponentsSearchAlgorithm extends Algorithm {
                 case NodeState.NOT_VISITED:
                     edgeState = EdgeState.TREE;
     
-                    //Pushing to stack
+                    // Pushing to stack
                     this.#stack.push(opposite);
                     graph.setNodeAttribute(opposite, NodeAttributes.STATE, NodeState.NEW_IN_STACK);
                     graph.setNodeAttribute(opposite, NodeAttributes.VISITED_FROM, this.#currentNode);
@@ -188,10 +208,10 @@ export default class BiconnectedComponentsSearchAlgorithm extends Algorithm {
                     ErrorThrower.notExpectedState();
             }
 
-            //Changing edge state
+            // Changing edge state
             graph.setEdgeAttribute(nextEdge, EdgeAttributes.STATE, edgeState);
 
-            //Switching state
+            // Switching state
             if (edgeState === EdgeState.TREE) {
                 this.#state = State.NODE_FROM_STACK;
             } else {
@@ -199,34 +219,34 @@ export default class BiconnectedComponentsSearchAlgorithm extends Algorithm {
             }
 
         } else {
-            //Next edge not found
+            // Next edge not found
 
-            //Determining articulation for current
+            // Determining articulation for current
             let articualtion = false;
             const currentDepth = graph.getNodeAttribute(this.#currentNode, NodeAttributes.DEPTH);
             const currentVisitedFrom = graph.getNodeAttribute(this.#currentNode, NodeAttributes.VISITED_FROM);
             const neighbors = graph.neighbors(this.#currentNode);
 
             if (currentVisitedFrom === null) {
-                //Root node
+                // Root node
                 
                 let num_children = 0;
                 for (const neighbor of neighbors) {
                     if (graph.getNodeAttribute(neighbor, NodeAttributes.VISITED_FROM) === this.#currentNode) {
-                        //Neighbor is child
+                        // Neighbor is child
 
                         num_children++;
                         if (num_children > 1) {
-                            //Current is articulation point
+                            // Current is articulation point
                             articualtion = true;
                         }
 
                         if (graph.getNodeAttribute(neighbor, NodeAttributes.LOWPOINT) > currentDepth) {
-                            //Potential bridge
+                            // Potential bridge
 
                             const connectingEdges = graph.edges(this.#currentNode, neighbor);
                             if (connectingEdges.length === 1) {
-                                //Connecting edge is a bridge
+                                // Connecting edge is a bridge
                                 graph.setEdgeAttribute(connectingEdges[0], EdgeAttributes.STATE, EdgeState.BRIDGE);
                             }
                         }
@@ -234,22 +254,22 @@ export default class BiconnectedComponentsSearchAlgorithm extends Algorithm {
                 }
 
             } else {
-                //Other nodes
+                // Other nodes
 
                 for (const neighbor of neighbors) {
                     if (graph.getNodeAttribute(neighbor, NodeAttributes.VISITED_FROM) === this.#currentNode) {
-                        //Neighbor is child
+                        // Neighbor is child
     
                         if (graph.getNodeAttribute(neighbor, NodeAttributes.LOWPOINT) >= currentDepth) {
-                            //Current is articulation point
+                            // Current is articulation point
                             articualtion = true;
 
                             if (graph.getNodeAttribute(neighbor, NodeAttributes.LOWPOINT) > currentDepth) {
-                                //Potential bridge
+                                // Potential bridge
 
                                 const connectingEdges = graph.edges(this.#currentNode, neighbor);
                                 if (connectingEdges.length === 1) {
-                                    //Connecting edge is a bridge
+                                    // Connecting edge is a bridge
                                     graph.setEdgeAttribute(connectingEdges[0], EdgeAttributes.STATE, EdgeState.BRIDGE);
                                 }
                             }
@@ -260,15 +280,14 @@ export default class BiconnectedComponentsSearchAlgorithm extends Algorithm {
                 }
             }
 
-
-            //Setting state based on articulation
+            // Setting state based on articulation
             if (articualtion) {
                 graph.setNodeAttribute(this.#currentNode, NodeAttributes.STATE, NodeState.ARTICULATION);
             } else {
                 graph.setNodeAttribute(this.#currentNode, NodeAttributes.STATE, NodeState.NOT_ARTICULATION);
             }
 
-            //Counting low point
+            // Counting low point
             let lowpoint = currentDepth;
             
             for (const neighbor of neighbors) {
@@ -277,7 +296,7 @@ export default class BiconnectedComponentsSearchAlgorithm extends Algorithm {
                 const neighborLowpoint = graph.getNodeAttribute(neighbor, NodeAttributes.LOWPOINT);
                 
                 if (neighbor !== currentVisitedFrom) {
-                    //Neighbor is not parent
+                    // Neighbor is not parent
 
                     if (neighborDepth < lowpoint) {
                         lowpoint = neighborDepth;
@@ -285,7 +304,7 @@ export default class BiconnectedComponentsSearchAlgorithm extends Algorithm {
                 }
 
                 if (neighbor !== currentVisitedFrom && neighborLowpoint !== null) {
-                    //Neighbor is child
+                    // Neighbor is child
 
                     if (graph.getNodeAttribute(neighbor, NodeAttributes.LOWPOINT) < lowpoint) {
                         lowpoint = graph.getNodeAttribute(neighbor, NodeAttributes.LOWPOINT);
@@ -295,23 +314,23 @@ export default class BiconnectedComponentsSearchAlgorithm extends Algorithm {
 
             graph.setNodeAttribute(this.#currentNode, NodeAttributes.LOWPOINT, lowpoint);
 
-            //Popping current from stack
+            // Popping current from stack
             this.#stack.pop();
             graph.setNodeAttribute(this.#currentNode, NodeAttributes.ORDER_OF_FINISH, this.#orderOfFinish++);
             graph.setNodeAttribute(this.#currentNode, NodeAttributes.TIME_OF_FINISH, this.#time++);
             this.#currentNode = null;
 
-            //Switching state
+            // Switching state
             if (this.#stack.length !== 0) {
                 this.#state = State.NODE_FROM_STACK;
                 return;
             }
 
-            //Finding not visited node
+            // Finding not visited node
             const nodes = graph.nodes();
             for (let i = 0; i < nodes.length; i++) {
                 if (graph.getNodeAttribute(nodes[i], NodeAttributes.STATE) === NodeState.NOT_VISITED) {
-                    //Found
+                    // Found
 
                     this.#newRoot = nodes[i];
                     this.#state = State.NEW_ROOT_TO_STACK;
@@ -319,44 +338,48 @@ export default class BiconnectedComponentsSearchAlgorithm extends Algorithm {
                 }
             }
 
-            //Not found
+            // Not found
             this.#state = State.COUNT_COMPONENTS;
 
         }
     }
 
+    // Sets new root attributes and pushes it to stack
     #stateNewRootToStack(graph) {
 
-        //Pushing starting node to stack
+        // Pushing new root node to stack
         this.#stack.push(this.#newRoot);
         graph.setNodeAttribute(this.#newRoot, NodeAttributes.STATE, NodeState.NEW_IN_STACK);
         graph.setNodeAttribute(this.#newRoot, NodeAttributes.ORDER_OF_VISIT, this.#orderOfVisit++);
         graph.setNodeAttribute(this.#newRoot, NodeAttributes.TIME_OF_VISIT, this.#time++);
         graph.setNodeAttribute(this.#newRoot, NodeAttributes.DEPTH, 0);
 
-        //Switching state
+        // Switching state
         this.#state = State.NODE_FROM_STACK;
 
     }
 
+    // Last step of algorithm. Counts components based on found articulations and bridges.
     #stateCountComponents(graph) {
 
-        //Setting initial value for each node
+        // Setting initial value for each node
         graph.forEachNode((node) => {
             graph.setNodeAttribute(node, NodeAttributes.BICONNECTED_COMPONENTS, []);
         });
 
-        //Helpful funcs
+        // Returns if node was visited
         function isVisited(node) {
             const components = graph.getNodeAttribute(node, NodeAttributes.BICONNECTED_COMPONENTS);
             return components.length !== 0;
         }
 
+        // Returns if edge is bridge
         function isBridge(edge) {
             const state = graph.getEdgeAttribute(edge, EdgeAttributes.STATE);
             return state === EdgeState.BRIDGE;
         }
 
+        // Returns if given node is part of given component
         function isPartOfComponent(node, component) {
             const components = graph.getNodeAttribute(node, NodeAttributes.BICONNECTED_COMPONENTS);
             for (const comp of components) {
@@ -368,16 +391,17 @@ export default class BiconnectedComponentsSearchAlgorithm extends Algorithm {
             return false;
         }
 
+        // Adds given node to given component
         function pushComponent(node, component) {
             const components = graph.getNodeAttribute(node, NodeAttributes.BICONNECTED_COMPONENTS);
             components.push(component);
             graph.setNodeAttribute(node, NodeAttributes.BICONNECTED_COMPONENTS, components);
         }
 
-        //Sorting nodes to components
+        // Sorting nodes to components
         let componentCounter = 1;
 
-        //Making bridge connected nodes as 2 node components
+        // Making bridge connected nodes as 2 node components
         const edges = graph.edges();
         for (const edge of edges) {
             if (isBridge(edge)) {
@@ -387,14 +411,14 @@ export default class BiconnectedComponentsSearchAlgorithm extends Algorithm {
             }
         }
 
-        //Making larger components
+        // Making larger components
         function dfsVisit(node) {
             pushComponent(node, componentCounter);
 
             const edges = graph.edges(node);
             for (const edge of edges) {
                 if (!isBridge(edge)) {
-                    //Opposite node potentialy in same component
+                    // Opposite node potentialy in same component
 
                     const opposite = graph.opposite(node, edge);
 
@@ -409,13 +433,13 @@ export default class BiconnectedComponentsSearchAlgorithm extends Algorithm {
 
         for (const node of nodes) {
             if (!isVisited(node)) {
-                //Node is not part of any component yet
+                // Node is not part of any component yet
                 dfsVisit(node);
                 componentCounter++;
             }
         }
 
-        //Algorithm ends
+        // Algorithm ends
         this.setFinished();
 
     }
@@ -424,6 +448,7 @@ export default class BiconnectedComponentsSearchAlgorithm extends Algorithm {
 
         let graph = this.getGraph();
 
+        // Returns JSON object containing all attributes for given node
         function getAttributes(node) {
             const attributes = structuredClone(graph.getNodeAttributes(node));
             attributes["key"] = node;
@@ -431,13 +456,13 @@ export default class BiconnectedComponentsSearchAlgorithm extends Algorithm {
             return attributes;
         }
 
-        //Stack
+        // Stack
         let stack = [];
         for (const node of this.#stack) {
             stack.push(getAttributes(node));
         }
 
-        //Order of visit
+        // Order of visit
         let orderOfVisit = [];
         graph.forEachNode((node, attributes) => {
             if (attributes[NodeAttributes.ORDER_OF_VISIT] !== null) {
@@ -449,7 +474,7 @@ export default class BiconnectedComponentsSearchAlgorithm extends Algorithm {
             return a[NodeAttributes.ORDER_OF_VISIT] - b[NodeAttributes.ORDER_OF_VISIT];
         });
 
-        //Order of finish
+        // Order of finish
         let orderOfFinish = [];
         graph.forEachNode((node, attributes) => {
             if (attributes[NodeAttributes.ORDER_OF_FINISH] !== null) {
@@ -461,7 +486,7 @@ export default class BiconnectedComponentsSearchAlgorithm extends Algorithm {
             return a[NodeAttributes.ORDER_OF_FINISH] - b[NodeAttributes.ORDER_OF_FINISH];
         });
 
-        //Components
+        // Components
         let componentsNodes = [];
 
         graph.forEachNode((node, attributes) => {
@@ -471,16 +496,16 @@ export default class BiconnectedComponentsSearchAlgorithm extends Algorithm {
             for (const index in nodecomponents) {
                 const nodecomponent = nodecomponents[index];
 
-                //Checking accessibility of array in components variable
+                // Checking accessibility of array in components variable
                 if (componentsNodes.length < nodecomponent) {
-                    //Not accessible, need to make
+                    // Not accessible, need to make
                     const d = nodecomponent - componentsNodes.length;
                     for (let i = 0; i < d; i++) {
                         componentsNodes.push([]);
                     }
                 }
 
-                //Pushing node to component
+                // Pushing node to component
                 componentsNodes[nodecomponent - 1].push(node);
             }
 
@@ -499,9 +524,9 @@ export default class BiconnectedComponentsSearchAlgorithm extends Algorithm {
 
                 for (const inComponent of intersection) {
                     
-                    //Checking accessibility of array in components variable
+                    // Checking accessibility of array in components variable
                     if (componentsEdges.length < inComponent) {
-                        //Not accessible, need to make
+                        // Not accessible, need to make
                         const d = inComponent - componentsEdges.length;
                         for (let i = 0; i < d; i++) {
                             componentsEdges.push([]);

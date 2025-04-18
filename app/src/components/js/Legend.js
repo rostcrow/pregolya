@@ -1,8 +1,13 @@
 
+// IMPORT
+// React Boostrap
 import Table from "react-bootstrap/esm/Table";
 
+// CODE
+// Component for displaying legend of algorithm nodes and edges colors
 export default function Legend( {data} ) {
 
+    // Creating content
     let content = [];
 
     for (const sublegend of data) {

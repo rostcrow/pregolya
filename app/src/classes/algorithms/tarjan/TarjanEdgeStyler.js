@@ -1,9 +1,13 @@
 
+// IMPORT
+// My classes
 import EdgeStyler from "../../EdgeStyler";
 import ErrorThrower from "../../ErrorThrower";
 import Globals from "../../Globals";
 import { EdgeAttributes, EdgeState } from "./TarjanAlgorithm";
 
+// CODE
+// This class represents edge styler for Tarjan algorithm
 export default class TarjanEdgeStyler extends EdgeStyler {
 
     style(attributes) {

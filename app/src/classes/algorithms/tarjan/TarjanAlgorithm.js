@@ -1,7 +1,12 @@
+
+// IMPORT
+// My classes
 import AdditionalData from "../../AdditionalData";
 import Algorithm from "../../Algorithm";
 import ErrorThrower from "../../ErrorThrower";
 
+// CODE
+// Globals
 const State = {
     SETTING_STARTING_NODE: 1,
     CHANGE_CURRENT: 2,
@@ -41,6 +46,7 @@ export const EdgeState = {
     IN_COMPONENT: "Part of component"
 }
 
+// This class represents Tarjan algorithm
 export default class TarjanAlgorithm extends Algorithm {
 
     #state;
@@ -53,14 +59,14 @@ export default class TarjanAlgorithm extends Algorithm {
     #components;
     #currentNode;
     #currentNeighbors;
-    #componentCounter;
+    #componentCounter; // Holds ordinal number for next component
     #highlightedEdge;
-    #newStartingNode;
+    #newStartingNode; // Node, which will become next root node for algorithm to continue 
 
     constructor(graph, startingNode) {
         super(graph);
 
-        //Initializing attributes
+        // Initializing attributes
         this.#state = State.SETTING_STARTING_NODE;
         this.#startingNode = startingNode;
         this.#dfsStack = [];
@@ -75,7 +81,7 @@ export default class TarjanAlgorithm extends Algorithm {
         this.#highlightedEdge = null;
         this.#newStartingNode = null;
 
-        //Setting initial value to nodes
+        // Setting initial value to nodes
         graph.forEachNode((node) => {
             graph.setNodeAttribute(node, NodeAttributes.STATE, NodeState.NOT_VISITED);
             graph.setNodeAttribute(node, NodeAttributes.VISITED, false);
@@ -88,7 +94,7 @@ export default class TarjanAlgorithm extends Algorithm {
             graph.setNodeAttribute(node, NodeAttributes.IN_COMPONENT, null);
         });
 
-        //Setting initial value to edges
+        // Setting initial value to edges
         graph.forEachEdge((edge) => {
             graph.setEdgeAttribute(edge, EdgeAttributes.STATE, EdgeState.NOT_VISITED);
         });
@@ -98,7 +104,7 @@ export default class TarjanAlgorithm extends Algorithm {
         
         const graph = this.getGraph();
 
-        //Dehighlighting edge
+        // Dehighlighting edge
         if (this.#highlightedEdge !== null) {
             graph.setEdgeAttribute(this.#highlightedEdge, EdgeAttributes.STATE, EdgeState.NOT_IN_COMPONENT);
             this.#highlightedEdge = null;
@@ -123,9 +129,10 @@ export default class TarjanAlgorithm extends Algorithm {
 
     }
 
+    // Sets starting node and pushes it to stack
     #stateSettingStartingNode(graph) {
 
-        //Setting starting node
+        // Setting starting node
         this.#dfsStack.push(this.#startingNode);
         graph.setNodeAttribute(this.#startingNode, NodeAttributes.STATE, NodeState.NEW_IN_DFS_STACK);
         graph.setNodeAttribute(this.#startingNode, NodeAttributes.VISITED, true);
@@ -135,13 +142,14 @@ export default class TarjanAlgorithm extends Algorithm {
         graph.setNodeAttribute(this.#startingNode, NodeAttributes.LOWLINK, this.#time++);
         this.#componentStack.push(this.#startingNode);
 
-        //Switching state
+        // Switching state
         this.#state = State.CHANGE_CURRENT;
     }
 
+    // Changes current to node on the top of the stack
     #stateChangeCurrent(graph) {
 
-        //Changing current
+        // Changing current
         if (this.#currentNode !== null) {
             graph.setNodeAttribute(this.#currentNode, NodeAttributes.STATE, NodeState.IN_DFS_STACK);
         }
@@ -150,18 +158,28 @@ export default class TarjanAlgorithm extends Algorithm {
         graph.setNodeAttribute(this.#currentNode, NodeAttributes.STATE, NodeState.CURRENT);
         this.#currentNeighbors = graph.outNeighbors(this.#currentNode);
 
-        //Switching state
+        // Switching state
         this.#state = State.HANDLE_CURRENT;
     }
 
+    /*
+        Handles current node.
+
+        Tries to visit next unvisited neighbor.
+        If found, it is pushed to dfs stack to be set current in the next step.
+        
+        If no neighbor left, counts the lowlink for current.
+        Checkis if component is complete. If it is, creates a new one.
+        Finishes current node.
+     */
     #stateHandleCurrent(graph) {
 
-        //Visiting next neighbor
+        // Visiting next neighbor
         while (this.#currentNeighbors.length !== 0) {
 
             const neighbor = this.#currentNeighbors.shift();
             if (!graph.getNodeAttribute(neighbor, NodeAttributes.VISITED)) {
-                //Visiting
+                // Visiting
                 this.#dfsStack.push(neighbor);
                 graph.setNodeAttribute(neighbor, NodeAttributes.STATE, NodeState.NEW_IN_DFS_STACK);
                 graph.setNodeAttribute(neighbor, NodeAttributes.VISITED, true);
@@ -171,11 +189,11 @@ export default class TarjanAlgorithm extends Algorithm {
                 graph.setNodeAttribute(neighbor, NodeAttributes.LOWLINK, this.#time++);
                 this.#componentStack.push(neighbor);
 
-                //Higlighting edge
+                // Higlighting edge
                 this.#highlightedEdge = graph.outEdges(this.#currentNode, neighbor)[0];
                 graph.setEdgeAttribute(this.#highlightedEdge, EdgeAttributes.STATE, EdgeState.HIGHLIGHTED);
 
-                //Switching state
+                // Switching state
                 this.#state = State.CHANGE_CURRENT;
 
                 return;
@@ -188,15 +206,15 @@ export default class TarjanAlgorithm extends Algorithm {
             }
         }
 
-        //Checking component finish
+        // Checking component finish
         const currentTimeOfVisit = graph.getNodeAttribute(this.#currentNode, NodeAttributes.TIME_OF_VISIT);
         const currentLowlink = graph.getNodeAttribute(this.#currentNode, NodeAttributes.LOWLINK);
 
         if (currentTimeOfVisit === currentLowlink) {
-            //Component finished
+            // Component finished
             const finishedComponent = [];
 
-            //Popping component stack until current popped
+            // Popping component stack until current popped
             while(true) {
                 const node = this.#componentStack.pop();
                 graph.setNodeAttribute(node, NodeAttributes.IN_COMPONENT, this.#componentCounter);
@@ -208,7 +226,7 @@ export default class TarjanAlgorithm extends Algorithm {
                 }
             }
 
-            //Coloring edges inside component
+            // Coloring edges inside component
             for (const nodeIndex in finishedComponent) {
                 const node = finishedComponent[nodeIndex];
                 const edges = graph.outEdges(node);
@@ -218,19 +236,19 @@ export default class TarjanAlgorithm extends Algorithm {
                     const opposite = graph.opposite(node, edge);
 
                     if (graph.getNodeAttribute(opposite, NodeAttributes.IN_COMPONENT) === this.#componentCounter) {
-                        //Edge is inside component
+                        // Edge is inside component
                         graph.setEdgeAttribute(edge, EdgeAttributes.STATE, EdgeState.IN_COMPONENT);
                     }
                 }
 
             }
 
-            //Pushing component to result
+            // Pushing component to result
             this.#components.push(structuredClone(finishedComponent));
             this.#componentCounter++;
         }
 
-        //Finishing current
+        // Finishing current
         this.#dfsStack.pop();
         graph.setNodeAttribute(this.#currentNode, NodeAttributes.ORDER_OF_FINISH, this.#orderOfFinish++);
         graph.setNodeAttribute(this.#currentNode, NodeAttributes.TIME_OF_FINISH, this.#time++);
@@ -241,16 +259,16 @@ export default class TarjanAlgorithm extends Algorithm {
 
         this.#currentNode = null;
 
-        //Switching state
+        // Switching state
         if (this.#dfsStack.length === 0) {
-            //Looking for next node
+            // Looking for next node
 
             const nodes = graph.nodes();
             for (const index in nodes) {
                 const node = nodes[index];
 
                 if (!graph.getNodeAttribute(node, NodeAttributes.VISITED)) {
-                    //Found
+                    // Found
 
                     this.#newStartingNode = node;
                     this.#state = State.NEW_STARTING_NODE;
@@ -259,7 +277,7 @@ export default class TarjanAlgorithm extends Algorithm {
                 }
             }
 
-            //Not found - algorithm ends
+            // Not found - algorithm ends
             this.setFinished();
             return;
         }
@@ -267,6 +285,7 @@ export default class TarjanAlgorithm extends Algorithm {
         this.#state = State.CHANGE_CURRENT;
     }
 
+    // Sets new starting node and pushes it to dfs stack
     #stateNewStartingNode(graph) {
 
         this.#dfsStack.push(this.#newStartingNode);
@@ -285,6 +304,7 @@ export default class TarjanAlgorithm extends Algorithm {
 
         let graph = this.getGraph();
 
+        // Gets all attributes of given node as JSON object
         function getAttributes(node) {
             
             let attributes = structuredClone(graph.getNodeAttributes(node));
@@ -293,19 +313,19 @@ export default class TarjanAlgorithm extends Algorithm {
             return attributes;
         }
 
-        //DFS stack
+        // DFS stack
         const dfsStackOut = []
         for (const node of this.#dfsStack) {
             dfsStackOut.push(getAttributes(node));
         }
 
-        //Component stack
+        // Component stack
         const componentStackOut = [];
         for (const node of this.#componentStack) {
             componentStackOut.push(getAttributes(node));
         }
 
-        //Order of visit
+        // Order of visit
         let orderOfVisit = [];
         graph.forEachNode((node, attributes) => {
             if (attributes[NodeAttributes.TIME_OF_VISIT] !== null) {
@@ -317,7 +337,7 @@ export default class TarjanAlgorithm extends Algorithm {
             return a[NodeAttributes.ORDER_OF_VISIT] - b[NodeAttributes.ORDER_OF_VISIT];
         });
 
-        //Order of finish
+        // Order of finish
         let orderOfFinish = [];
         graph.forEachNode((node, attributes) => {
             if (attributes[NodeAttributes.TIME_OF_FINISH] !== null) {
@@ -329,7 +349,7 @@ export default class TarjanAlgorithm extends Algorithm {
             return a[NodeAttributes.ORDER_OF_FINISH] - b[NodeAttributes.ORDER_OF_FINISH];
         });
 
-        //Components
+        // Components
         let componentsNodes = [];
 
         graph.forEachNode((node, attributes) => {
@@ -338,16 +358,16 @@ export default class TarjanAlgorithm extends Algorithm {
 
             if (inComponent !== null) {
 
-                //Checking accessibility of array in components variable
+                // Checking accessibility of array in components variable
                 if (componentsNodes.length < inComponent) {
-                    //Not accessible, need to make
+                    // Not accessible, need to make
                     const d = inComponent - componentsNodes.length;
                     for (let i = 0; i < d; i++) {
                         componentsNodes.push([]);
                     }
                 }
 
-                //Pushing node to component
+                // Pushing node to component
                 componentsNodes[inComponent - 1].push(node);
             }
         });
@@ -360,12 +380,12 @@ export default class TarjanAlgorithm extends Algorithm {
             const componentTarget = graph.getNodeAttribute(graph.target(edge), NodeAttributes.IN_COMPONENT);
 
             if (componentSource === componentTarget && componentSource !== null) {
-                //Edge inside component
+                // Edge inside component
                 const inComponent = componentSource;
 
-                //Checking accessibility of array in components variable
+                // Checking accessibility of array in components variable
                 if (componentsEdges.length < inComponent) {
-                    //Not accessible, need to make
+                    // Not accessible, need to make
                     const d = inComponent - componentsEdges.length;
                     for (let i = 0; i < d; i++) {
                         componentsEdges.push([]);
@@ -378,7 +398,7 @@ export default class TarjanAlgorithm extends Algorithm {
 
         const components = {"nodes": componentsNodes, "edges": componentsEdges};
 
-        //Edge between components
+        // Edges between components
         const edgesBetweenComponents = [];
         const numComponents = componentsNodes.length;
 
@@ -399,7 +419,7 @@ export default class TarjanAlgorithm extends Algorithm {
                 const targetComponent = graph.getNodeAttribute(graph.target(edge), NodeAttributes.IN_COMPONENT);
 
                 if (sourceComponent !== null && targetComponent !== null) {
-                    //Edge between components
+                    // Edge is between components
                     edgesBetweenComponents[sourceComponent - 1][targetComponent - 1] = true;
                 }
             }

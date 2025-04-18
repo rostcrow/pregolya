@@ -1,15 +1,21 @@
+
+// IMPORT
+// My classes
 import GraphLayout from "../../GraphLayout";
 import { NodeAttributes, } from "./TarjanAlgorithm";
 
+// CODE
+// Globals
 const HORIZONTAL_SPACE = 10;
 const VERTICAL_SPACE = 30;
 const CURVATURE = 1;
 
+// This class represents layout for search tree of Tarjan algorithm
 export default class TarjanTreeGraphLayout extends GraphLayout {
 
     assign(graph) {
 
-        //Helpful func to sort nodes by order of visit
+        // Sorts nodes by order of visit
         function sortByOrderOfVisit(nodeList) {
 
             function compareOrderOfVisit(a, b) {
@@ -22,7 +28,7 @@ export default class TarjanTreeGraphLayout extends GraphLayout {
             nodeList.sort(compareOrderOfVisit);
         }
         
-        //Finding root nodes
+        // Finding root nodes
         let nodesQueue = [];
 
         graph.forEachNode((node) => {
@@ -32,48 +38,48 @@ export default class TarjanTreeGraphLayout extends GraphLayout {
             }
         });
 
-        //Sorting root nodes
+        // Sorting root nodes
         sortByOrderOfVisit(nodesQueue);
 
-        //Preparing level counter
+        // Preparing level counter
         const levelCounter = [0];
 
-        //Setting position to nodes
+        // Setting position to nodes
         while(nodesQueue.length !== 0) {
 
-            //Getting node from queue
+            // Getting node from queue
             const node = nodesQueue.shift();
 
-            //Getting level
+            // Getting level
             const level = graph.getNodeAttribute(node, "level");
 
-            //Checking level counter length
+            // Checking level counter length
             if (levelCounter.length < level + 1) {
-                //Level counter is short
+                // Level counter is short
 
-                //Adding levels to counter
+                // Adding levels to counter
                 const d = level + 1 - levelCounter.length;
                 for (let i = 0; i < d; i++) {
                     levelCounter.push(0);
                 }
             }
 
-            //Setting position
+            // Setting position
             graph.setNodeAttribute(node, "x", HORIZONTAL_SPACE * levelCounter[level]++);
             graph.setNodeAttribute(node, "y", -1 * VERTICAL_SPACE * level);
 
-            //Getting children in order
+            // Getting children in order
             const outEdges = structuredClone(graph.outboundEdges(node));
             let children = [];
             for (const edge of outEdges) {
 
                 const child = graph.opposite(node, edge);
                 if (graph.getNodeAttribute(child, NodeAttributes.VISITED_FROM) === node) {
-                    //Is child
+                    // Is child
                     children.push(child);
 
                 } else {
-                    //Not a child, forward or back edge
+                    // Not a child, forward or back edge
                     graph.setEdgeAttribute(edge, "curvature", CURVATURE);
                     graph.setEdgeAttribute(edge, "type", "curvedArrow");
                 }
@@ -81,7 +87,7 @@ export default class TarjanTreeGraphLayout extends GraphLayout {
 
             sortByOrderOfVisit(children);
             
-            //Setting level to children and pushing to queue
+            // Setting level to children and pushing to queue
             for (const child of children) {
                 if (graph.hasNodeAttribute(child, "level") === false) {
                     graph.setNodeAttribute(child, "level", level + 1);

@@ -1,13 +1,18 @@
+
+// IMPORT
+// My classes
 import NodeStyler from "../../NodeStyler";
 import { NodeState, NodeAttributes } from "./BFSAlgorithm";
 import Globals from "../../Globals";
 
+// CODE
+// This class represents node styler for breadth-first search
 export default class BFSNodeStyler extends NodeStyler {
 
     style(attributes) {
         let ret = {};
 
-        //Setting color
+        // Setting color
         switch(attributes[NodeAttributes.STATE]) {
             case NodeState.NOT_VISITED:
                 ret["color"] = Globals.Colors.DEFAULT_NODE_COLOR;
@@ -28,9 +33,8 @@ export default class BFSNodeStyler extends NodeStyler {
             default:
         }
 
-        //Setting label
+        // Setting label
         const k = attributes["key"];
-
         const s = attributes[NodeAttributes.STATE];
 
         const ov = attributes[NodeAttributes.ORDER_OF_VISIT];

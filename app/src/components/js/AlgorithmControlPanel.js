@@ -1,21 +1,29 @@
-import Container from "react-bootstrap/esm/Container";
+
+// IMPORT
+// React
 import { BsChevronBarLeft, BsChevronLeft, BsChevronRight, BsChevronBarRight, BsPlay, BsStop } from "react-icons/bs";
 import { useState  } from "react";
+
+// React Bootstrap
+import Container from "react-bootstrap/esm/Container";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
 import Button from "react-bootstrap/Button";
 
+// CODE
+// Globals
 const DEFAULT_RUN_BUTTON_STYLE = "btn-primary";
 const DEFAULT_OTHER_BUTTON_STYLE = "btn-secondary";
 
+// This component is used for controlling algorithm
 export default function AlgorithmControlPanel( {running, controlState, setControlStateFunc, algorithmFacade, updateFunc} ) {
 
-    //States
+    // States
     const [runSpeed, setRunSpeed] = useState(6);
 
-    //Setting dynamic variables dependent on runningState
+    // Setting dynamic variables dependent on runningState
     let buttonStyles = [DEFAULT_OTHER_BUTTON_STYLE, DEFAULT_OTHER_BUTTON_STYLE, 
         DEFAULT_RUN_BUTTON_STYLE, DEFAULT_OTHER_BUTTON_STYLE, DEFAULT_OTHER_BUTTON_STYLE];
 
@@ -27,7 +35,7 @@ export default function AlgorithmControlPanel( {running, controlState, setContro
     let runButtonIcon;
 
     if (controlState === "running") {
-        //Running
+        // Running
 
         runButtonTitle = "Stop";
         runButtonIcon = <BsStop />;
@@ -42,14 +50,14 @@ export default function AlgorithmControlPanel( {running, controlState, setContro
         runButtonIcon = <BsPlay />
 
         if (controlState === "start") {
-            //Start, can't go further back
+            // Start, can't go further back
 
             for (const index of leftButtonStyles) {
                 buttonStyles[index] += " disabled";
             }
 
         } else if (controlState === "end") {
-            //End, can't go further forward
+            // End, can't go further forward
 
             for (const index of rightButtonStyles) {
                 buttonStyles[index] += " disabled";
@@ -63,7 +71,7 @@ export default function AlgorithmControlPanel( {running, controlState, setContro
     let forwardButtonStyle = buttonStyles[3];
     let endButtonStyle = buttonStyles[4];
 
-    //Sets correct control state based on algorithm
+    // Sets correct control state based on algorithm
     function setStartMiddleEnd() {
         if (algorithmFacade.algorithmIsOnStart()) {
             setControlStateFunc("start");
@@ -74,30 +82,30 @@ export default function AlgorithmControlPanel( {running, controlState, setContro
         }
     }
 
-    //Handle jump to start button
+    // Handles jump to start button
     function handleJumpToStart() {
-        //Updating graph
+        // Updating graph
         algorithmFacade.jumpToStart();
         updateFunc();
         
-        //Updating state
+        // Updating state
         setStartMiddleEnd();
     }
     
-    //Handle back button
+    // Handles back button
     function handleBack() {
-        //Updating graph
+        // Updating graph
         algorithmFacade.back();
         updateFunc();
 
-        //Updating states
+        // Updating states
         setStartMiddleEnd();
     }
 
-    //Handle run button
+    // Handles run button
     function handleRun() {
 
-        //Run/stop logic
+        // Run/stop logic
         if (running.current === true) {
             running.current = false;
             setStartMiddleEnd();
@@ -107,15 +115,15 @@ export default function AlgorithmControlPanel( {running, controlState, setContro
             setControlStateFunc("running");
         }
 
-        //Sleep function
+        // Makes program sleep for given amount of ms
         function sleep(ms) {
             return new Promise(resolve => setTimeout(resolve, ms));
         }
 
-        //Counting sleep duration
+        // Counting sleep duration
         let sleepDurationMs = 1000 / runSpeed;
 
-        //Run function
+        // Run function
         async function run() {
             while(running.current && !algorithmFacade.algorithmIsOnEnd()) {
                 algorithmFacade.forward();
@@ -132,27 +140,27 @@ export default function AlgorithmControlPanel( {running, controlState, setContro
         run();
     }
 
-    //Handle forward button
+    // Handle sforward button
     function handleForward() {
-        //Updating graph
+        // Updating graph
         algorithmFacade.forward();
         updateFunc();
 
-        //Updating state
+        // Updating state
         setStartMiddleEnd();
     }
 
-    //Handle jump to end button
+    // Handle jump to end button
     function handleJumpToEnd() {
-        //Updating graph
+        // Updating graph
         algorithmFacade.jumpToEnd();
         updateFunc();
 
-        //Updating states
+        // Updating states
         setStartMiddleEnd();
     }
 
-    //Handle range change
+    // Handle range change
     function handleRange(value) {
         setRunSpeed(value);
     }

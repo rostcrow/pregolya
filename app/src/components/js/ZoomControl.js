@@ -1,14 +1,23 @@
-import { useSigma } from "@react-sigma/core";
+
+// IMPORT
+// React
 import { BsZoomIn, BsZoomOut } from "react-icons/bs";
 
+// React Sigma
+import { useSigma } from "@react-sigma/core";
+
+// CODE
+// Component consisting of two buttons to control graph zoom
 export default function ZoomControl() {
 
     const sigma = useSigma();
 
+    // Zooms in
     function zoomIn () {
         sigma.getCamera().animatedZoom();
     }
 
+    // Zooms out
     function zoomOut () {
         sigma.getCamera().animatedUnzoom();
     }

@@ -1,7 +1,13 @@
 
-import AlgorithmOptionsForm from "../../AlgorithmOptionsForm";
+// IMPORT
+// React Bootstrap
 import Form from 'react-bootstrap/Form';
 
+// My classes
+import AlgorithmOptionsForm from "../../AlgorithmOptionsForm";
+
+// CODE
+// This class represents option form for breadth-first search
 export default class BFSAlgorithmOptionsForm extends AlgorithmOptionsForm {
     
     getDefaultOptions() {
@@ -9,6 +15,7 @@ export default class BFSAlgorithmOptionsForm extends AlgorithmOptionsForm {
         return [firstNode];
     }
 
+    // Changes starting node option
     #startingNodeChange(e) {
 
         let options = this.getOptions();
@@ -24,6 +31,7 @@ export default class BFSAlgorithmOptionsForm extends AlgorithmOptionsForm {
         const options = this.getOptions();
         const graph = this.getGraph();
 
+        // Making options
         let optionsHtml = [];
         graph.forEachNode((node) => {
             optionsHtml.push(<option key={node} value={node}>{node}</option>);

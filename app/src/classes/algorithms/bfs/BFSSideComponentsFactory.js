@@ -1,4 +1,13 @@
 
+// IMPORT
+// React Bootstrap
+import Table from "react-bootstrap/Table";
+
+// My components
+import GraphView from '../../../components/js/GraphView';
+import Legend from '../../../components/js/Legend';
+
+// My classes
 import SideComponent from '../../SideComponent';
 import SideComponentsFactory from "../../SideComponentsFactory";
 import Globals from '../../Globals';
@@ -8,12 +17,11 @@ import BFSNodeStyler from './BFSNodeStyler';
 import BFSEdgeStyler from './BFSEdgeStyler';
 import GraphData from '../../GraphData';
 import GraphFactory from '../../GraphFactory';
-import GraphView from '../../../components/js/GraphView';
 import BFSTreeGraphLayout from './BFSTreeGraphLayout';
 import GraphDataApplier from '../../GraphDataApplier';
-import Table from "react-bootstrap/Table";
-import Legend from '../../../components/js/Legend';
 
+// CODE
+// This class represents side component factory for breadth-first search
 export default class BFSSideComponentsFactory extends SideComponentsFactory {
 
     createSideComponents(algorithmState) {
@@ -21,7 +29,8 @@ export default class BFSSideComponentsFactory extends SideComponentsFactory {
         const graphData = algorithmState.getGraphData();
         const additionalData = algorithmState.getAdditionalData();
 
-        //QUEUE
+        // QUEUE
+        // Current node table item
         const currentNode = additionalData.get("currentNode");
 
         const currrentNodeItemStyle = {color: Globals.Colors.RED};
@@ -47,12 +56,13 @@ export default class BFSSideComponentsFactory extends SideComponentsFactory {
                 </tr>;
         }
 
+        // Queue itself
         let queue = additionalData.get("queue");
 
         let items = [];
         for (const node of queue) {
 
-            //Setting style
+            // Setting style
             let style = {};
             if (node["state"] === NodeState.NEW_IN_QUEUE) {
                 style = {color: Globals.Colors.GREEN};
@@ -63,7 +73,7 @@ export default class BFSSideComponentsFactory extends SideComponentsFactory {
                 vf = "null";
             }
 
-            //Pushing item
+            // Pushing item
             items.push(
                 <tr key={node["key"]}>
                     <td style={style}>{node["key"]}</td>
@@ -116,11 +126,11 @@ export default class BFSSideComponentsFactory extends SideComponentsFactory {
                 </div>
             </>;
 
-        //TREE
+        // TREE
         const nodes = graphData.getNodes();
         const edges = graphData.getEdges();
 
-        //Creating output nodes
+        // Creating output nodes
         let outputNodes = {};
         for (const key in nodes) {
             if (nodes[key][NodeAttributes.STATE] !== NodeState.NOT_VISITED) {
@@ -128,14 +138,14 @@ export default class BFSSideComponentsFactory extends SideComponentsFactory {
             }
         }
 
-        //Creating output edges
+        // Creating output edges
         let outputEdges = {};
         for (const key in edges) {
             if (edges[key][EdgeAttributes.STATE] !== EdgeState.NORMAL) {
                 
                 let edge = edges[key];
 
-                //Changing direction of edge if needed
+                // Changing direction of edge if needed
                 const sourceNode = edge["source"];
                 const targetNode = edge["target"];
 
@@ -148,25 +158,25 @@ export default class BFSSideComponentsFactory extends SideComponentsFactory {
             }
         }
 
-        //Making graph
+        // Making graph
         const treeGraphData = new GraphData(true, false, outputNodes, outputEdges);
         const treeGraph = GraphFactory.createDisplayGraph(treeGraphData);
 
-        //Styling graph
+        // Styling graph
         const graphDataStyler = new GraphDataStyler(new BFSNodeStyler(), new BFSEdgeStyler());
         const styledTreeGraphData = graphDataStyler.style(treeGraphData);
         GraphDataApplier.applyAll(treeGraph, styledTreeGraphData);
 
-        //Making component
+        // Making component
         const treeComponent = <GraphView graph={treeGraph} layout={new BFSTreeGraphLayout()}></GraphView>;
 
-        //ORDER OF VISIT
+        // ORDER OF VISIT
         const order = additionalData.get("order");
 
         let orderItems = [];
         for (const node of order) {
 
-            //Setting style
+            // Setting style
             let style = {};
             if (node["state"] === NodeState.NEW_IN_QUEUE) {
                 style = {color: Globals.Colors.GREEN};
@@ -206,7 +216,7 @@ export default class BFSSideComponentsFactory extends SideComponentsFactory {
                 </Table>
             </div>;
 
-        //LEGEND
+        // LEGEND
         const legendData = [
             {"title": "Nodes", "type": "circle", "rows": [
                 {"color": Globals.Colors.DEFAULT_NODE_COLOR, "key": NodeState.NOT_VISITED},

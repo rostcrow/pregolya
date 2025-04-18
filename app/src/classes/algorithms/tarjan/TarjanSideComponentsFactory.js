@@ -1,13 +1,24 @@
+
+// IMPORT
+// React Bootstrap
+import Table from "react-bootstrap/Table";
+
+// Graphology layouts
+import circlepack from "graphology-layout/circlepack";
+import circular from "graphology-layout/circular";
+
+// My components
+import ComponentsList from "../../../components/js/ComponentsList";
+import GraphCanvas from "../../../components/js/GraphCanvas";
+import Legend from "../../../components/js/Legend";
+import GraphView from "../../../components/js/GraphView";
+
+// My classes
 import SideComponentsFactory from "../../SideComponentsFactory";
 import SideComponent from "../../SideComponent";
 import { EdgeAttributes, EdgeState, NodeAttributes, NodeState } from "./TarjanAlgorithm";
 import Globals from "../../Globals";
-import Table from "react-bootstrap/Table";
-import ComponentsList from "../../../components/js/ComponentsList";
-import GraphCanvas from "../../../components/js/GraphCanvas";
 import GraphologyGraphLayout from "../../GraphologyGraphLayout";
-import circlepack from "graphology-layout/circlepack";
-import circular from "graphology-layout/circular";
 import TopologicalSortGraphLayout from "./TopologicalSortGraphLayout";
 import GraphData from "../../GraphData";
 import GraphFactory from "../../GraphFactory";
@@ -16,11 +27,10 @@ import GraphDataStyler from "../../GraphDataStyler";
 import TarjanNodeStyler from "./TarjanNodeStyler";
 import TarjanEdgeStyler from "./TarjanEdgeStyler";
 import GraphDataApplier from "../../GraphDataApplier";
-import GraphView from "../../../components/js/GraphView";
 import TarjanTreeGraphLayout from "./TarjanTreeGraphLayout";
-import Legend from "../../../components/js/Legend";
 import GraphTagFactory from "../../GraphTagFactory";
 
+// This class represents side components factory for Tarjan algorithm
 export default class TarjanSideComponentsFactory extends SideComponentsFactory {
 
     createSideComponents(algorithmState) {
@@ -28,14 +38,14 @@ export default class TarjanSideComponentsFactory extends SideComponentsFactory {
         const graphData = algorithmState.getGraphData();
         const additionalData = algorithmState.getAdditionalData();
 
-        //DFS stack
+        // DFS stack
         const dfsStack = structuredClone(additionalData.get("dfsStack"));
         dfsStack.reverse();
 
         let dfsStackItems = [];
         for (const node of dfsStack) {
             
-            //Color
+            // Color
             let style = {};
             if (node[NodeAttributes.STATE] === NodeState.NEW_IN_DFS_STACK) {
                 style = {color: Globals.Colors.GREEN};
@@ -83,48 +93,48 @@ export default class TarjanSideComponentsFactory extends SideComponentsFactory {
                 </Table>
             </div>
 
-        //DFS tree
+        // DFS tree
         const nodes = graphData.getNodes();
         const edges = graphData.getEdges();
 
         const outputNodes = {};
         const outputEdges = {};
 
-        //Adding nodes
+        // Adding nodes
         for (const key in nodes) {
             if (nodes[key][NodeAttributes.STATE] !== NodeState.NOT_VISITED) {
                 outputNodes[key] = nodes[key];
             }
         }
 
-        //Adding edges
+        // Adding edges
         for (const key in edges) {
             if (edges[key][EdgeAttributes.STATE] !== EdgeState.NOT_VISITED) {
                 outputEdges[key] = edges[key];
             }
         }
 
-        //Making graph
+        // Making graph
         let treeGraphData = new GraphData(true, false, outputNodes, outputEdges);
         const treeGraph = GraphFactory.createDisplayGraph(treeGraphData);
         treeGraphData = GraphDataExtractor.extractData(treeGraph);
 
-        //Styling graph
+        // Styling graph
         const graphDataStyler = new GraphDataStyler(new TarjanNodeStyler(), new TarjanEdgeStyler());
         const styledData = graphDataStyler.style(treeGraphData);
         GraphDataApplier.applyNodesEdges(treeGraph, styledData);
 
-        //Making component
+        // Making component
         const treeComponent = <GraphView graph={treeGraph} layout={new TarjanTreeGraphLayout()} />;
 
-        //Component stack
+        // Component stack
         const componentStack = structuredClone(additionalData.get("componentStack"));
         componentStack.reverse();
 
         let componentStackItems = [];
         for (const node of componentStack) {
             
-            //Color
+            // Color
             let style = {};
             if (node[NodeAttributes.STATE] === NodeState.NEW_IN_DFS_STACK) {
                 style = {color: Globals.Colors.GREEN};
@@ -176,7 +186,7 @@ export default class TarjanSideComponentsFactory extends SideComponentsFactory {
                 </Table>
             </div>
 
-        //Order of visit
+        // Order of visit
         const orderOfVisit = additionalData.get("orderOfVisit");
 
         let orderOfVisitItems = [];
@@ -190,7 +200,7 @@ export default class TarjanSideComponentsFactory extends SideComponentsFactory {
                 vf = "null";
             }
 
-            //Style
+            // Style
             let style = {};
             switch (node[NodeAttributes.STATE]) {
                 case NodeState.NEW_IN_DFS_STACK:
@@ -232,7 +242,7 @@ export default class TarjanSideComponentsFactory extends SideComponentsFactory {
                 </Table>
             </div>;
 
-        //Order of finish
+        // Order of finish
         const orderOfFinish = additionalData.get("orderOfFinish");
 
         let orderOfFinishItems = [];
@@ -275,15 +285,16 @@ export default class TarjanSideComponentsFactory extends SideComponentsFactory {
                 </Table>
             </div>;
 
-        //Components
+        // Components
         const components = additionalData.get("components");
         const componentsComponent = <ComponentsList components={components}
             zeroComponentsMessage={"No components"}/>;
 
-        //Components graph
+        // Components graph
         const componentsNodes = components["nodes"];
         const componentNamePrefix = "Comp. ";
 
+        // Adding nodes
         const componentsGraphNodes = [];
         for (let i = 0; i < componentsNodes.length; i++) {
             componentsGraphNodes.push(componentNamePrefix + String(i + 1));
@@ -291,6 +302,7 @@ export default class TarjanSideComponentsFactory extends SideComponentsFactory {
         
         const edgesBetweenComponents = additionalData.get("edgesBetweenComponents");
 
+        // Adding edges
         const componentsGraphEdges = [];
         for (let s = 0; s < edgesBetweenComponents.length; s++) {
             for (let t = 0; t < edgesBetweenComponents[s].length; t++) {
@@ -301,6 +313,7 @@ export default class TarjanSideComponentsFactory extends SideComponentsFactory {
             }
         }
 
+        // Making graph
         const json = {
             "directed": true,
             "weighted": false,
@@ -311,6 +324,7 @@ export default class TarjanSideComponentsFactory extends SideComponentsFactory {
         const componentsGraphTag = GraphTagFactory.createFromJson(json);
         const graph = componentsGraphTag.getDisplayGraph();
 
+        // Adding label to nodes
         for (let componentIndex = 0; componentIndex < componentsNodes.length; componentIndex++) {
             const component = componentsNodes[componentIndex];
             const num = componentIndex + 1;
@@ -324,7 +338,7 @@ export default class TarjanSideComponentsFactory extends SideComponentsFactory {
 
         const componentsGraphComponent = <GraphCanvas graph={graph} refreshState={false} layouts={layouts} graphPreview={false} />
 
-        //Legend
+        // Legend
         const legendData = [
             {"title": "Nodes", "type": "circle", "rows": [
                 {"color": Globals.Colors.DEFAULT_NODE_COLOR, "key": NodeState.NOT_VISITED},

@@ -1,15 +1,20 @@
+
+// IMPORT
+// My classes
 import NodeStyler from "../../NodeStyler";
 import { NodeAttributes, NodeState } from "./BiconnectedComponentsSearchAlgorithm";
 import Globals from "../../Globals";
 import ErrorThrower from "../../ErrorThrower";
 
+// CODE
+// This class represents node styler for biconnected components search
 export default class BiconnectedComponentsSearchNodeStyler extends NodeStyler {
 
     style(attributes) {
 
         let ret = {};
 
-        //Color
+        // Color
         switch(attributes[NodeAttributes.STATE]) {
             case NodeState.NOT_VISITED:
                 ret["color"] = Globals.Colors.DEFAULT_NODE_COLOR;
@@ -33,7 +38,7 @@ export default class BiconnectedComponentsSearchNodeStyler extends NodeStyler {
                 ErrorThrower.notExpectedState();
         }
 
-        //Label
+        // Label
         const k = attributes["key"];
         const s = attributes[NodeAttributes.STATE];
         const vf = attributes[NodeAttributes.VISITED_FROM];

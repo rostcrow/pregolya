@@ -1,12 +1,16 @@
 
+// IMPORT
+// React Bootstrap
 import Card from "react-bootstrap/Card";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
+
+// My classes
 import CompatibilityAlert from "./CompatibilityAlert";
 
-//Helpful func to convert array to string
+// Converts array to string
 function arrayToString(array) {
     
     let ret = "";
@@ -23,19 +27,22 @@ function arrayToString(array) {
     return ret;
 }
 
+// This components represents form for choosing algorithm and its options
 export default function AlgorithmForm ( {algorithmTags, algortihmTagIndex, handleAlgorithmChooseChange, optionsForm, 
     handleSubmit, handleClear, graphTag} ) {
 
+    // Making options
     let options = [];
     for (const [index, algorithmTag] of algorithmTags.entries()) {
         options.push(<option key={index} value={index}>{algorithmTag.getName()}</option>)
     }
 
+    // Handles change of algorithm
     function handleSelectChange(e) {
         handleAlgorithmChooseChange(Number(e.target.value));
     }
 
-    //Compatibility check
+    // Compatibility check
     let submitDisabled = false;
     let compatibilityComponent = <></>;
     let selectClassName = "";
@@ -46,12 +53,12 @@ export default function AlgorithmForm ( {algorithmTags, algortihmTagIndex, handl
     const compatibilityTable = algorithmTag.getCompatibilityTable();
 
     if (compatibilityTable.isInCompatible(graphType)) {
-        //Not compatible, showing error message
+        // Not compatible, showing error message
 
         submitDisabled = true;
         selectClassName = "border border-5 border-danger-subtle";
 
-        //Generating message
+        // Generating message
         const algorithmName = algorithmTag.getName();
 
         const compatible = compatibilityTable.getCompatible();
@@ -69,15 +76,15 @@ export default function AlgorithmForm ( {algorithmTags, algortihmTagIndex, handl
             content.push(<p>These graph types can be converted to be compatible: <b>{convertibleKeysStr}</b>.</p>);
         }
         
-        //Making component
+        // Making component
         compatibilityComponent = <CompatibilityAlert variant={"error"} content={content}/>;
 
     } else if (compatibilityTable.isConvertible(graphType)) {
-        //Not compatible, but can be converted
+        // Not compatible, but can be converted
 
         selectClassName = "border border-5 border-warning-subtle";
 
-        //Generating message
+        // Generating message
         const algorithmName = algorithmTag.getName();
 
         const compatible = compatibilityTable.getCompatible();
@@ -90,7 +97,7 @@ export default function AlgorithmForm ( {algorithmTags, algortihmTagIndex, handl
             <p><b>{algorithmName}</b> is compatible with these graph types: <b>{compatibleStr}</b>.</p>
         ];
 
-        //Making component
+        // Making component
         compatibilityComponent = <CompatibilityAlert variant={"warning"} content={content}/>;
 
     }

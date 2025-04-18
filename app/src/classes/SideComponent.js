@@ -1,4 +1,5 @@
 
+// This class represents side component in SidePanel component
 export default class SideComponent {
 
     #name;
@@ -9,10 +10,12 @@ export default class SideComponent {
         this.#component = component;
     }
 
+    // Returns name
     getName() {
         return this.#name;
     }
 
+    // Returns React component
     getComponent() {
         return this.#component;
     }

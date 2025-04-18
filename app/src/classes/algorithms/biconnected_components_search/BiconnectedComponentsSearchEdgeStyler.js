@@ -1,8 +1,13 @@
+
+// IMPRORT
+// My classes
 import EdgeStyler from "../../EdgeStyler";
 import { EdgeState, EdgeAttributes } from "./BiconnectedComponentsSearchAlgorithm";
 import Globals from "../../Globals";
 import ErrorThrower from "../../ErrorThrower";
 
+// CODE
+// This class represents edge styler for biconnected components search
 export default class BiconnectedComponentsSearchEdgeStyler extends EdgeStyler {
 
     style(attributes) {

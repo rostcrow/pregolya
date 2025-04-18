@@ -1,6 +1,11 @@
+
+// IMPORT
+// My classes
 import AlgorithmOptionsForm from "../../AlgorithmOptionsForm";
 import Form from "react-bootstrap/Form";
 
+// CODE
+// This class represents options form for Tarjan algorithm
 export default class TarjanAlgorithmOptionsForm extends AlgorithmOptionsForm {
 
     getDefaultOptions() {
@@ -8,6 +13,7 @@ export default class TarjanAlgorithmOptionsForm extends AlgorithmOptionsForm {
         return [firstNode];
     }
 
+    // Changes starting node option
     #startingNodeChange(e) {
 
         let options = this.getOptions();
@@ -23,6 +29,7 @@ export default class TarjanAlgorithmOptionsForm extends AlgorithmOptionsForm {
         const options = this.getOptions();
         const graph = this.getGraph();
 
+        // Making options
         let optionsHtml = [];
         graph.forEachNode((node) => {
             optionsHtml.push(<option key={node} value={node}>{node}</option>);

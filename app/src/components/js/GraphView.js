@@ -1,19 +1,32 @@
-//Importing libraries and build-in files
+
+// IMPORT
+// React
 import { useEffect } from "react";
+
+// React Bootstrap
+import Card from 'react-bootstrap/Card';
+
+// React Sigma
 import { SigmaContainer, useSigma, useLoadGraph, ControlsContainer, FullScreenControl,} from "@react-sigma/core";
 import "@react-sigma/core/lib/react-sigma.min.css";
-import Card from 'react-bootstrap/Card';
+
+// Sigma.js
 import EdgeCurveProgram, { EdgeCurvedArrowProgram } from "@sigma/edge-curve";
 import {EdgeRectangleProgram, EdgeArrowProgram} from "sigma/rendering";
+
+// Graphology
 import { MultiGraph } from "graphology";
 
-//Importing my classes
-import EdgeLoopProgram from "../../programs/EdgeLoopProgram/EdgeLoopProgram.ts";
-import EdgeLoopArrowProgram from "../../programs/EdgeLoopArrowProgram/EdgeLoopArrowProgram.ts";
+// My components
 import RescaleControl from "./RescaleControl.js";
 import ZoomControl from "./ZoomControl.js";
+
+// My programs
+import EdgeLoopProgram from "../../programs/EdgeLoopProgram/EdgeLoopProgram.ts";
+import EdgeLoopArrowProgram from "../../programs/EdgeLoopArrowProgram/EdgeLoopArrowProgram.ts";
 import MyNodeProgram from "../../programs/MyNodeProgram/MyNodeProgram.ts";
 
+// CODE
 // Component that loads the graph
 function LoadGraph( {graph, layout} ) {
   const loadGraph = useLoadGraph();
@@ -46,6 +59,7 @@ const sigmaSettings = {allowInvalidContainer: true, renderEdgeLabels: true, defa
   loopArrow: EdgeLoopArrowProgram
 }};
 
+// Component that displays the graph WITHOUT ability of maneuvering nodes. Similar to GraphCanvas.
 export default function GraphView ( {graph, layout} ) {
 
     return (

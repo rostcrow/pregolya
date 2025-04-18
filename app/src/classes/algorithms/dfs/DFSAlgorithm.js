@@ -1,8 +1,12 @@
 
+// IMPORT
+// My classes
 import AdditionalData from "../../AdditionalData";
 import Algorithm from "../../Algorithm";
 import ErrorThrower from "../../ErrorThrower";
 
+// CODE
+// Globals
 const State = {
     STARTING_NODE_TO_STACK: 0,
     NODE_FROM_STACK: 1,
@@ -39,6 +43,7 @@ export const EdgeState = {
     CROSS: "Cross"
 }
 
+// This class represents depth-first search algorithm
 export default class DFSAlgorithm extends Algorithm {
 
     #startingNode;
@@ -48,12 +53,12 @@ export default class DFSAlgorithm extends Algorithm {
     #orderOfVisit;
     #orderOfFinish;
     #time;
-    #newRoot;
+    #newRoot; // Node, which will become next root node for algorithm to continue 
 
     constructor(graph, startingNode) {
         super(graph);
 
-        //Initializing attributes
+        // Initializing attributes
         this.#startingNode = startingNode;
         this.#state = State.STARTING_NODE_TO_STACK;
         this.#stack = [];
@@ -63,7 +68,7 @@ export default class DFSAlgorithm extends Algorithm {
         this.#time = 1;
         this.#newRoot = null;
 
-        //Setting up nodes
+        // Setting up nodes
         graph.forEachNode((node) => {
             graph.setNodeAttribute(node, NodeAttributes.STATE, NodeState.NOT_VISITED);
             graph.setNodeAttribute(node, NodeAttributes.VISITED_FROM, null);
@@ -73,7 +78,7 @@ export default class DFSAlgorithm extends Algorithm {
             graph.setNodeAttribute(node, NodeAttributes.TIME_OF_FINISH, null);
         });
 
-        //Setting up edges
+        // Setting up edges
         graph.forEachEdge((edge) => {
             graph.setEdgeAttribute(edge, EdgeAttributes.STATE, EdgeState.NORMAL);
         });
@@ -103,37 +108,49 @@ export default class DFSAlgorithm extends Algorithm {
 
     }
 
+    // Sets starting node and pushes it to stack
     #stateStartingNodeToStack(graph) {
 
-        //Pushing starting node to stack
+        // Pushing starting node to stack
         this.#stack.push(this.#startingNode);
         graph.setNodeAttribute(this.#startingNode, NodeAttributes.STATE, NodeState.NEW_IN_STACK);
         graph.setNodeAttribute(this.#startingNode, NodeAttributes.ORDER_OF_VISIT, this.#orderOfVisit++);
         graph.setNodeAttribute(this.#startingNode, NodeAttributes.TIME_OF_VISIT, this.#time++);
 
-        //Switching state
+        // Switching state
         this.#state = State.NODE_FROM_STACK;
     }
 
+    // Gets node from stack and sets it as current
     #stateNodeFromStack(graph) {
 
-        //Last current change
+        // Last current change
         if (this.#currentNode !== null && graph.getNodeAttribute(this.#currentNode, NodeAttributes.STATE) === NodeState.CURRENT) {
             graph.setNodeAttribute(this.#currentNode, NodeAttributes.STATE, NodeState.IN_STACK);
         }
 
-        //Popping from stack
+        // Popping from stack
         this.#currentNode = this.#stack[this.#stack.length - 1];
         graph.setNodeAttribute(this.#currentNode, NodeAttributes.STATE, NodeState.CURRENT);
 
-        //Switching state
+        // Switching state
         this.#state = State.HANDLE_CURRENT;
 
     }
 
+    /*
+        Handles current node.
+
+        Tries to find unused edge from current node.
+        If this edge leads to unvisited node, the node is pushed to stack to be set as current in the next step.
+
+        If no edge is found, it pops current from stack.
+        Checks if stack is empty. If it is, it tries to find new root node.
+        If no new root node is found, algorithm ends.
+    */
     #stateHandleCurrent(graph) {
 
-        //Finding next appropriate edge
+        // Finding next appropriate edge
         const edges = graph.outboundEdges(this.#currentNode);
         let nextEdge = null;
 
@@ -145,9 +162,9 @@ export default class DFSAlgorithm extends Algorithm {
         }
 
         if (nextEdge !== null) {
-            //Next edge found
+            // Next edge found
 
-            //Determining edge state
+            // Determining edge state
             let edgeState = null;
             const opposite = graph.opposite(this.#currentNode, nextEdge);
             const oppositeState = graph.getNodeAttribute(opposite, NodeAttributes.STATE);
@@ -156,7 +173,7 @@ export default class DFSAlgorithm extends Algorithm {
                 case NodeState.NOT_VISITED:
                     edgeState = EdgeState.TREE;
     
-                    //Pushing to stack
+                    // Pushing to stack
                     this.#stack.push(opposite);
                     graph.setNodeAttribute(opposite, NodeAttributes.STATE, NodeState.NEW_IN_STACK);
                     graph.setNodeAttribute(opposite, NodeAttributes.VISITED_FROM, this.#currentNode);
@@ -185,10 +202,10 @@ export default class DFSAlgorithm extends Algorithm {
                     ErrorThrower.notExpectedState();
             }
 
-            //Changing edge state
+            // Changing edge state
             graph.setEdgeAttribute(nextEdge, EdgeAttributes.STATE, edgeState);
 
-            //Switching state
+            // Switching state
             if (edgeState === EdgeState.TREE) {
                 this.#state = State.NODE_FROM_STACK;
             } else {
@@ -196,26 +213,26 @@ export default class DFSAlgorithm extends Algorithm {
             }
 
         } else {
-            //Next edge not found
+            // Next edge not found
 
-            //Setting current as finished
+            // Setting current as finished
             this.#stack.pop();
             graph.setNodeAttribute(this.#currentNode, NodeAttributes.STATE, NodeState.FINISHED);
             graph.setNodeAttribute(this.#currentNode, NodeAttributes.ORDER_OF_FINISH, this.#orderOfFinish++);
             graph.setNodeAttribute(this.#currentNode, NodeAttributes.TIME_OF_FINISH, this.#time++);
             this.#currentNode = null;
 
-            //Switching state
+            // Switching state
             if (this.#stack.length !== 0) {
                 this.#state = State.NODE_FROM_STACK;
                 return;
             }
 
-            //Finding not visited node
+            // Finding not visited node
             const nodes = graph.nodes();
             for (let i = 0; i < nodes.length; i++) {
                 if (graph.getNodeAttribute(nodes[i], NodeAttributes.STATE) === NodeState.NOT_VISITED) {
-                    //Found
+                    // Found
 
                     this.#newRoot = nodes[i];
                     this.#state = State.NEW_ROOT_TO_STACK;
@@ -223,21 +240,22 @@ export default class DFSAlgorithm extends Algorithm {
                 }
             }
 
-            //Not found, algorithm ends
+            // Not found, algorithm ends
             this.setFinished();
 
         }
     }
 
+    // Sets new root and pushes it to stack
     #stateNewRootToStack(graph) {
 
-        //Pushing starting node to stack
+        // Pushing starting node to stack
         this.#stack.push(this.#newRoot);
         graph.setNodeAttribute(this.#newRoot, NodeAttributes.STATE, NodeState.NEW_IN_STACK);
         graph.setNodeAttribute(this.#newRoot, NodeAttributes.ORDER_OF_VISIT, this.#orderOfVisit++);
         graph.setNodeAttribute(this.#newRoot, NodeAttributes.TIME_OF_VISIT, this.#time++);
 
-        //Switching state
+        // Switching state
         this.#state = State.NODE_FROM_STACK;
 
     }
@@ -246,6 +264,7 @@ export default class DFSAlgorithm extends Algorithm {
 
         let graph = this.getGraph();
 
+        // Gets all attributes of node as JSON object
         function getAttributes(node) {
             const attributes = structuredClone(graph.getNodeAttributes(node));
             attributes["key"] = node;
@@ -253,13 +272,13 @@ export default class DFSAlgorithm extends Algorithm {
             return attributes;
         }
 
-        //Stack
+        // Stack
         let stack = [];
         for (const node of this.#stack) {
             stack.push(getAttributes(node));
         }
 
-        //Order of visit
+        // Order of visit
         let orderOfVisit = [];
         graph.forEachNode((node, attributes) => {
             if (attributes[NodeAttributes.ORDER_OF_VISIT] !== null) {
@@ -271,7 +290,7 @@ export default class DFSAlgorithm extends Algorithm {
             return a[NodeAttributes.ORDER_OF_VISIT] - b[NodeAttributes.ORDER_OF_VISIT];
         });
 
-        //Order of finish
+        // Order of finish
         let orderOfFinish = [];
         graph.forEachNode((node, attributes) => {
             if (attributes[NodeAttributes.ORDER_OF_FINISH] !== null) {

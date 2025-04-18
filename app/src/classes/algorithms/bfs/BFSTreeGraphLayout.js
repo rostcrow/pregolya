@@ -1,14 +1,20 @@
+
+// IMPORT
+// My classes
 import { NodeAttributes } from "./BFSAlgorithm";
 import GraphLayout from "../../GraphLayout";
 
+// CODE
+// Globals
 const HORIZONTAL_SPACE = 10;
 const VERTICAL_SPACE = 30;
 
+// This class represents layout for search tree of breadth-first search
 export default class BFSTreeGraphLayout extends GraphLayout {
 
     assign(graph) {
 
-        //Helpful func to sort nodes by order of visit
+        // Sorts nodes by order of visit
         function sortByOrderOfVisit(nodeList) {
 
             function compareOrderOfVisit(a, b) {
@@ -21,7 +27,7 @@ export default class BFSTreeGraphLayout extends GraphLayout {
             nodeList.sort(compareOrderOfVisit);
         }   
         
-        //Finding root nodes
+        // Finding root nodes
         let nodesQueue = [];
 
         graph.forEachNode((node) => {
@@ -31,22 +37,22 @@ export default class BFSTreeGraphLayout extends GraphLayout {
             }
         });
 
-        //Sorting root nodes
+        // Sorting root nodes
         sortByOrderOfVisit(nodesQueue);
 
-        //Preparing level counter
+        // Preparing level counter
         const levelCounter = [0];
 
-        //Setting position to nodes
+        // Setting position to nodes
         while(nodesQueue.length !== 0) {
 
-            //Getting node from queue
+            // Getting node from queue
             const node = nodesQueue.shift();
 
-            //Getting level
+            // Getting level
             const level = graph.getNodeAttribute(node, "level");
 
-            //Checking level counter length
+            // Checking level counter length
             if (levelCounter.length < level + 1) {
                 //Level counter is short
 
@@ -57,15 +63,15 @@ export default class BFSTreeGraphLayout extends GraphLayout {
                 }
             }
 
-            //Setting position
+            // Setting position
             graph.setNodeAttribute(node, "x", HORIZONTAL_SPACE * levelCounter[level]++);
             graph.setNodeAttribute(node, "y", -1 * VERTICAL_SPACE * level);
 
-            //Getting children in order
+            // Getting children in order
             let children = structuredClone(graph.outNeighbors(node));
             sortByOrderOfVisit(children);
             
-            //Setting level to children and pushing to queue
+            // Setting level to children and pushing to queue
             for (const child of children) {
                 graph.setNodeAttribute(child, "level", level + 1);
                 nodesQueue.push(child);

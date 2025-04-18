@@ -1,5 +1,10 @@
+
+// IMPORT
+// My classes
 import GraphLayout from "./GraphLayout";
 
+// CODE
+// This class represents graph layout taken from Graphology library
 export default class GraphologyGraphLayout extends GraphLayout {
 
     #graphologyLayout

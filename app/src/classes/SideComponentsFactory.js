@@ -1,5 +1,10 @@
+
+// IMPORT
+// My classes
 import ErrorThrower from "./ErrorThrower";
 
+// CODE
+// This abstract class represents factory for creating side components from algorithm state
 export default class SideComponentsFactory {
 
     constructor () {

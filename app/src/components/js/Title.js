@@ -1,6 +1,11 @@
+
+// IMPORT
+// React Bootstrap
 import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar';
 
+// CODE
+// Static component for showing navigation bar wih app name
 export default function Title() {
     return (
         <>

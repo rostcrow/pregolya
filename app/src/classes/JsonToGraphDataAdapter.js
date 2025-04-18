@@ -1,17 +1,22 @@
+
+// IMPORT
+// My classes
 import GraphData from "./GraphData";
 
+// This static class converts JSON object to graph data
 export default class JSONToGraphDataAdapter {
 
+    // Converts JSON object to graph data
     static adapt(json) {
 
-        //Nodes
+        // Nodes
         let nodes = {};
 
         for (const key of json["nodes"]) {
             nodes[key] = {"key": key};
         }
 
-        //Edges
+        // Edges
         let edges = {};
 
         for (const [index, edge] of json["edges"].entries()) {

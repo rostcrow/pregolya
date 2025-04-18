@@ -1,24 +1,39 @@
-//Importing libraries and build-in files
+
+// IMPORT
+// React
 import { useEffect, useState } from "react";
+
+// React boostrap
+import Card from 'react-bootstrap/Card';
+
+// React Sigma
 import { SigmaContainer, useRegisterEvents, useSigma, useLoadGraph, ControlsContainer, FullScreenControl,} from "@react-sigma/core";
 import "@react-sigma/core/lib/react-sigma.min.css";
-import Card from 'react-bootstrap/Card';
+
+// Sigma.js
 import EdgeCurveProgram, { EdgeCurvedArrowProgram } from "@sigma/edge-curve";
 import {EdgeRectangleProgram, EdgeArrowProgram} from "sigma/rendering";
+
+// Graphology
 import { MultiGraph } from "graphology";
 
-//Importing my classes
-import EdgeLoopProgram from "../../programs/EdgeLoopProgram/EdgeLoopProgram.ts";
-import EdgeLoopArrowProgram from "../../programs/EdgeLoopArrowProgram/EdgeLoopArrowProgram.ts";
+// My components
 import LayoutControl from "./LayoutControl.js";
 import RescaleControl from "./RescaleControl.js";
 import ZoomControl from "./ZoomControl.js";
-import MyNodeProgram from "../../programs/MyNodeProgram/MyNodeProgram.ts";
 
-//Importing css
-import "../css/GraphCanvas.css";
+// My classes
 import EdgeResetGraphLayout from "../../classes/EdgeResetGraphLayout.js";
 
+// My programs
+import EdgeLoopProgram from "../../programs/EdgeLoopProgram/EdgeLoopProgram.ts";
+import EdgeLoopArrowProgram from "../../programs/EdgeLoopArrowProgram/EdgeLoopArrowProgram.ts";
+import MyNodeProgram from "../../programs/MyNodeProgram/MyNodeProgram.ts";
+
+// My css
+import "../css/GraphCanvas.css";
+
+// CODE
 // Component that loads the graph
 function LoadGraph( {graph, layout} ) {
   const loadGraph = useLoadGraph();
@@ -26,13 +41,13 @@ function LoadGraph( {graph, layout} ) {
 
   useEffect(() => {
 
-    //Setting autoscale
+    // Setting autoscale
     sigma.setCustomBBox(null);
 
-    //Assigning layout
+    // Assigning layout
     layout.assign(graph);
 
-    //Loading graph
+    // Loading graph
     loadGraph(graph);
 
   }, [loadGraph, sigma, graph, layout]);
@@ -83,7 +98,7 @@ function GraphEvents() {
   return null;
 }
 
-//Component that refreshes graph when state changes
+// Component that refreshes graph when state changes
 function Refresher( {state} ) {
 
   const sigma = useSigma();
@@ -108,7 +123,7 @@ const sigmaSettings = {allowInvalidContainer: true, renderEdgeLabels: true, defa
   loopArrow: EdgeLoopArrowProgram
 }};
 
-// Component that displays the graph
+// Component that displays the graph with ability of maneuvering nodes
 export default function GraphCanvas( {graph, refreshState, layouts} ) {
 
   const [currentLayoutKeyIndex, setCurrentLayoutKeyIndex] = useState(0);
@@ -119,13 +134,13 @@ export default function GraphCanvas( {graph, refreshState, layouts} ) {
   const currentLayoutKey = layoutKeys[currentLayoutKeyIndex];
   const currentLayout = layouts[currentLayoutKey];
 
-  //Handling layout key change
+  // Handles layout key change
   function changeLayoutKey() {
     
-    //Resetting graphs edges
+    // Resetting graphs edges
     new EdgeResetGraphLayout().assign(graph);
 
-    //Changing layout
+    // Changing layout
     setCurrentLayoutKeyIndex(currentLayoutKeyIndex => (currentLayoutKeyIndex + 1) % layoutKeysLen);
   }
 

@@ -1,4 +1,5 @@
 
+// This static class represents global variables in our program
 export default class Globals {
 
     static Sizes = {

@@ -1,18 +1,28 @@
 
+// IMPORT
+// React
 import { useContext } from "react";
+
+// React Boostrap
 import ListGroup from "react-bootstrap/ListGroup"
+
+// My components
 import { GraphContext } from "./AppControl";
+
+// My class
 import Globals from "../../classes/Globals";
 
+// CODE
+// This component represents interactive list of components
 export default function ComponentsList( {components, zeroComponentsMessage} ) {
 
-    //Using context
+    // Using context
     const graphContextValue = useContext(GraphContext);
     const graph = graphContextValue["graph"];
     const state = graphContextValue["state"];
     const setState = graphContextValue["setState"];
 
-    //Checking empty
+    // Checking empty
     const componentsNodes = components["nodes"];
 
     if (componentsNodes.length === 0) {
@@ -21,48 +31,49 @@ export default function ComponentsList( {components, zeroComponentsMessage} ) {
         );
     }
 
-    //Handle funcs
+    // Handles entering mouse on given item in list
     function handleOnMouseEnter(e) {
 
         const componentNumber = e.target.id;
 
-        //Setting different size attribute for node inside wanted component
+        // Setting different size attribute for node inside wanted component
         const nodes = components["nodes"][componentNumber - 1];
 
         for (const index in nodes) {
             graph.setNodeAttribute(nodes[index], "size", 2 * Globals.Sizes.DEFAULT_NODE_SIZE);
         }
 
-        //Setting different size attribute for node inside wanted component
+        // Setting different size attribute for node inside wanted component
         const edges = components["edges"][componentNumber - 1];
         for (const index in edges) {
             graph.setEdgeAttribute(edges[index], "size", 2 * Globals.Sizes.DEFAULT_EDGE_SIZE);
         }
 
-        //Refreshing
+        // Refreshing
         const nextState = !state;
         setState(nextState);
     }
 
+    // Handles leaving mouse on given item in list
     function handleOnMouseLeave(e) {
 
-        //Resetting size attribute for all nodes
+        // Resetting size attribute for all nodes
         graph.forEachNode((node) => {
             graph.setNodeAttribute(node, "size", Globals.Sizes.DEFAULT_NODE_SIZE);
         });
 
-        //Resetting size attribute for all edges
+        // Resetting size attribute for all edges
         graph.forEachEdge((edge) => {
             graph.setEdgeAttribute(edge, "size", Globals.Sizes.DEFAULT_EDGE_SIZE);
         });
 
-        //Refreshing
+        // Refreshing
         const nextState = !state;
         setState(nextState);
     }
 
 
-    //Generating list
+    // Generating list
     let componentsListItems = [];
     
     for (const index in componentsNodes) {

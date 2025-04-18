@@ -1,7 +1,12 @@
+
+// IMPORT
+// My classes
 import EdgeStyler from "../../EdgeStyler";
 import { EdgeState, EdgeAttributes } from "./BFSAlgorithm";
 import Globals from "../../Globals";
 
+// CODE
+// This class represents edge styler for breadth-first search
 export default class BFSEdgeStyler extends EdgeStyler {
 
     style(attributes) {

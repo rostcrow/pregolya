@@ -1,4 +1,6 @@
 
+// IMPORT
+// My graphs
 import sevenBridges from "./seven_bridges.json";
 import cube from "./cube.json";
 import itaFig223 from "./ita_fig223.json";
@@ -27,6 +29,7 @@ import tarjanFig3 from "./tarjan_fig3.json";
 import pragueMetro from "./prague_metro.json";
 import summerOlympics from "./summer_olympics.json";
 
+// List of graphs
 const graphExamplesArray = [
     sevenBridges, 
     cube, 

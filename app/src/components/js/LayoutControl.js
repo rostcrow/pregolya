@@ -1,6 +1,10 @@
 
+// IMPORT
+// React
 import { PiGraphBold } from "react-icons/pi";
 
+// CODE
+// Button for changing layout
 export default function LayoutControl({layoutKey, changeLayoutKeyFunc}) {
 
     return (

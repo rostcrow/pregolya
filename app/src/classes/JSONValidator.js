@@ -1,4 +1,5 @@
 
+// Globals
 const SCHEMA = {
     "type": "object",
     "properties": {
@@ -54,39 +55,40 @@ const SCHEMA_WEIGHTED = {
     "required": ["directed", "weighted", "nodes", "edges"] 
 };
 
+// This class validates if given JSON has the right graph schema
 export default class JSONValidator {
 
+    // Validates if given JSON has the right graph schema
     static validate(instance) {
 
-        //Helpful funcs
+        // Return error stack from error
         function getStackFromError(error) {
             return error["stack"];
         }
 
-
         let Validator = require("jsonschema").Validator;
         let v = new Validator();
 
-        //Validating standard schema
+        // Validating standard schema
         let result = v.validate(instance, SCHEMA);
 
         if (!result.valid) {
-            //Not valid schema, returning errors
+            // Not valid schema, returning errors
             return result.errors.map(getStackFromError);
         }
 
         if (instance["weighted"]) {
-            //Validating schema for weighted graph
+            // Validating schema for weighted graph
 
             result = v.validate(instance, SCHEMA_WEIGHTED);
 
             if (!result.valid) {
-                //Not valid schema, returning errors
+                // Not valid schema, returning errors
                 return result.errors.map(getStackFromError);
             }
         }
         
-        //Valid
+        // Valid
         return [];
     }
 }

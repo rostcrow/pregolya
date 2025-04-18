@@ -1,22 +1,27 @@
-import GraphLayout from "./GraphLayout"
 
+// IMPORT
+// Sigma.js
 import { indexParallelEdgesIndex, DEFAULT_EDGE_CURVATURE } from '@sigma/edge-curve';
 
+// My classes
+import GraphLayout from "./GraphLayout"
+
+// This class represents layout which sets edge type for each edge. Nodes are untouched.
 export default class EdgeResetGraphLayout extends GraphLayout {
 
     assign(graph) {
 
         const isDirected = graph.getAttribute("directed");
 
-        //Counting parallel index for each edge - used for curved edges
+        // Counting parallel index for each edge - used for curved edges
         indexParallelEdgesIndex(graph, { edgeIndexAttribute: "parallelIndex", edgeMaxIndexAttribute: "parallelMaxIndex"});
 
-        //Resetting edge types
+        // Resetting edge types
         graph.forEachEdge((edge, attributes, source, target) => {
 
-            //Determining edge type
+            // Determining edge type
             if (source === target) {
-                //Loop edge
+                // Loop edge
 
                 if (isDirected) {
                     graph.setEdgeAttribute(edge, "type", "loopArrow");
@@ -27,7 +32,7 @@ export default class EdgeResetGraphLayout extends GraphLayout {
             } else {
 
                 if (graph.getEdgeAttribute(edge, "parallelIndex") != null) {
-                    //Parallel edge
+                    // Parallel edge
                     
                     let parallelIndex = graph.getEdgeAttribute(edge, "parallelIndex");
                     let parallelMaxIndex = graph.getEdgeAttribute(edge, "parallelMaxIndex");
@@ -42,7 +47,7 @@ export default class EdgeResetGraphLayout extends GraphLayout {
                     }
 
                 } else {
-                    //Non-parallel edge
+                    // Non-parallel edge
 
                     if (isDirected) {
                         graph.setEdgeAttribute(edge, "type", "arrow");

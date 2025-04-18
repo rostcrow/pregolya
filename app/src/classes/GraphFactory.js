@@ -1,11 +1,20 @@
 
+// IMPORT
+// Graphology
 import Graph from "graphology";
-import Globals from "./Globals";
+
+// Sigma.js
 import { indexParallelEdgesIndex, DEFAULT_EDGE_CURVATURE } from '@sigma/edge-curve';
+
+// My classes
+import Globals from "./Globals";
 import ErrorThrower from "./ErrorThrower";
 
+// CODE
+// This static class represents a factory to create graphs
 export default class GraphFactory {
 
+    // Creates algorithm graph
     static createAlgorithmGraph(graphData) {
         
         const type = "un".repeat(!graphData.isDirected()) + "directed";
@@ -14,21 +23,21 @@ export default class GraphFactory {
         const nodes = graphData.getNodes();
         const edges = graphData.getEdges();
 
-        //Setting graph type
+        // Setting graph type
         graph.setAttribute("directed", graphData.isDirected());
         graph.setAttribute("weighted", graphData.isWeighted());
 
-        //Adding nodes
+        // Adding nodes
         for (const key in nodes) {
             graph.addNode(nodes[key]["key"]);
         }
 
-        //Adding edges
+        // Adding edges
         for (const key in edges) {
 
             graph.addEdgeWithKey(key, edges[key]["source"], edges[key]["target"]);
 
-            //Adding weigth
+            // Adding weigth
             if (graphData.isWeighted()) {
                 graph.setEdgeAttribute(key, "weight", edges[key]["weight"]);
             }
@@ -37,6 +46,7 @@ export default class GraphFactory {
         return graph;
     }
 
+    // Creates graph to be ready for display in GUI
     static createDisplayGraph(graphData) {
 
         let graph = this.createAlgorithmGraph(graphData).copy();
@@ -44,29 +54,29 @@ export default class GraphFactory {
         const nodes = graphData.getNodes();
         const edges = graphData.getEdges();
 
-        //Setting attributes to nodes
+        // Setting attributes to nodes
         graph.forEachNode((node) => {
 
-            //Setting default visual attributes
+            // Setting default visual attributes
             const defaultAttributes = {"size": Globals.Sizes.DEFAULT_NODE_SIZE, "color": Globals.Colors.DEFAULT_NODE_COLOR, "label": node};
             graph.mergeNodeAttributes(node, defaultAttributes);
 
-            //Setting attributes from graph data
+            // Setting attributes from graph data
             const nodeAttributes = nodes[node];
             graph.mergeNodeAttributes(node, nodeAttributes);
         });
 
-        //Counting parallel index for each edge - used for curved edges
+        // Counting parallel index for each edge - used for curved edges
         indexParallelEdgesIndex(graph, { edgeIndexAttribute: "parallelIndex", edgeMaxIndexAttribute: "parallelMaxIndex"});
 
-        //Setting attributes to edges
+        // Setting attributes to edges
         graph.forEachEdge((edge, attributes, source, target) => {
 
-            //Setting default visual attributes
+            // Setting default visual attributes
             const defaultAttributes = {"size": Globals.Sizes.DEFAULT_EDGE_SIZE, "color": Globals.Colors.DEFAULT_EDGE_COLOR};
             graph.mergeEdgeAttributes(edge, defaultAttributes);
 
-            //Setting weight label
+            // Setting weight label
             if (graphData.isWeighted()) {
                 if (graph.hasEdgeAttribute(edge, "weight")) {
 
@@ -75,14 +85,14 @@ export default class GraphFactory {
                     graph.setEdgeAttribute(edge, "forceLabel", true);
 
                 } else {
-                    //Edge in weighted graph doesn't have weight
+                    // Edge in weighted graph doesn't have weight
                     ErrorThrower.edgeWithoutWeight();
                 }
             }
 
-            //Determining edge type
+            // Determining edge type
             if (source === target) {
-                //Loop edge
+                // Loop edge
 
                 if (graphData.isDirected()) {
                     graph.setEdgeAttribute(edge, "type", "loopArrow");
@@ -93,7 +103,7 @@ export default class GraphFactory {
             } else {
 
                 if (graph.getEdgeAttribute(edge, "parallelIndex") != null) {
-                    //Parallel edge
+                    // Parallel edge
                     
                     let parallelIndex = graph.getEdgeAttribute(edge, "parallelIndex");
                     let parallelMaxIndex = graph.getEdgeAttribute(edge, "parallelMaxIndex");
@@ -108,7 +118,7 @@ export default class GraphFactory {
                     }
 
                 } else {
-                    //Non-parallel edge
+                    // Non-parallel edge
 
                     if (graphData.isDirected()) {
                         graph.setEdgeAttribute(edge, "type", "arrow");
@@ -118,7 +128,7 @@ export default class GraphFactory {
                 }
             }
 
-            //Setting attributes from graph data
+            // Setting attributes from graph data
             const edgeAttributes = edges[edge];
             graph.mergeEdgeAttributes(edge, edgeAttributes);
 

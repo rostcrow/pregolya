@@ -1,15 +1,20 @@
+
+// IMPORT
+// My classes
 import ErrorThrower from "../../ErrorThrower";
 import Globals from "../../Globals";
 import NodeStyler from "../../NodeStyler";
 import { NodeAttributes, NodeState } from "./TarjanAlgorithm";
 
+// CODE
+// This class represents node styler for Tarjan algorithm
 export default class TarjanNodeStyler extends NodeStyler {
 
     style(attributes) {
 
         let ret = {}
 
-        //Color
+        // Color
         switch (attributes[NodeAttributes.STATE]) {
             case NodeState.NOT_VISITED:
                 ret["color"] = Globals.Colors.DEFAULT_NODE_COLOR;
@@ -33,7 +38,7 @@ export default class TarjanNodeStyler extends NodeStyler {
                 ErrorThrower.notExpectedState();
         }
 
-        //Label
+        // Label
         const key = attributes["key"];
         const state = attributes[NodeAttributes.STATE];
         const visited = attributes[NodeAttributes.VISITED];

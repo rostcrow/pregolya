@@ -1,16 +1,21 @@
+
+// IMPORT
+// My classes
 import NodeStyler from "../../NodeStyler";
 import { NodeState } from "./DFSAlgorithm";
 import { NodeAttributes } from "./DFSAlgorithm";
 import Globals from "../../Globals";
 import ErrorThrower from "../../ErrorThrower";
 
+// CODE
+// This class represents node styler of depth-first search
 export default class DFSNodeStyler extends NodeStyler {
 
     style(attributes) {
 
         let ret = {};
 
-        //Color
+        // Color
         switch(attributes[NodeAttributes.STATE]) {
             case NodeState.NOT_VISITED:
                 ret["color"] = Globals.Colors.DEFAULT_NODE_COLOR;
@@ -31,7 +36,7 @@ export default class DFSNodeStyler extends NodeStyler {
                 ErrorThrower.notExpectedState();
         }
 
-        //Label
+        // Label
         const k = attributes["key"];
         const s = attributes[NodeAttributes.STATE];
         const vf = attributes[NodeAttributes.VISITED_FROM];

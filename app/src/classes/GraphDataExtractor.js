@@ -1,15 +1,20 @@
 
+// IMPORT
+// My classes
 import GraphData from "./GraphData";
 
+// CODE
+// This static class extracts graph data from given graph
 export default class GraphDataExtractor {
 
+    // Extracts graph data from given graph
     static extractData (graph) {
 
-        //Type
+        // Type
         const directed = graph.getAttribute("directed");
         const weighted = graph.getAttribute("weighted");
 
-        //Nodes
+        // Nodes
         let nodes = {};        
         graph.forEachNode((node, attributes) => {
 
@@ -19,7 +24,7 @@ export default class GraphDataExtractor {
             nodes[node] = attr;
         });
 
-        //Edges
+        // Edges
         let edges = {};
         graph.forEachEdge((edge, attributes) => {
 

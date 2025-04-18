@@ -1,14 +1,19 @@
 
+// IMPORT
+// My classes
 import AlgorithmOptionsForm from "../../AlgorithmOptionsForm";
 import Form from 'react-bootstrap/Form';
 
-export default class BFSAlgorithmOptionsForm extends AlgorithmOptionsForm {
+// CODE
+// This class represents options form for depth-first search algorithm
+export default class DFSAlgorithmOptionsForm extends AlgorithmOptionsForm {
     
     getDefaultOptions() {
         let firstNode = this.getGraph().nodes()[0]
         return [firstNode];
     }
 
+    // Changes starting node option
     #startingNodeChange(e) {
 
         let options = this.getOptions();
@@ -24,6 +29,7 @@ export default class BFSAlgorithmOptionsForm extends AlgorithmOptionsForm {
         const options = this.getOptions();
         const graph = this.getGraph();
 
+        // Making options
         let optionsHtml = [];
         graph.forEachNode((node) => {
             optionsHtml.push(<option key={node} value={node}>{node}</option>);

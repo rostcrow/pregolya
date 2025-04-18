@@ -1,6 +1,10 @@
 
+// IMPORT
+// My classes
 import ErrorThrower from "./ErrorThrower";
 
+// CODE
+// This abstract class represents form for selecting options of algortihm
 export default class AlgorithmOptionsForm {
 
     #options;
@@ -25,18 +29,22 @@ export default class AlgorithmOptionsForm {
         }
     }
 
+    // Returns options
     getOptions() {
         return this.#options;
     }
 
+    // Sets options
     setOptions(options) {
         this.#options = options;
     }
 
+    // Returns set option
     getSetOptionsFunc() {
         return this.#setOptionsFunc;
     }
 
+    // Returns graph
     getGraph() {
         return this.#graph;
     }

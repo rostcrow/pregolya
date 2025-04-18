@@ -1,6 +1,10 @@
 
+// IMPORT
+// My classes
 import GraphData from "./GraphData";
 
+// CODE
+// This class uses node styler and edge styler to transform attributes of all nodes and edges
 export default class GraphDataStyler {
 
     #nodeStyler;
@@ -11,6 +15,7 @@ export default class GraphDataStyler {
         this.#edgeStyler = edgeStyler;
     }
 
+    // Transforms attributes of all nodes and edges
     style(graphData) {
         
         const directed = graphData.isDirected();
@@ -21,12 +26,12 @@ export default class GraphDataStyler {
         let retNodes = {};
         let retEdges = {};
 
-        //Styling nodes
+        // Styling nodes
         for (const key in nodes) {
             retNodes[key] = this.#nodeStyler.style(nodes[key]);
         }
 
-        //Styling edges
+        // Styling edges
         for (const key in edges) {
             retEdges[key] = this.#edgeStyler.style(edges[key]);
         }

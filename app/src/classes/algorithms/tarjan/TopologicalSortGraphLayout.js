@@ -1,10 +1,16 @@
+
+// IMPORT
+// My classes
 import ErrorThrower from "../../ErrorThrower";
 import GraphLayout from "../../GraphLayout";
 
+// CODE
+// Globals
 const DISTANCE_BETWEEN_NODES = 10;
 const BASE_CURVATURE = 1;
 const INC_CURVATURE = 1;
 
+// This class represents layout which sorts given graph topologically from left to right
 export default class TopologicalSortGraphLayout extends GraphLayout {
 
     assign (graph) {
@@ -14,7 +20,7 @@ export default class TopologicalSortGraphLayout extends GraphLayout {
         let sorted = []
         let nodesWithNoIncEdge = []
 
-        //Finding starting nodes
+        // Finding starting nodes
         graphCopy.forEachNode((node) => {
 
             const inEdges = graphCopy.inEdges(node);
@@ -24,7 +30,7 @@ export default class TopologicalSortGraphLayout extends GraphLayout {
 
         });
 
-        //Main algorithm
+        // Main algorithm
         while(nodesWithNoIncEdge.length !== 0) {
 
             const node = nodesWithNoIncEdge.shift();
@@ -43,14 +49,14 @@ export default class TopologicalSortGraphLayout extends GraphLayout {
             }
         }
 
-        //Cycle check
+        // Cycle check
         if (graphCopy.edges().length !== 0) {
-            //Graph has a cycle
+            // Graph has a cycle
             ErrorThrower.graphHasCycle();
             return;
         }
 
-        //Giving position to each node
+        // Giving position to each node
         let x = 0;
         for (const node of sorted) {
 
@@ -59,7 +65,7 @@ export default class TopologicalSortGraphLayout extends GraphLayout {
 
             x += DISTANCE_BETWEEN_NODES;
 
-            //Curving out edges
+            // Curving out edges
             const outEdges = graph.outEdges(node);
             const outEdgesLen = outEdges.length;
 

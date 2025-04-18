@@ -1,9 +1,14 @@
+
+// iMPORT
+// My classes
 import EdgeStyler from "../../EdgeStyler";
 import { EdgeState } from "./DFSAlgorithm";
 import { EdgeAttributes } from "./DFSAlgorithm";
 import Globals from "../../Globals";
 import ErrorThrower from "../../ErrorThrower";
 
+// CODE
+// This class represents edge styler of depth-first search
 export default class DFSEdgeStyler extends EdgeStyler {
 
     style(attributes) {
