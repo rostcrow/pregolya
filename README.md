@@ -14,7 +14,8 @@ Install Node.js on this website:
 
 https://nodejs.org/en/
 
-NPM will be automatically installed with Node.js.
+NPM will be automatically installed with Node.js. 
+When you are using Visual Studio Code, VSC may need to be reopened for changes to become active.
 
 ## Installing node modules, which are not provided in git repository
 
