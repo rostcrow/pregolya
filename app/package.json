@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@react-sigma/core": "^4.0.3",
-    "@sigma/edge-curve": "^3.1.0",
+    "@sigma/edge-curve": "3.0.0",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
