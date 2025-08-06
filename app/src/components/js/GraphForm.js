@@ -12,6 +12,8 @@ import Button from "react-bootstrap/Button";
 
 // My components
 import FileAlert from "./FileAlert";
+import FileInputInfoButton from "./FileInputInfoButton";
+import FileInputInfo from "./FileInputInfo";
 
 // My classes
 import JSONValidator from '../../classes/JSONValidator';
@@ -32,7 +34,8 @@ export default function GraphForm ( {graphTags, graphTagIndex, handleGraphChoose
     // States
     const [showFileAlert, setShowFileAlert] = useState(false);
     const [fileAlertHeading, setFileAlertHeading] = useState("");
-    const [fileAlertErrorStack, setFileAlertErrorStack] = useState([]);
+    const [fileAlertErrorStack, setFileAlertErrorStack] = useState([]); 
+    const [showFileInputInfo, setShowFileInputInfo] = useState(false);
 
     // Initiliazing options in select
     let options = [];
@@ -145,6 +148,11 @@ export default function GraphForm ( {graphTags, graphTagIndex, handleGraphChoose
 
     }
 
+    // Handles file info click
+    function handleFileInfoClick() {
+        setShowFileInputInfo(showFileInputInfo => !showFileInputInfo);
+    }
+
     // Counting if submit is disabled
     let submitDisabled = false;
     if (graphTagIndex === -1) {
@@ -181,8 +189,11 @@ export default function GraphForm ( {graphTags, graphTagIndex, handleGraphChoose
                         </Col>
                         <Col className="col-12 col-md-6 mt-2">
                             <Form.Group className="text-start">
-                                <Form.Label>or upload one</Form.Label>
-                            <Form.Control className={fileInputClassName} 
+                                <Form.Label>
+                                    or upload one <FileInputInfoButton func={handleFileInfoClick} />
+                                </Form.Label>
+                                <FileInputInfo show={showFileInputInfo}/>
+                                <Form.Control className={fileInputClassName} 
                                 id="file-input" type="file" onChange={e => handleControlOnChange(e)}/>
                             </Form.Group>
                             <FileAlert show={showFileAlert} setShowFunc={setShowFileAlert}
