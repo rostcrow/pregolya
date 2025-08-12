@@ -173,7 +173,7 @@ export default function GraphForm ( {graphTags, graphTagIndex, handleGraphChoose
     }
 
     return (
-        <Card className="mx-5 my-3 bg-light">
+        <Card className="mx-3 mx-md-5 my-3 bg-light">
             <Card.Header as="h5" className="text-start">Graph</Card.Header>
             <Card.Body>
                 <Form>

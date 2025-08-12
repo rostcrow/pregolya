@@ -11,7 +11,14 @@ export default function Title() {
         <>
             <Navbar bg='primary' data-bs-theme='dark'>
                 <Container>
-                    <Navbar.Brand color='primary'>Pregolya - Visualizer of graph algorithms</Navbar.Brand>
+                    <Navbar.Collapse color='primary'>
+                        <Navbar.Brand>
+                            Pregolya
+                        </Navbar.Brand>
+                        <Navbar.Text>
+                            Visualizer of graph algorithms
+                        </Navbar.Text>
+                    </Navbar.Collapse>
                 </Container>
             </Navbar>
         </>

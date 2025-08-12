@@ -339,7 +339,7 @@ export default function AppControl() {
                     graphTag={chosenGraphTag}/>
             </div>
 
-            <Container className='px-5 mb-5' fluid={true}>
+            <Container className='px-3 px-md-5 mb-5' fluid={true}>
                 <Row className='p-0 m-0'>
                     <Col className="col-12 col-xl-8 p-0 pe-xl-2 mt-0">
                         <Card className={graphCardClassName}>

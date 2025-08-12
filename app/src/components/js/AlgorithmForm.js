@@ -103,7 +103,7 @@ export default function AlgorithmForm ( {algorithmTags, algortihmTagIndex, handl
     }
 
     return (
-        <Card className="mx-5 my-3 bg-light">
+        <Card className="mx-3 mx-md-5 my-3 bg-light">
             <Card.Header as="h5" className="text-start">Algorithm</Card.Header>
             <Card.Body>
                 <Form>
